@@ -3,6 +3,7 @@
 #include "x86.h"
 
 // TODO: déclarer la table GDT
+static gdt_entry_t gdt;
 
 // Pointeur sur la table GDT
 static gdt_ptr_t   gdt_ptr;

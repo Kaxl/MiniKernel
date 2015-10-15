@@ -18,16 +18,25 @@ dd MULTIBOOT_HEADER_MAGIC
 dd MULTIBOOT_HEADER_FLAGS
 dd MULTIBOOT_HEADER_CHECKSUM
 
+STACK_SIZE  equ 0x3e800     ; Size of stack in hex
+
 entrypoint:
 	; Bootloader code starts executing here
 	cli  ; disable hardware interrupts
 
+    ; Init of stack pointer and base pointer
+    mov     esp, STACK_SIZE ; Init at end of stack 
+    mov     ebp, STACK_SIZE ; Init at end of stack 
 	; TODO : initialiser le pointeur de pile ainsi qu'EBP (à la même valeur)
     ; Rappel : la pile "grandi" en descendant !
 	; ...
 
+
+    ; Main function
+    ; TODO
+
 	; TODO : appeler la fonction principale du kernel (code C)
-	 ; Celle-ci doit etre visible par le linker
+	; Celle-ci doit etre visible par le linker
 	; ...
 
 	; infinite loop (should never get here)
@@ -37,6 +46,10 @@ entrypoint:
 
 ;---------------------------------------------------------------------------------------------------
 ; stack section
+section .stack
+    align   4               ; Alignment on 4 bytes
+    resb    STACK_SIZE      ; Reserve 256KB
+    
 
 ; TODO : ajouter une section pour la pile kernel dans laquelle
 ; reserver au moins 256KB grace a la directive "resb".

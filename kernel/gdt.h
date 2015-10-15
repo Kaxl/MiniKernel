@@ -33,4 +33,32 @@ typedef struct gdt_ptr_st {
 extern void gdt_init();
 extern void gdt_flush(gdt_ptr_t *gdt_ptr);
 
+// Basic functions
+
+/**
+ * @brief Fill memory with a constant byte
+ *
+ * The memset() function fills the first count bytes of the memory area
+ * pointed to by dst with the constant byte value.
+ *
+ * @param dst   Memory area pointed to
+ * @param value Constant byte
+ * @param count Number of bytes
+ *
+ * @return
+ */
+void *memset(void *dst, int value, uint count);
+
+/**
+ * @brief Copy memory area
+ *
+ * @param dst
+ * @param src
+ * @param count
+ *
+ * @return
+ */
+void *memcpy(void *dst, void *src, uint count);
+int strncmp(const char *p, const char *q, uint n);
+
 #endif
