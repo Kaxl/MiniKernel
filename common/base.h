@@ -34,21 +34,21 @@ void *memset(void *dst, int value, uint count);
 /**
  * @brief Copy memory area
  *
- * @param dst
- * @param src
- * @param count
+ * @param dst   Destination
+ * @param src   Source
+ * @param count 
  *
  * @return
  */
 void *memcpy(void *dst, void *src, uint count);
 
 /**
- * @brief
+ * @brief Compares two strings.
  *
- * @param p
- * @param q
- * @param n
+ * @param p String one
+ * @param q String two
+ * @param n Number of bytes
  *
- * @return
+ * @return int (-1, 0, 1) following the size of the first string and the second one
  */
 int strncmp(const char *p, const char *q, uint n);
