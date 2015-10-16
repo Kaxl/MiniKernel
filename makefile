@@ -26,6 +26,8 @@ run: kernel.iso
 clean:
 	rm -f *.o
 	rm -f kernel/*.o
+	rm -f kernel/*.elf
 	rm -rf boot/
+	rm -f kernel.iso
 
 
