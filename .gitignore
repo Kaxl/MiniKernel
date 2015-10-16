@@ -36,3 +36,6 @@
 
 # Temporary grub directory
 boot/
+
+# ISO file
+*.iso

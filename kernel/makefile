@@ -29,3 +29,4 @@ base.o: ../common/base.c
 
 clean:
 	rm -f *.o
+	rm -f *.elf
