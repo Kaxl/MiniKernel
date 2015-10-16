@@ -16,6 +16,8 @@
  * =====================================================================================
  */
 
+#ifndef _BASE_H_
+#define _BASE_H_
 
 /**
  * @brief Fill memory with a constant byte
@@ -59,3 +61,6 @@ void *memcpy(void *dst, void *src, uint count);
  * @return int (-1, 0, 1) following the size of the first string and the second one
  */
 int strncmp(const char *p, const char *q, uint n);
+
+#endif
+

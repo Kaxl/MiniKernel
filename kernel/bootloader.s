@@ -48,6 +48,7 @@ entrypoint:
 ; stack section
 section .stack
     align   4               ; Alignment on 4 bytes
+    ;size: resb  STACK_SIZE  ; Reserve 256KB
     resb    STACK_SIZE      ; Reserve 256KB
     
 

@@ -1,9 +1,10 @@
 #include "../common/types.h"
+#include "../common/base.h"
 #include "gdt.h"
 #include "x86.h"
 
 // TODO: déclarer la table GDT
-static gdt_entry_t gdt;
+static gdt_entry_t gdt[3];
 
 // Pointeur sur la table GDT
 static gdt_ptr_t   gdt_ptr;
@@ -49,9 +50,18 @@ static gdt_entry_t data_segment(uint32_t base, uint32_t limit, uint8_t dpl) {
 // Initialize the GDT
 void gdt_init() {
 	// TODO: fixer la limite de gdt_ptr, puis la faire pointer sur la GDT
+    //gdt_ptr.limit = (2 << 19) - 1;
+    gdt_ptr.limit = 0x100000;
+    gdt_ptr.base = 0;
 
 	// TODO: initialisation des trois descripteurs de segment: NULL, segment code, segment data
 	// Les descripteurs de code et data doivent avoir un DPL de 0.
+
+    // Creation of segments (code and data segments) in a "FLAT" mode
+    // Code and data segments have access to the same memory
+    gdt[0] = null_segment();
+    gdt[1] = code_segment(0, gdt_ptr.limit, 0);
+    gdt[2] = data_segment(0, gdt_ptr.limit, 0);
 
     // Load the GDT
     gdt_flush(&gdt_ptr);
