@@ -16,6 +16,7 @@
  * =====================================================================================
  */
 
+#include "base.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void *memset(void *dst, int value, uint count) {
@@ -30,9 +31,9 @@ void *memset(void *dst, int value, uint count) {
 void *memcpy(void *dst, void *src, uint count) {
     char *dp = dst;
     const char *sp = src;
-    while (n--)
+    while (count--)
         *dp++ = *sp++;
-    return dst
+    return dst;
 }
 
 

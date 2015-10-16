@@ -19,6 +19,8 @@
 #ifndef _BASE_H_
 #define _BASE_H_
 
+#include "types.h"
+
 /**
  * @brief Fill memory with a constant byte
  *

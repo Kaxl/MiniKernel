@@ -25,8 +25,8 @@ entrypoint:
 	cli  ; disable hardware interrupts
 
     ; Init of stack pointer and base pointer
-    mov     esp, STACK_SIZE ; Init at end of stack 
-    mov     ebp, STACK_SIZE ; Init at end of stack 
+    mov     esp,STACK_SIZE ; Init at end of stack 
+    mov     ebp,STACK_SIZE ; Init at end of stack 
 	; TODO : initialiser le pointeur de pile ainsi qu'EBP (à la même valeur)
     ; Rappel : la pile "grandi" en descendant !
 	; ...
@@ -34,6 +34,8 @@ entrypoint:
 
     ; Main function
     ; TODO
+    mov     eax,0xB8000
+    mov     word [eax], 0x0E01
 
 	; TODO : appeler la fonction principale du kernel (code C)
 	; Celle-ci doit etre visible par le linker
