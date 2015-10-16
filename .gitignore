@@ -33,3 +33,6 @@
 
 # Vim temporary files
 *.swp
+
+# Temporary grub directory
+boot/

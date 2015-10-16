@@ -12,10 +12,13 @@
 .PHONY: run, clean
 
 kernel.iso: kernel.elf
-	# Mettre grub et ensuite kernel.elf dans kernel.iso avec dd
+	grub-mkrescue -o $@ .
 	
 kernel.elf:
 	cd kernel && $(MAKE)
+	mkdir -p boot/grub
+	cp kernel/kernel.elf boot/
+	cp grub/grub.cfg boot/grub/
 
 run: kernel.iso
 	qemu-system-i386 -hda $<
@@ -23,5 +26,6 @@ run: kernel.iso
 clean:
 	rm -f *.o
 	rm -f kernel/*.o
+	rm -rf boot/
 
 
