@@ -12,7 +12,7 @@
 .PHONY: run, clean
 
 kernel.iso: kernel.elf
-	grub-mkrescue -o $@ .
+	grub-mkrescue -d /usr/lib/grub/i386-pc -o $@ .
 	
 kernel.elf:
 	cd kernel && $(MAKE)
