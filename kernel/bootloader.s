@@ -26,15 +26,13 @@ entrypoint:
 	cli  ; disable hardware interrupts
 
     ; Init of stack pointer and base pointer
-    mov     esp,stack   ; Init at end of stack 
-    mov     ebp,stack   ; Init at end of stack 
-	; TODO : initialiser le pointeur de pile ainsi qu'EBP (à la même valeur)
-    ; Rappel : la pile "grandi" en descendant !
-	; ...
+    mov     esp, stack      ; Init at end of stack 
+    mov     ebp, stack      ; Init at end of stack 
 
 
     ; Main function
     ; TODO
+    ; Print a smiley
     mov     eax,0xB8000
     mov     word [eax], 0x0E01
 
@@ -53,8 +51,3 @@ section .stack
     align   4                   ; Alignment on 4 bytes
     stack:  resb  STACK_SIZE    ; Reserve 256KB (not initialized)
     
-
-; TODO : ajouter une section pour la pile kernel dans laquelle
-; reserver au moins 256KB grace a la directive "resb".
-; Cette section devra etre alignee sur 4 bytes.
-; ...
