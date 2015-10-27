@@ -50,9 +50,7 @@ static gdt_entry_t data_segment(uint32_t base, uint32_t limit, uint8_t dpl) {
 // Initialize the GDT
 void gdt_init() {
 	// TODO: fixer la limite de gdt_ptr, puis la faire pointer sur la GDT
-    //gdt_ptr.limit = (2 << 19) - 1;
-    //gdt_ptr.limit = 0x100000;
-    gdt_ptr.limit = 0x1000;
+    gdt_ptr.limit = 0xFFFFF; // 4 GB of limit, the G is set to 1
     gdt_ptr.base = 0;
 
 	// TODO: initialisation des trois descripteurs de segment: NULL, segment code, segment data

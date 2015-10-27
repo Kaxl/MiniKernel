@@ -13,12 +13,14 @@ MULTIBOOT_HEADER_CHECKSUM  equ -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS
 section .bootloader
 align 4    ; section aligned to a 4 bytes boundary
 
+
 ; Minimum multiboot header
 dd MULTIBOOT_HEADER_MAGIC
 dd MULTIBOOT_HEADER_FLAGS
 dd MULTIBOOT_HEADER_CHECKSUM
 
 STACK_SIZE  equ 0x3e800     ; Size of stack in hex
+;STACK_SIZE  equ 256000     ; Size of stack in hex
 
 entrypoint:
 	; Bootloader code starts executing here
@@ -50,7 +52,7 @@ entrypoint:
 ; stack section
 section .stack
     align   4               ; Alignment on 4 bytes
-    ;size: resb  STACK_SIZE  ; Reserve 256KB
+    ;size db resb  STACK_SIZE  ; Reserve 256KB
     resb    STACK_SIZE      ; Reserve 256KB
     
 
