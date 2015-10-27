@@ -21,13 +21,12 @@ kernel.elf:
 	cp grub/grub.cfg boot/grub/
 
 run: kernel.iso
-	qemu-system-i386 -hda $<
+	qemu-system-i386 -hda $^
 
 clean:
 	rm -f *.o
 	rm -rf boot/
 	rm -f kernel.iso
-	rm kernel/*.o
-	rm kernel/*.elf
+	cd kernel && $(MAKE) clean
 
 

@@ -13,6 +13,7 @@ MULTIBOOT_HEADER_CHECKSUM  equ -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS
 section .bootloader
 align 4    ; section aligned to a 4 bytes boundary
 
+
 ; Minimum multiboot header
 dd MULTIBOOT_HEADER_MAGIC
 dd MULTIBOOT_HEADER_FLAGS
@@ -25,8 +26,8 @@ entrypoint:
 	cli  ; disable hardware interrupts
 
     ; Init of stack pointer and base pointer
-    mov     esp,STACK_SIZE ; Init at end of stack 
-    mov     ebp,STACK_SIZE ; Init at end of stack 
+    mov     esp,stack   ; Init at end of stack 
+    mov     ebp,stack   ; Init at end of stack 
 	; TODO : initialiser le pointeur de pile ainsi qu'EBP (à la même valeur)
     ; Rappel : la pile "grandi" en descendant !
 	; ...
@@ -49,9 +50,8 @@ entrypoint:
 ;---------------------------------------------------------------------------------------------------
 ; stack section
 section .stack
-    align   4               ; Alignment on 4 bytes
-    ;size: resb  STACK_SIZE  ; Reserve 256KB
-    resb    STACK_SIZE      ; Reserve 256KB
+    align   4                   ; Alignment on 4 bytes
+    stack:  resb  STACK_SIZE    ; Reserve 256KB (not initialized)
     
 
 ; TODO : ajouter une section pour la pile kernel dans laquelle
