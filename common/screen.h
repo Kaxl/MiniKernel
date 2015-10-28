@@ -83,7 +83,7 @@ uchar getTextColor(uchar x, uchar y);
 
 /**
  * @brief Set the background color of all the screen
- * 
+ *
  * @param color
  * @return
  */
@@ -161,7 +161,7 @@ void setCursorPosition(uchar x, uchar y);
  *
  * @return The position in an array
  */
-int getCursorPosition(uchar* posGrid);
+int* getCursorPosition();
 // lit les registres des registres 3d4 et 3d5 avec inb et inw les msb et lsb de la position a l'aide de inb et inw, puis convertir l'adresse hex 1-dim en position 2-Dim
 
 /**
@@ -173,11 +173,11 @@ int gridToLine(uchar x, uchar y);
 // 0xBA000 + (hex)(y * 80 + x) or 753664 + (y * 80 + x)
 
 /**
- * @brief Convert 1 dimension position to 2 dimensions coordinate 
+ * @brief Convert 1 dimension position to 2 dimensions coordinate
  *
  * @return The 2 dim coordinate
  */
-void lineToGrid(int pos, uchar* posGrid);
+uchar* lineToGrid(int pos);
 // pos / 80 => le quotient c'est x, le reste c'est y
 
 #endif
