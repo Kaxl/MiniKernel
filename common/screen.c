@@ -18,12 +18,12 @@
 
 #include "screen.h"
 
-ushort* charPointer = FIRST_ADDR;
-uchar* posGrid[2];
+volatile ushort* charPointer = FIRST_ADDR;
+volatile uchar* currentPointer[2];
 
 void initScreen() {
     //clearScreen();
-    //setCursorPosition(0, 1);
+    setCursorPosition(0, 1);
     //setAllBackgroundColor(0); // 0 is for black
     //setAllTextColor(15); // 15 is for white
     printCharacter(65);
@@ -72,9 +72,11 @@ uchar getBackgroundColor(uchar x, uchar y) {
 // convertir l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
 
 void printCharacter(uchar character) {
-    uchar* cursorPos = getCursorPosition();
-    //ushort* tmpPtr = gridToLine(cursorPos[0], cursorPos[1]); 
-    ushort* tmpPtr = gridToLine(posGrid[0], posGrid[1]); 
+    //uchar* cursorPos = getCursorPosition();
+    uchar* cursorPos[2];
+    getCursorPosition(cursorPos);
+    ushort* tmpPtr = gridToLine(cursorPos[0], cursorPos[1]); 
+    //ushort* tmpPtr = gridToLine(posGrid[0], posGrid[1]); 
 
     *tmpPtr = *tmpPtr & (0xFF << 8);
     *tmpPtr = *tmpPtr | character;
@@ -93,19 +95,20 @@ void printf() {
 void setCursorPosition(uchar x, uchar y) {
     int pos = gridToLine(x, y);
     outb(0x3d4, 14);
-    outw(0x3d5, (ushort)(pos >> 8)); // MSB of pos
+    outw(0x3d5, (ushort)(pos-FIRST_ADDR >> 8)); // MSB of pos
     outb(0x3d4, 15);
-    outw(0x3d5, (ushort)(pos & 255)); // LSB of pos
+    outw(0x3d5, (ushort)(pos-FIRST_ADDR & 255)); // LSB of pos
 }
 // convertir l'adresse 2-Dim en hexa 1-Dim puis passer dans les 3d4 et 3d5 le msb et le lsb de la position a l'aide de outb et outw
 
-uchar* getCursorPosition() {
+int getCursorPosition(uchar* posGrid) {
     int pos;
     outb(0x3d4, 14);
     pos = (int)(inw(0x3d5)) << 8; // MSB of pos
     outb(0x3d4, 15);
     pos = pos | (int)(inw(0x3d5)); // LSB of pos
-    return lineToGrid(pos);
+    lineToGrid(pos*2+FIRST_ADDR, posGrid);
+    return pos+FIRST_ADDR;
 
 }
 // lit les registres des registres 3d4 et 3d5 avec inb et inw les msb et lsb de la position a l'aide de inb et inw, puis convertir l'adresse hex 1-dim en position 2-Dim
@@ -115,13 +118,13 @@ int gridToLine(uchar x, uchar y) {
     return FIRST_ADDR + (y * SCREEN_WIDTH + x);
 }
 
-uchar* lineToGrid(int pos) {
+void lineToGrid(int pos, uchar* posGrid) {
     //uchar* posGrid[2];
-    uchar* nothing;
+
     // pos / 80 => le quotient c'est x, le reste c'est y
     posGrid[0] = (uchar)((pos-FIRST_ADDR) / 80);
     posGrid[1] = (uchar)((pos-FIRST_ADDR) % 80);
     
-    return nothing;
+    //return posGrid;
 }
 

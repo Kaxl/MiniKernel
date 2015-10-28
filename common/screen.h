@@ -161,7 +161,7 @@ void setCursorPosition(uchar x, uchar y);
  *
  * @return The position in an array
  */
-uchar* getCursorPosition();
+int getCursorPosition(uchar* posGrid);
 // lit les registres des registres 3d4 et 3d5 avec inb et inw les msb et lsb de la position a l'aide de inb et inw, puis convertir l'adresse hex 1-dim en position 2-Dim
 
 /**
@@ -177,7 +177,7 @@ int gridToLine(uchar x, uchar y);
  *
  * @return The 2 dim coordinate
  */
-uchar* lineToGrid(int pos);
+void lineToGrid(int pos, uchar* posGrid);
 // pos / 80 => le quotient c'est x, le reste c'est y
 
 #endif
