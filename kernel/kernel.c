@@ -16,4 +16,9 @@
  * =====================================================================================
  */
 
+#include "kernel.h"
+#include "../common/screen.h"
 
+void kernel_main() {
+    initScreen();
+}

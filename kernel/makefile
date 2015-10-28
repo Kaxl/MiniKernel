@@ -12,7 +12,7 @@ CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra
 
 .PHONY: clean
 
-kernel.elf: kernel.o gdt.o bootloader.o ../common/base.o gdt_asm.o ../common/screen.o
+kernel.elf: kernel.o gdt.o bootloader.o ../common/base.o gdt_asm.o ../common/screen.o ../common/controller_asm.o
 	ld -melf_i386 -T kernel.ld $^ -o $@
 
 kernel.o: kernel.c
@@ -32,6 +32,9 @@ gdt_asm.o: gdt_asm.s
 	
 ../common/screen.o: ../common/screen.c
 	$(CC) $(CFLAGS) -c $^ -o $@
+
+../common/controller_asm.o: ../common/controller_asm.s
+	nasm -f elf32 $^
 
 clean:
 	rm -f ../common/*.o

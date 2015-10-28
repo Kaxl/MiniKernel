@@ -27,6 +27,12 @@
 #define FIRST_ADDR 753664
 #define CHAR_COUNT SCREEN_WIDTH*SCREEN_HEIGHT
 
+// Functions written in controller_asm.s
+extern void outb(ushort port, uchar data);
+extern void outw(ushort port, ushort data);
+extern uchar inb(ushort port);
+extern ushort inw(ushort port);
+
 /**
  * @brief Initialization of the screen
  *
@@ -111,7 +117,7 @@ uchar getBackgroundColor(uchar x, uchar y);
  * @param character Character to print
  * @return
  */
-void printCharacter(char character);
+void printCharacter(uchar character);
 // recuperer le curseur, imprimer le caractere a cette position, avancer le curseur d'une pos
 
 
@@ -120,7 +126,7 @@ void printCharacter(char character);
  *
  * @return
  */
-void printString(char* string);
+void printString(uchar* string);
 // recuperer le curseur, appeler printCharacter
 
 /**

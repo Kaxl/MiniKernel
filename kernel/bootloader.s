@@ -1,3 +1,4 @@
+extern kernel_main
 global entrypoint  ; the entry point symbol defined in kernel.ld
 
 ; Values for the multiboot header
@@ -39,6 +40,8 @@ entrypoint:
 	; TODO : appeler la fonction principale du kernel (code C)
 	; Celle-ci doit etre visible par le linker
 	; ...
+
+    call kernel_main
 
 	; infinite loop (should never get here)
 .forever:
