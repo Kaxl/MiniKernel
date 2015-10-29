@@ -127,7 +127,7 @@ void setCursorPosition(uchar x, uchar y) {
     outb(0x3d4, 15);
     outw(0x3d5, (ushort)(pos & 255)); // LSB of pos
 
-    s.cursor = (ushort *)(pos + FIRST_ADDR);
+    s.cursor = (ushort *)((pos * 2) + FIRST_ADDR);
 }
 
 

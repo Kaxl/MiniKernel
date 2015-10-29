@@ -33,6 +33,8 @@ void kernel_main() {
     setTextColor(13); // TODO : define pour les couleurs
     setBackgroundColor(14);
     printCharacter('C');
+    setCursorPosition(79, 24);
+    printCharacter('E');
     //printString("Pikachu");
 
     //int* x;
