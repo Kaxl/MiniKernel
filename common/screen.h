@@ -20,12 +20,13 @@
 #define _SCREEN_H_
 
 #include "types.h"
+#include "colors.h"
 
-#define SCREEN_WIDTH 80
-#define SCREEN_HEIGHT 25
-#define FIRST_ADDR_HEX 0xB8000
-#define FIRST_ADDR 753664
-#define CHAR_COUNT SCREEN_WIDTH*SCREEN_HEIGHT
+#define SCREEN_WIDTH    80
+#define SCREEN_HEIGHT   25
+#define FIRST_ADDR_HEX  0xB8000
+#define FIRST_ADDR      753664
+#define CHAR_COUNT      SCREEN_WIDTH * SCREEN_HEIGHT
 
 // Functions written in controller_asm.s
 extern void outb(ushort port, uchar data);
@@ -33,10 +34,22 @@ extern void outw(ushort port, ushort data);
 extern uchar inb(ushort port);
 extern ushort inw(ushort port);
 
+
+/**
+ * Screen structure to store the cursor position
+ * and the colors (text and background)
+ */
+typedef struct screen {
+    ushort* cursor;     // Cursor position absolute pointer on display memory
+    uchar textColor;    // Text color
+    uchar bgColor;      // Background color
+} screen;
+
 /**
  * @brief Initialization of the screen
  *
- * Clear the screen and set the cursor's position at top left.
+ * Clear the screen, set the cursor's position at top left
+ * and set the default color for the text and background.
  *
  * @return
  */
@@ -45,7 +58,7 @@ void initScreen();
 /**
  * @brief Clear the screen
  *
- * Set the background in black and the text in white.
+ * Clear the screen but keep the properties.
  *
  * @return
  */
@@ -61,24 +74,22 @@ void setAllTextColor(uchar color);
 // parcourt tous les caracteres et fait setTextColor
 
 /**
- * @brief Set the text color at position (x, y)
+ * @brief Set the text color
  *
- * @param x Row of the character
- * @param y Line of the character
+ * All characters written after this call will be with
+ * this new color.
+ *
  * @param color Color to set
  * @return
  */
-void setTextColor(uchar x, uchar y, uchar color);
+void setTextColor(uchar color);
 
 /**
  * @brief Get the text color
  *
- * @param x Row of the character
- * @param y Line of the character
- * @return Color of the char at the position (x, y)
+ * @return The current color
  */
-uchar getTextColor(uchar x, uchar y);
-// convertit l'adresse en offset heca 1-DIM, retourne la couleur presente dans les attributs
+uchar getTextColor();
 
 /**
  * @brief Set the background color of all the screen
@@ -87,39 +98,36 @@ uchar getTextColor(uchar x, uchar y);
  * @return
  */
 void setAllBackgroundColor(uchar color);
-// parcourt tous les caracters et fait setBackgroundColor
 
 /**
  * @brief Set the background color
  *
- * @param x Row of the character
- * @param y Line of the character
+ * All background of characters written after this call will be with
+ * this new color.
+ *
  * @param color
  * @return
  */
-void setBackgroundColor(uchar x, uchar y, uchar color);
+void setBackgroundColor(uchar color);
 
 /**
  * @brief Get the background color
  *
- * @param x Row of the character
- * @param y Line of the character
- * @return Color of the char at the position (x, y)
+ * @return The current background color
  */
-uchar getBackgroundColor(uchar x, uchar y);
-// convertir l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
+uchar getBackgroundColor();
 
 /**
  * @brief Print a character
  *
- * The character is print a the current cursor's position.
+ * The character is print at the current cursor's position.
  * Then, the cursor is moved forward.
+ * The color (text and background) of the character is the last one set.
  *
  * @param character Character to print
  * @return
  */
 void printCharacter(uchar character);
-// recuperer le curseur, imprimer le caractere a cette position, avancer le curseur d'une pos
 
 
 /**
@@ -128,7 +136,6 @@ void printCharacter(uchar character);
  * @return
  */
 void printString(uchar* string);
-// recuperer le curseur, appeler printCharacter
 
 /**
  * @brief Printf function
@@ -150,36 +157,35 @@ void printf();
 /**
  * @brief Set cursor position
  *
- * @param x Row of the cursor
- * @param y Line of the cursor
+ * @param x New x position
+ * @param y New y position
  * @return
  */
 void setCursorPosition(uchar x, uchar y);
-// convertir l'adresse 2-Dim en hexa 1-Dim puis passer dans les 3d4 et 3d5 le msb et le lsb de la position a l'aide de outb et outw
 
 /**
  * @brief Get cursor position
  *
- * @return The address of the cursor's position
+ * @param x pointer to store the x position
+ * @param y pointer to store the x position
+ *
+ * @return
  */
-int getCursorPosition();
-// lit les registres des registres 3d4 et 3d5 avec inb et inw les msb et lsb de la position a l'aide de inb et inw, puis convertir l'adresse hex 1-dim en position 2-Dim
+void getCursorPosition(uchar* x, uchar* y);
 
 /**
  * @brief Convert 2 dimensions coordinate to 1 dimension position
  *
  * @return The 1 dim position
  */
-int gridToLine(uchar x, uchar y);
-// 0xBA000 + (hex)(y * 80 + x) or 753664 + (y * 80 + x)
+ushort gridToLine(uchar x, uchar y);
 
 /**
  * @brief Convert 1 dimension position to 2 dimensions coordinate
  *
  * @return The 2 dim coordinate
  */
-uchar* lineToGrid(int pos);
-// pos / 80 => le quotient c'est x, le reste c'est y
+void lineToGrid(ushort pos, uchar* x, uchar* y);
 
 #endif
 

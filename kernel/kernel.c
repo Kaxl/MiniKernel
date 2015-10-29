@@ -21,4 +21,27 @@
 
 void kernel_main() {
     initScreen();
+    setCursorPosition(12, 20);
+    printCharacter('X');
+    clearScreen();
+    setCursorPosition(0, 0);
+    printCharacter('A');
+    setCursorPosition(0, 5);
+    printCharacter('B');
+    //printString("Hello");
+    //setCursorPosition(5, 10);
+    setTextColor(13); // TODO : define pour les couleurs
+    setBackgroundColor(14);
+    printCharacter('C');
+    //printString("Pikachu");
+
+    //int* x;
+    //int* y;
+    //getCursorPosition(x, y);
+    //printf("Pos : (%d, %d)", *x, *y);
+
+    //for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
+    //    printCharacter(i % 255);
+    //    // TODO : faire fonction sleep pour ralentir l'affichage
+    //}
 }
