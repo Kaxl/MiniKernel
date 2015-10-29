@@ -70,38 +70,47 @@ void clearScreen() {
 // il nettoie juste les valeurs ascii des caracters mais laisse les proprietes des caracteres (parcourir tous les caracteres) donc ne modifie ni le backgroud ni le font-color
 
 void setAllTextColor(uchar color) {
-
+    // Change text color of all screen
+    for (int i = 0; i < SCREEN_WIDTH; i++) {
+        for (int j = 0; j < SCREEN_HEIGHT; j++) {
+            setTextgroundColor(i, j, color);
+        }
+    }
 }
-// parcourt tous les caracteres et fait setTextColor
 
 void setTextColor(uchar x, uchar y, uchar color) {
-    // 4 premiers bits pour la couleur du texte.
+    // Get the address of the position to change
     int* pos = (int *)(gridToLine(x, y) + FIRST_ADDR);
 
+    // Set bits [8..11] to 0
     *pos = *pos & ~(0xF00);
+    // Set the color of text in bits [8..11]
     *pos = *pos | (color << 8);
 }
-// convertit l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
 
 uchar getTextColor(uchar x, uchar y) {
-
 }
 // convertit l'adresse en offset heca 1-DIM, retourne la couleur presente dans les attributs
 
 void setAllBackgroundColor(uchar color) {
-
+    // Change background color of all screen
+    for (int i = 0; i < SCREEN_WIDTH; i++) {
+        for (int j = 0; j < SCREEN_HEIGHT; j++) {
+            setBackgroundColor(i, j, color);
+        }
+    }
 }
-// parcourt tous les caracters et fait setBackgroundColor
 
 void setBackgroundColor(uchar x, uchar y, uchar color) {
-    // 4 dernier bits pour la couleur du texte.
+    // Get the address of the position to change
     int* pos = (int *)(gridToLine(x, y) + FIRST_ADDR);
 
+    // Set bits [12..15] to 0
     *pos = *pos & ~(0xF000);
+    // Set the color of text in bits [12..15]
     *pos = *pos | (color << 12);
 
 }
-// convertit l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
 
 uchar getBackgroundColor(uchar x, uchar y) {
 
