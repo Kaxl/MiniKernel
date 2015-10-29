@@ -23,26 +23,28 @@ volatile uchar currentPointer[2];
 
 void initScreen() {
     clearScreen();
-    int tab[4];
-    tab[0] = 65;
-    tab[1] = 120;
-    tab[2] = 101;
-    tab[3] = 108;
+    //int tab[4];
+    //tab[0] = 65;
+    //tab[1] = 120;
+    //tab[2] = 101;
+    //tab[3] = 108;
 
-    for (int i = 0; i < 4; i++) {
-        setCursorPosition(0, i);
-        setTextColor(0, i, i + 1);
-        printCharacter(tab[i]);
-        setCursorPosition(i, 0);
-        setTextColor(i, 0, i + 2);
-        printCharacter(tab[i]);
-    }
+    //for (int i = 0; i < 4; i++) {
+    //    setCursorPosition(0, i);
+    //    setTextColor(0, i, i + 1);
+    //    printCharacter(tab[i]);
+    //    setCursorPosition(i, 0);
+    //    setTextColor(i, 0, i + 2);
+    //    printCharacter(tab[i]);
+    //}
     //setAllBackgroundColor(0); // 0 is for black
     //setAllTextColor(15); // 15 is for white
-    //printCharacter(65);
-    //setCursorPosition(1, 0);
-    //setTextColor(1, 0, 1);
-    //printCharacter(66);
+    setCursorPosition(5, 5);
+    setTextColor(5, 5, 1);
+    printCharacter(65);
+    setCursorPosition(1, 0);
+    setTextColor(1, 0, 1);
+    printCharacter(66);
     //setCursorPosition(0, 2);
     //printCharacter(67);
     //setCursorPosition(0, 3);
@@ -56,8 +58,12 @@ void clearScreen() {
     int i, j;
     for (i = 0; i < SCREEN_WIDTH; i++) {
         for (j = 0; j < SCREEN_HEIGHT; j++) {
+            setTextColor(i, j, 15);
+            //setBackgroundColor(i, j, 0);
+            setBackgroundColor(i, j, 1);
             setCursorPosition(i,j);
-            printCharacter(0);
+            //printCharacter(0);
+            printCharacter(65);
         }
     }
 }
@@ -70,7 +76,7 @@ void setAllTextColor(uchar color) {
 
 void setTextColor(uchar x, uchar y, uchar color) {
     // 4 premiers bits pour la couleur du texte.
-    int* pos = gridToLine(x, y);
+    int* pos = (int *)(gridToLine(x, y) + FIRST_ADDR);
 
     *pos = *pos & ~(0xF00);
     *pos = *pos | (color << 8);
@@ -89,6 +95,10 @@ void setAllBackgroundColor(uchar color) {
 
 void setBackgroundColor(uchar x, uchar y, uchar color) {
     // 4 dernier bits pour la couleur du texte.
+    int* pos = (int *)(gridToLine(x, y) + FIRST_ADDR);
+
+    *pos = *pos & ~(0xF000);
+    *pos = *pos | (color << 12);
 
 }
 // convertit l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
@@ -101,7 +111,7 @@ uchar getBackgroundColor(uchar x, uchar y) {
 void printCharacter(uchar character) {
     //uchar* cursorPos = getCursorPosition();
     //uchar cursorPos[2];
-    int* cursorPos = getCursorPosition();
+    int* cursorPos = (int *)getCursorPosition();
     //ushort* tmpPtr = gridToLine(cursorPos[0], cursorPos[1]);
     //ushort* tmpPtr = gridToLine(posGrid[0], posGrid[1]);
 
@@ -124,13 +134,14 @@ void printf() {
 void setCursorPosition(uchar x, uchar y) {
     int pos = gridToLine(x, y);
     outb(0x3d4, 14);
-    outw(0x3d5, (ushort)((pos - FIRST_ADDR) >> 8)); // MSB of pos
+    outw(0x3d5, (ushort)(pos >> 8)); // MSB of pos
     outb(0x3d4, 15);
-    outw(0x3d5, (ushort)((pos - FIRST_ADDR) & 255)); // LSB of pos
+    outw(0x3d5, (ushort)(pos & 255)); // LSB of pos
 }
 // convertir l'adresse 2-Dim en hexa 1-Dim puis passer dans les 3d4 et 3d5 le msb et le lsb de la position a l'aide de outb et outw
 
-int* getCursorPosition() {
+// KO !!!!!!!!!
+int getCursorPosition() {
     int pos;
     outb(0x3d4, 14);
     pos = (int)(inw(0x3d5)) << 8; // MSB of pos
@@ -138,16 +149,15 @@ int* getCursorPosition() {
     pos = pos | (int)(inw(0x3d5)); // LSB of pos
     //uchar posGrid[2];
     //posGrid = lineToGrid(pos * 2 + FIRST_ADDR);
+    //return pos + FIRST_ADDR;
     return pos + FIRST_ADDR;
 
 }
 // lit les registres des registres 3d4 et 3d5 avec inb et inw les msb et lsb de la position a l'aide de inb et inw, puis convertir l'adresse hex 1-dim en position 2-Dim
 
 int gridToLine(uchar x, uchar y) {
-    // 0xBA000 + (hex)(y * 80 + x) or 753664 + (y * 80 + x)
-    //return (y * SCREEN_WIDTH + x);
-    // IL FAUT FAIRE * 2 POUR LES COORDONNEES X CAR CEST DEUX ADDRESSE PAR CARACTERES
-    return FIRST_ADDR + (y * (SCREEN_WIDTH * 2) + (x * 2));
+    // We need to multiply by 2 because each character is on 2 bytes
+    return y * (SCREEN_WIDTH * 2) + (x * 2);
 }
 
 uchar* lineToGrid(int pos) {

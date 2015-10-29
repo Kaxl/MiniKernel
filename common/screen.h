@@ -161,7 +161,7 @@ void setCursorPosition(uchar x, uchar y);
  *
  * @return The position in an array
  */
-int* getCursorPosition();
+int getCursorPosition();
 // lit les registres des registres 3d4 et 3d5 avec inb et inw les msb et lsb de la position a l'aide de inb et inw, puis convertir l'adresse hex 1-dim en position 2-Dim
 
 /**
