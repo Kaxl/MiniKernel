@@ -41,15 +41,15 @@ extern ushort inw(ushort port);
  * @return
  */
 void initScreen();
-// appeler le clear screen, positionner le curseur en (0, 0), background noir, ecriture blanche
 
 /**
  * @brief Clear the screen
  *
+ * Set the background in black and the text in white.
+ *
  * @return
  */
 void clearScreen();
-// il nettoie juste les valeurs ascii des caracters mais laisse les proprietes des caracteres (parcourir tous les caracteres) donc ne modifie ni le backgroud ni le font-color
 
 /**
  * @brief Set the text color of all the screen
@@ -65,18 +65,17 @@ void setAllTextColor(uchar color);
  *
  * @param x Row of the character
  * @param y Line of the character
- * @param color
+ * @param color Color to set
  * @return
  */
 void setTextColor(uchar x, uchar y, uchar color);
-// convertit l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
 
 /**
  * @brief Get the text color
  *
  * @param x Row of the character
  * @param y Line of the character
- * @return uchar Color of the char at the position (x, y)
+ * @return Color of the char at the position (x, y)
  */
 uchar getTextColor(uchar x, uchar y);
 // convertit l'adresse en offset heca 1-DIM, retourne la couleur presente dans les attributs
@@ -84,7 +83,7 @@ uchar getTextColor(uchar x, uchar y);
 /**
  * @brief Set the background color of all the screen
  *
- * @param color
+ * @param color Color to set
  * @return
  */
 void setAllBackgroundColor(uchar color);
@@ -99,20 +98,22 @@ void setAllBackgroundColor(uchar color);
  * @return
  */
 void setBackgroundColor(uchar x, uchar y, uchar color);
-// convertit l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
 
 /**
  * @brief Get the background color
  *
  * @param x Row of the character
  * @param y Line of the character
- * @return uchar Color of the char at the position (x, y)
+ * @return Color of the char at the position (x, y)
  */
 uchar getBackgroundColor(uchar x, uchar y);
 // convertir l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
 
 /**
  * @brief Print a character
+ *
+ * The character is print a the current cursor's position.
+ * Then, the cursor is moved forward.
  *
  * @param character Character to print
  * @return
@@ -159,7 +160,7 @@ void setCursorPosition(uchar x, uchar y);
 /**
  * @brief Get cursor position
  *
- * @return The position in an array
+ * @return The address of the cursor's position
  */
 int getCursorPosition();
 // lit les registres des registres 3d4 et 3d5 avec inb et inw les msb et lsb de la position a l'aide de inb et inw, puis convertir l'adresse hex 1-dim en position 2-Dim

@@ -23,6 +23,12 @@ volatile uchar currentPointer[2];
 
 void initScreen() {
     clearScreen();
+    setCursorPosition(0, 0);
+
+
+    /*  TESTING */
+    setAllBackgroundColor(13);
+    setAllTextColor(10);
     //int tab[4];
     //tab[0] = 65;
     //tab[1] = 120;
@@ -39,12 +45,12 @@ void initScreen() {
     //}
     //setAllBackgroundColor(0); // 0 is for black
     //setAllTextColor(15); // 15 is for white
-    setCursorPosition(5, 5);
-    setTextColor(5, 5, 1);
-    printCharacter(65);
-    setCursorPosition(1, 0);
-    setTextColor(1, 0, 1);
-    printCharacter(66);
+    //setCursorPosition(5, 5);
+    //setTextColor(5, 5, 1);
+    //printCharacter(65);
+    //setCursorPosition(1, 0);
+    //setTextColor(1, 0, 1);
+    //printCharacter(66);
     //setCursorPosition(0, 2);
     //printCharacter(67);
     //setCursorPosition(0, 3);
@@ -55,15 +61,13 @@ void initScreen() {
 // appeler le clear screen, positionner le curseur en (0, 0), background noir, ecriture blanche
 
 void clearScreen() {
-    int i, j;
-    for (i = 0; i < SCREEN_WIDTH; i++) {
-        for (j = 0; j < SCREEN_HEIGHT; j++) {
-            setTextColor(i, j, 15);
-            //setBackgroundColor(i, j, 0);
-            setBackgroundColor(i, j, 1);
-            setCursorPosition(i,j);
-            //printCharacter(0);
-            printCharacter(65);
+    // Set background and text color
+    // and remove each character
+    for (int i = 0; i < SCREEN_WIDTH; i++) {
+        for (int j = 0; j < SCREEN_HEIGHT; j++) {
+            setBackgroundColor(i, j, 0);  // Background black
+            setTextColor(i, j, 15);       // Text white
+            printCharacter(0);      // No character
         }
     }
 }
@@ -73,7 +77,7 @@ void setAllTextColor(uchar color) {
     // Change text color of all screen
     for (int i = 0; i < SCREEN_WIDTH; i++) {
         for (int j = 0; j < SCREEN_HEIGHT; j++) {
-            setTextgroundColor(i, j, color);
+            setTextColor(i, j, color);
         }
     }
 }
