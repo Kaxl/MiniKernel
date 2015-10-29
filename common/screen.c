@@ -29,6 +29,18 @@ void initScreen() {
     /*  TESTING */
     setAllBackgroundColor(13);
     setAllTextColor(10);
+
+    for (int i = 0; i < SCREEN_WIDTH; i++) {
+        for (int j = 0; j < SCREEN_HEIGHT; j++) {
+            setCursorPosition(i, j);
+            setTextColor(i, j, 11);
+            setBackgroundColor(i, j, 14);
+            printCharacter(0x41);
+            //int* pos = (int *)(gridToLine(i, j) + FIRST_ADDR);
+            //*pos = *pos & ~(0xFF);
+            //*pos = *pos | 0x42;
+        }
+    }
     //int tab[4];
     //tab[0] = 65;
     //tab[1] = 120;
@@ -122,16 +134,10 @@ uchar getBackgroundColor(uchar x, uchar y) {
 // convertir l'adresse en offset hexa 1-DIM, applique la couleur en gardant la valeur ascii
 
 void printCharacter(uchar character) {
-    //uchar* cursorPos = getCursorPosition();
-    //uchar cursorPos[2];
-    int* cursorPos = (int *)getCursorPosition();
-    //ushort* tmpPtr = gridToLine(cursorPos[0], cursorPos[1]);
-    //ushort* tmpPtr = gridToLine(posGrid[0], posGrid[1]);
+    int* pos = (int *)(getCursorPosition());
 
-    //*tmpPtr = *tmpPtr & (0xFF << 8);
-    //*tmpPtr = *tmpPtr | character;
-    *cursorPos = *cursorPos & (0xFF << 8);
-    *cursorPos = *cursorPos | character;
+    *pos = *pos & ~(0xFF);
+    *pos = *pos | character;
 }
 // recuperer le curseur, imprimer le caractere a cette position, avancer le curseur d'une pos
 
@@ -153,18 +159,19 @@ void setCursorPosition(uchar x, uchar y) {
 }
 // convertir l'adresse 2-Dim en hexa 1-Dim puis passer dans les 3d4 et 3d5 le msb et le lsb de la position a l'aide de outb et outw
 
-// KO !!!!!!!!!
+// KO !!!!!!!!! static
 int getCursorPosition() {
-    int pos;
+    int pos, msb, lsb;
     outb(0x3d4, 14);
-    pos = (int)(inw(0x3d5)) << 8; // MSB of pos
+    msb = (int)(inw(0x3d5)); // MSB of pos
     outb(0x3d4, 15);
-    pos = pos | (int)(inw(0x3d5)); // LSB of pos
-    //uchar posGrid[2];
-    //posGrid = lineToGrid(pos * 2 + FIRST_ADDR);
-    //return pos + FIRST_ADDR;
-    return pos + FIRST_ADDR;
+    lsb = (int)(inw(0x3d5)); // LSB of pos
 
+    pos = lsb;
+    pos = pos | (msb << 8);
+
+    //return (pos * 2) + FIRST_ADDR;
+    return pos;
 }
 // lit les registres des registres 3d4 et 3d5 avec inb et inw les msb et lsb de la position a l'aide de inb et inw, puis convertir l'adresse hex 1-dim en position 2-Dim
 
