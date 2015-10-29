@@ -101,13 +101,22 @@ void printCharacter(uchar character) {
     // Move the cursor
     s.cursor++;
 
-    //setCursorPosition(
+    // Update the cursor position on the screen
+    uchar x, y;
+    ushort pos = s.cursor;
+    //lineToGrid((s.cursor - (ushort *)FIRST_ADDR), &x, &y);
+    //lineToGrid(s.cursor, &x, &y);
+    //x = (uchar)((pos - FIRST_ADDR) / SCREEN_WIDTH);
+    //y = (uchar)((pos - FIRST_ADDR) % SCREEN_WIDTH);
+    //setCursorPosition(x, y); // KO ne marche pas car ne remet pas bien le curseur ?
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void printString(uchar* string) {
-
+    while (*string) {
+        printCharacter(*(string++)); // TODO check
+    }
 }
 // recuperer le curseur, appeler printCharacter
 
@@ -156,7 +165,7 @@ ushort gridToLine(uchar x, uchar y) {
 ////////////////////////////////////////////////////////////////////////////////////////
 void lineToGrid(ushort pos, uchar* x, uchar* y) {
     // x is the division, y the modulo
-    *x = (uchar)((pos - FIRST_ADDR) / 80);
-    *y = (uchar)((pos - FIRST_ADDR) % 80);
+    *x = (uchar)(((pos) - FIRST_ADDR) / SCREEN_WIDTH);
+    *y = (uchar)(((pos) - FIRST_ADDR) % SCREEN_WIDTH);
 }
 
