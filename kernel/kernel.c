@@ -37,7 +37,7 @@ void kernel_main() {
     printCharacter('B');
     printString("Hello");
     setCursorPosition(5, 10);
-    setTextColor(C_LIGHT_MAGENTA); // TODO : define pour les couleurs
+    setTextColor(C_LIGHT_MAGENTA);
     setBackgroundColor(C_YELLOW);
     printCharacter('C');
     setCursorPosition(77, 23);
@@ -52,7 +52,6 @@ void kernel_main() {
     }
 
     setCursorPosition(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
-    //printCharacter('N');
     printString("New Line");
 
     //int* x;
@@ -60,11 +59,20 @@ void kernel_main() {
     //getCursorPosition(x, y);
     //printf("Pos : (%d, %d)", *x, *y);
 
-    //for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
-    //    printCharacter(i % 255);
-    //    sleep(100000);
-    //    // TODO : faire fonction sleep pour ralentir l'affichage
-    //}
+    setTextColor(C_WHITE);
+    setBackgroundColor(C_BLACK);
+
+    clearScreen();
+
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
+        setCursorPosition(0, i);
+        printCharacter(i + 48);
+    }
+
+    for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
+        printCharacter(i % 255);
+        sleep(15);
+    }
 }
 
 

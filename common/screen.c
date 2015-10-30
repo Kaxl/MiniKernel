@@ -36,11 +36,11 @@ void initScreen() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void clearScreen() {
-    // Clear all the screen
+    // Clear all the screen but keeps the text and background color,
+    // only the character value is removed
     setCursorPosition(0, 0);
     for (ushort* i = (ushort *)FIRST_ADDR; i <= (ushort *)LAST_ADDR; i++) {
-        //*i = 0x0;
-        *i = (15 << 8) | 65;
+        *i = (s.bgColor << 12) | (s.textColor << 8) | 0x0;
     }
 }
 
@@ -103,29 +103,17 @@ void printCharacter(uchar character) {
     s.cursor++;
 
     // Shift the screen
-    // TODO : Check pointeur
-    //ushort* val = (ushort *)FIRST_ADDR;
-    //ushort* newVal = (ushort *)FIRST_ADDR;
     if (s.cursor > LAST_ADDR) {
         // Reset the cursor at the beginning of the line
-        //s.cursor -= (SCREEN_WIDTH * 2);
         s.cursor -= SCREEN_WIDTH;
-        //for (int i = 0; i < SCREEN_HEIGHT * (SCREEN_WIDTH - 1); i++, val++) {
-        //    newVal = val + SCREEN_WIDTH;
-        //    //*screen = (ushort *)screen + (ushort *)SCREEN_WIDTH;
-        //    *val = *newVal;
-        //}
         // Each line is replaced by the next one
         for (ushort* i = (ushort *)FIRST_ADDR; i < (ushort *)(LAST_ADDR - SCREEN_WIDTH); i++) {
-            //newVal = i + SCREEN_WIDTH;
             *i = *(i + SCREEN_WIDTH);
-            //*i = *newVal;
-            //*i = *i + (ushort *)SCREEN_WIDTH; // KO
         }
         // Clear the last line
+        // Text and bg color are kept
         for (ushort* i = (ushort *)LAST_ADDR; i >= (ushort *)(LAST_ADDR - SCREEN_WIDTH); i--) {
-            //*i = 0x0;
-            *i = (15 << 8) | 65;
+            *i = (s.bgColor << 12) | (s.textColor << 8) | 0x0;
         }
     }
 
