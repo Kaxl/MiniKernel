@@ -19,6 +19,13 @@
 #ifndef _KERNEL_H_
 #define _KERNEL_H_
 
-void kernel_main();
+/**
+ * @brief Start the kernel
+ *
+ * Function call by the assembly file : 'bootloader.s'
+ * For now, there is just the initialization of the kernel
+ * and a welcom message.
+ */
+void runKernel();
 
 #endif
