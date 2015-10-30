@@ -26,6 +26,7 @@
 #define SCREEN_HEIGHT   25
 #define FIRST_ADDR_HEX  0xB8000
 #define FIRST_ADDR      753664
+#define LAST_ADDR       FIRST_ADDR + SCREEN_WIDTH * SCREEN_HEIGHT * 2 - 2
 #define CHAR_COUNT      SCREEN_WIDTH * SCREEN_HEIGHT
 
 // Functions written in controller_asm.s
@@ -135,7 +136,7 @@ void printCharacter(uchar character);
  *
  * @return
  */
-void printString(uchar* string);
+void printString(char* string);
 
 /**
  * @brief Printf function

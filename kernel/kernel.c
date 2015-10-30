@@ -17,9 +17,13 @@
  */
 
 #include "kernel.h"
+#include "gdt.h"
 #include "../common/screen.h"
 
 void kernel_main() {
+    // Init of gdt ???
+    //gdt_init();
+
     initScreen();
     setCursorPosition(12, 20);
     printCharacter('X');
@@ -40,6 +44,17 @@ void kernel_main() {
     printCharacter('E');
     printString("Pikachu");
 
+    clearScreen();
+
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
+        setCursorPosition(0, i);
+        printCharacter(i + 48);
+    }
+
+    setCursorPosition(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
+    //printCharacter('N');
+    printString("New Line");
+
     //int* x;
     //int* y;
     //getCursorPosition(x, y);
@@ -47,6 +62,12 @@ void kernel_main() {
 
     //for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
     //    printCharacter(i % 255);
+    //    sleep(100000);
     //    // TODO : faire fonction sleep pour ralentir l'affichage
     //}
+}
+
+
+void sleep(int c) {
+    for (int i = 0; i < c * 1000; i++);
 }

@@ -20,7 +20,7 @@
 
 // Screen properties
 volatile screen s = {
-    .cursor = (ushort*)FIRST_ADDR,
+    .cursor = (ushort *)FIRST_ADDR,
     .textColor = C_WHITE,
     .bgColor = C_BLACK
 };
@@ -38,10 +38,10 @@ void initScreen() {
 void clearScreen() {
     // Clear all the screen
     setCursorPosition(0, 0);
-    for (int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
-        printCharacter('\0');
+    for (ushort* i = (ushort *)FIRST_ADDR; i <= (ushort *)LAST_ADDR; i++) {
+        //*i = 0x0;
+        *i = (15 << 8) | 65;
     }
-    setCursorPosition(0, 0);
 }
 
 
@@ -102,16 +102,43 @@ void printCharacter(uchar character) {
     // Move the cursor
     s.cursor++;
 
+    // Shift the screen
+    // TODO : Check pointeur
+    //ushort* val = (ushort *)FIRST_ADDR;
+    //ushort* newVal = (ushort *)FIRST_ADDR;
+    if (s.cursor > LAST_ADDR) {
+        // Reset the cursor at the beginning of the line
+        //s.cursor -= (SCREEN_WIDTH * 2);
+        s.cursor -= SCREEN_WIDTH;
+        //for (int i = 0; i < SCREEN_HEIGHT * (SCREEN_WIDTH - 1); i++, val++) {
+        //    newVal = val + SCREEN_WIDTH;
+        //    //*screen = (ushort *)screen + (ushort *)SCREEN_WIDTH;
+        //    *val = *newVal;
+        //}
+        // Each line is replaced by the next one
+        for (ushort* i = (ushort *)FIRST_ADDR; i < (ushort *)(LAST_ADDR - SCREEN_WIDTH); i++) {
+            //newVal = i + SCREEN_WIDTH;
+            *i = *(i + SCREEN_WIDTH);
+            //*i = *newVal;
+            //*i = *i + (ushort *)SCREEN_WIDTH; // KO
+        }
+        // Clear the last line
+        for (ushort* i = (ushort *)LAST_ADDR; i >= (ushort *)(LAST_ADDR - SCREEN_WIDTH); i--) {
+            //*i = 0x0;
+            *i = (15 << 8) | 65;
+        }
+    }
+
     // Update the cursor position on the screen
     uchar x, y;
     x = (uchar)((((uint)s.cursor - FIRST_ADDR) / 2) % SCREEN_WIDTH);
     y = (uchar)((((uint)s.cursor - FIRST_ADDR) / 2) / SCREEN_WIDTH);
-    setCursorPosition(x, y); // KO ne marche pas car ne remet pas bien le curseur ?
+    setCursorPosition(x, y);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void printString(uchar* string) {
+void printString(char* string) {
     // Print character until 0 is reached
     while (*string) {
         printCharacter(*(string++));
@@ -134,7 +161,7 @@ void setCursorPosition(uchar x, uchar y) {
     outb(0x3d4, 15);
     outw(0x3d5, (ushort)(pos & 255));   // LSB of pos
 
-    s.cursor = (ushort*)FIRST_ADDR;     // Go to first address
+    s.cursor = (ushort *)FIRST_ADDR;    // Go to first address
     s.cursor += (ushort)pos;            // Add the pos
 }
 
