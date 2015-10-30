@@ -23,6 +23,7 @@ void kernel_main() {
     initScreen();
     setCursorPosition(12, 20);
     printCharacter('X');
+    printCharacter('Y');
     setCursorPosition(1, 1);
     printCharacter('a');
     clearScreen();
@@ -31,7 +32,7 @@ void kernel_main() {
     setCursorPosition(0, 5);
     printCharacter('B');
     printString("Hello");
-    ////setCursorPosition(5, 10);
+    setCursorPosition(5, 10);
     setTextColor(C_LIGHT_MAGENTA); // TODO : define pour les couleurs
     setBackgroundColor(C_YELLOW);
     printCharacter('C');

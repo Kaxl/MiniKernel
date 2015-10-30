@@ -31,16 +31,17 @@ void initScreen() {
     setBackgroundColor(C_BLACK);
     // Clear and set the cursor position
     clearScreen();
-    setCursorPosition(0, 0);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void clearScreen() {
     // Clear all the screen
+    setCursorPosition(0, 0);
     for (int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
-        printCharacter(0);
+        printCharacter('\0');
     }
+    setCursorPosition(0, 0);
 }
 
 
@@ -103,12 +104,9 @@ void printCharacter(uchar character) {
 
     // Update the cursor position on the screen
     uchar x, y;
-    ushort pos = s.cursor;
-    //lineToGrid((s.cursor - (ushort *)FIRST_ADDR), &x, &y);
-    //lineToGrid(s.cursor, &x, &y);
-    //x = (uchar)((pos - FIRST_ADDR) / SCREEN_WIDTH);
-    //y = (uchar)((pos - FIRST_ADDR) % SCREEN_WIDTH);
-    //setCursorPosition(x, y); // KO ne marche pas car ne remet pas bien le curseur ?
+    x = (uchar)((((uint)s.cursor - FIRST_ADDR) / 2) % SCREEN_WIDTH);
+    y = (uchar)((((uint)s.cursor - FIRST_ADDR) / 2) / SCREEN_WIDTH);
+    setCursorPosition(x, y); // KO ne marche pas car ne remet pas bien le curseur ?
 }
 
 
@@ -129,14 +127,15 @@ void printf() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void setCursorPosition(uchar x, uchar y) {
-    ushort pos = gridToLine(x, y);
+    ushort pos = y * SCREEN_WIDTH + x;
 
     outb(0x3d4, 14);
-    outw(0x3d5, (ushort)(pos >> 8)); // MSB of pos
+    outw(0x3d5, (ushort)(pos >> 8));    // MSB of pos
     outb(0x3d4, 15);
-    outw(0x3d5, (ushort)(pos & 255)); // LSB of pos
+    outw(0x3d5, (ushort)(pos & 255));   // LSB of pos
 
-    s.cursor = (ushort *)((pos * 2) + FIRST_ADDR);
+    s.cursor = (ushort*)FIRST_ADDR;     // Go to first address
+    s.cursor += (ushort)pos;            // Add the pos
 }
 
 
@@ -156,6 +155,7 @@ void getCursorPosition(uchar* x, uchar* y) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
+// NOT USED
 ushort gridToLine(uchar x, uchar y) {
     // We need to multiply by 2 because each character is on 2 bytes
     return y * SCREEN_WIDTH + x;
@@ -163,6 +163,7 @@ ushort gridToLine(uchar x, uchar y) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
+// NOT USED
 void lineToGrid(ushort pos, uchar* x, uchar* y) {
     // x is the division, y the modulo
     *x = (uchar)(((pos) - FIRST_ADDR) / SCREEN_WIDTH);
