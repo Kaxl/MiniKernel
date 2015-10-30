@@ -73,4 +73,11 @@ void runKernelTest() {
         printCharacter(i % 255);
         sleep(15);
     }
+
+    printString("                              ");
+    printString("BAAAAAAATMAAAAAN TADATADATADTADTADTADTADTADTA");
+    printString("                              ");
+    printString("Rudolf, tu vas te faire defoncer a CS ;)");
+    printString("                                                            ");
+    printString("BOOOOOOOOOM HEAAAAAADSHOOOOOOT !!!!!!!!!!!");
 }
