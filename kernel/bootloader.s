@@ -20,7 +20,7 @@ dd MULTIBOOT_HEADER_MAGIC
 dd MULTIBOOT_HEADER_FLAGS
 dd MULTIBOOT_HEADER_CHECKSUM
 
-STACK_SIZE  equ 0x3e800     ; Size of stack in hex
+STACK_SIZE  equ 0x40000     ; Size of stack in hex (256KB)
 
 entrypoint:
 	; Bootloader code starts executing here
