@@ -48,10 +48,10 @@ void clearScreen() {
 ////////////////////////////////////////////////////////////////////////////////////////
 void setAllTextColor(uchar color) {
     // Change text color of all screen
-    for (int i = 0; i < SCREEN_WIDTH; i++) {
-        for (int j = 0; j < SCREEN_HEIGHT; j++) {
-            //setTextColor(i, j, color);
-        }
+    // Warning : doesn't change the current text color
+    for (ushort* i = (ushort *)FIRST_ADDR; i <= (ushort *)LAST_ADDR; i++) {
+        *i = *i & ~(0xF00);
+        *i = *i | (color << 8);
     }
 }
 
@@ -69,13 +69,12 @@ uchar getTextColor() {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// TODO
 void setAllBackgroundColor(uchar color) {
     // Change background color of all screen
-    for (int i = 0; i < SCREEN_WIDTH; i++) {
-        for (int j = 0; j < SCREEN_HEIGHT; j++) {
-            //setBackgroundColor(i, j, color);
-        }
+    // Warning : doesn't change the current background color
+    for (ushort* i = (ushort *)FIRST_ADDR; i <= (ushort *)LAST_ADDR; i++) {
+        *i = *i & ~(0xF000);
+        *i = *i | (color << 12);
     }
 }
 
