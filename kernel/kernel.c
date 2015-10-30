@@ -30,14 +30,14 @@ void kernel_main() {
     printCharacter('A');
     setCursorPosition(0, 5);
     printCharacter('B');
-    ////printString("Hello");
+    printString("Hello");
     ////setCursorPosition(5, 10);
     setTextColor(C_LIGHT_MAGENTA); // TODO : define pour les couleurs
     setBackgroundColor(C_YELLOW);
     printCharacter('C');
-    setCursorPosition(79, 24);
+    setCursorPosition(77, 23);
     printCharacter('E');
-    //printString("Pikachu");
+    printString("Pikachu");
 
     //int* x;
     //int* y;

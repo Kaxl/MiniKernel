@@ -114,11 +114,11 @@ void printCharacter(uchar character) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void printString(uchar* string) {
+    // Print character until 0 is reached
     while (*string) {
-        printCharacter(*(string++)); // TODO check
+        printCharacter(*(string++));
     }
 }
-// recuperer le curseur, appeler printCharacter
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
