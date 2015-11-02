@@ -73,29 +73,4 @@ void runKernelTest() {
         printCharacter(i % 255);
         sleep(15);
     }
-
-    printString("                                                                               ");
-    printString("                   BAAAAAAATMAAAAAN TADATADATADTADTADTADTADTADTA                ");
-    printString("      Rudolf, tu vas te faire defoncer a CS ;) -> Looser                        ");
-    printString("                                                                                ");
-    printString("             BOOOOOOOOOM HEAAAAAADSHOOOOOOT !!!!!!!!!!!                         ");
-    printString("                            .-----------------TTTT_-----_______                 ");
-    printString("                        /''''''''''(______O] ----------____  |______/]_         ");
-    printString("     __...---''''|_ --''   Q                               ___________@         ");
-    printString(" |'''                   ._   _______________=---------'''''''                   ");
-    printString(" |                ..--''|   l L |_l   |                                         ");
-    printString(" |          ..--''      .  /-___j '   '                                         ");
-    printString(" |    ..--''           /  ,       '   '                                         ");
-    printString(" |--''                /           `    '                                        ");
-    printString("                      L__'         '    -                                       ");
-    printString("                                    -    '-.                                    ");
-    printString("                                     '.    /                                    ");
-    printString("                                       '-./                                     ");
-    printString("                        ,-%/%|                                                  ");
-    printString("                    _,-'    \\//%\\                                              ");
-    printString("                _,-'        \\%/|%                                               ");
-    printString("              / / )    __,--  /%\\           DICK TAX !!!                        ");
-    printString("              \\__/_,-'%(%  ;  %)%                                               ");
-    printString("                      %\\%,   %\\                                                 ");
-    printString("                        '--%'                                                   ");
 }

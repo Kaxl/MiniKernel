@@ -31,6 +31,16 @@ void initScreen() {
     setBackgroundColor(C_BLACK);
     // Clear and set the cursor position
     clearScreen();
+
+    // Change cursor
+    // Cursor always visible
+    outb(0x3d4, 0xA);
+    outw(0x3d5, (int)inw(0x3d5) & ~(0x1 << 5));
+    // Cursor fill
+    outb(0x3d4, 0xA);
+    outw(0x3d5, 0);
+    outb(0x3d4, 0xB);
+    outw(0x3d5, 0x1F);
 }
 
 
@@ -143,10 +153,10 @@ void printf() {
 void setCursorPosition(uchar x, uchar y) {
     ushort pos = y * SCREEN_WIDTH + x;
 
-    outb(0x3d4, 14);
+    outb(0x3d4, 0xE);
     outw(0x3d5, (ushort)(pos >> 8));    // MSB of pos
-    outb(0x3d4, 15);
-    outw(0x3d5, (ushort)(pos & 255));   // LSB of pos
+    outb(0x3d4, 0xF);
+    outw(0x3d5, (ushort)(pos & 0xFF));  // LSB of pos
 
     s.cursor = (ushort *)FIRST_ADDR;    // Go to first address
     s.cursor += (ushort)pos;            // Add the pos
@@ -156,31 +166,14 @@ void setCursorPosition(uchar x, uchar y) {
 ////////////////////////////////////////////////////////////////////////////////////////
 void getCursorPosition(uchar* x, uchar* y) {
     int pos, msb, lsb;
-    outb(0x3d4, 14);
+    outb(0x3d4, 0xE);
     msb = (int)(inw(0x3d5)); // MSB of pos
-    outb(0x3d4, 15);
+    outb(0x3d4, 0xF);
     lsb = (int)(inw(0x3d5)); // LSB of pos
 
     pos = lsb;
     pos = pos | (msb << 8);
 
     lineToGrid(pos, x, y);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-// NOT USED
-ushort gridToLine(uchar x, uchar y) {
-    // We need to multiply by 2 because each character is on 2 bytes
-    return y * SCREEN_WIDTH + x;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-// NOT USED
-void lineToGrid(ushort pos, uchar* x, uchar* y) {
-    // x is the division, y the modulo
-    *x = (uchar)(((pos) - FIRST_ADDR) / SCREEN_WIDTH);
-    *y = (uchar)(((pos) - FIRST_ADDR) % SCREEN_WIDTH);
 }
 
