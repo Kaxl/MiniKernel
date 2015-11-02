@@ -19,6 +19,7 @@
 #include "test_cases.h"
 #include "../common/screen.h"
 
+
 void runKernelTest() {
 
     initScreen();
@@ -73,4 +74,8 @@ void runKernelTest() {
         printCharacter(i % 255);
         sleep(15);
     }
+}
+
+void sleep(int c) {
+    for (int i = 0; i < c * 1000; i++);
 }

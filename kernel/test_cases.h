@@ -26,4 +26,12 @@
  */
 void runKernelTest();
 
+
+/**
+ * @brief Custom made sleep function
+ *
+ * @param c
+ */
+void sleep(int c);
+
 #endif

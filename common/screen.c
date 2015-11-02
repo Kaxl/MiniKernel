@@ -112,7 +112,7 @@ void printCharacter(uchar character) {
     s.cursor++;
 
     // Shift the screen
-    if (s.cursor > LAST_ADDR) {
+    if (s.cursor > (ushort *)(LAST_ADDR)) {
         // Reset the cursor at the beginning of the line
         s.cursor -= SCREEN_WIDTH;
         // Each line is replaced by the next one

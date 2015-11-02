@@ -21,8 +21,6 @@
 #include "gdt.h"
 #include "../common/screen.h"
 
-void sleep(int c);
-
 void runKernel() {
 
 #ifdef TEST
@@ -39,7 +37,3 @@ void runKernel() {
 
 }
 
-
-void sleep(int c) {
-    for (int i = 0; i < c * 1000; i++);
-}
