@@ -177,3 +177,17 @@ void getCursorPosition(uchar* x, uchar* y) {
     lineToGrid(pos, x, y);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+// NOT USED
+ushort gridToLine(uchar x, uchar y) {
+    // We need to multiply by 2 because each character is on 2 bytes
+    return y * SCREEN_WIDTH + x;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+void lineToGrid(ushort pos, uchar* x, uchar* y) {
+    // x is the division, y the modulo
+    *x = (uchar)(((pos) - FIRST_ADDR) / SCREEN_WIDTH);
+    *y = (uchar)(((pos) - FIRST_ADDR) % SCREEN_WIDTH);
+}
