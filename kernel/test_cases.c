@@ -63,17 +63,24 @@ void runKernelTest() {
     //setTextColor(C_WHITE);
     //setBackgroundColor(C_BLACK);
 
-    clearScreen();
+    //clearScreen();
 
-    for (int i = 0; i < SCREEN_HEIGHT; i++) {
-        setCursorPosition(0, i);
-        printCharacter(i + 48);
-    }
+    //for (int i = 0; i < SCREEN_HEIGHT; i++) {
+    //    setCursorPosition(0, i);
+    //    printCharacter(i + 48);
+    //}
 
-    for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
-        printCharacter(i % 255);
-        sleep(15);
-    }
+    //for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
+    //    printCharacter(i % 255);
+    //    sleep(15);
+    //}
+    //
+
+    printString("                ");
+    char c = 'x';
+
+    printf("Test : %c", c);
+
 }
 
 void sleep(int c) {

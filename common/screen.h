@@ -128,7 +128,7 @@ uchar getBackgroundColor();
  * @param character Character to print
  * @return
  */
-void printCharacter(uchar character);
+void printCharacter(char character);
 
 
 /**
@@ -153,7 +153,7 @@ void printString(char* string);
  *
  * @return
  */
-void printf();
+void printf(const char* s, ...);
 
 /**
  * @brief Set cursor position

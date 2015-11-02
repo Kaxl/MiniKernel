@@ -17,6 +17,8 @@
  */
 
 #include "screen.h"
+#include "base.h"
+#include <stdarg.h>
 
 // Screen properties
 volatile screen s = {
@@ -102,7 +104,7 @@ uchar getBackgroundColor() {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void printCharacter(uchar character) {
+void printCharacter(char character) {
     // Reset char
     *s.cursor = 0x0;
 
@@ -144,8 +146,37 @@ void printString(char* string) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void printf() {
+void printf(const char *s, ...) {
 
+    va_list args;
+    char ch;
+
+    va_start(args, s);
+
+    while (*s) {
+        // If we have a '%', check the next char for the type and print the value
+        if (strncmp(s, "%", 1) == 0) {
+            s++; // Skip the %
+            switch(*s) {
+                case 'd':
+                    //va_arg(args, int);
+                    break;
+                case 'c':
+                    ch = va_arg(args, char);
+                    printCharacter(ch);
+                    break;
+                case 's':
+                    //va_arg(args, char*);
+                    break;
+            }
+            s++; // Skip the type
+        }
+        else {
+            printCharacter(*(s++));
+        }
+    }
+
+    va_end(args);
 }
 
 
