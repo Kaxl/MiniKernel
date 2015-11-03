@@ -45,5 +45,6 @@ gdt_asm.o: gdt_asm.s
 
 clean:
 	rm -f ../common/*.o
+	rm -f ../test/*.o
 	rm -f *.o
 	rm -f *.elf
