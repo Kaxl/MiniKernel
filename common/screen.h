@@ -194,8 +194,18 @@ ushort gridToLine(uchar x, uchar y);
  */
 void lineToGrid(ushort pos, uchar* x, uchar* y);
 
+/**
+ * @brief Convert an integer into a string 
+ *
+ * @return
+ **/
 void itoa(int n, char* s);
 
+/**
+ * @brief Convert an integer into a string of hexa 
+ *
+ * @return
+ **/
 void xtoa(int n, char* s);
 
 #endif

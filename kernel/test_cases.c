@@ -79,12 +79,16 @@ void runKernelTest() {
     printString("                ");
     char c = 'z';
 
-    printf("Test char : %c", c);
+    printf("Test char : %c\n", c);
 
     char s[23] = "J'aime les licornes...";
-    printString(s);
-    printf("Test string : %s", &s);
+    //printString(s);
+    //printf("Test string : %s", &s);
 
+    
+    printf("Test integer : %d  ", 4213);
+    printf("Test hexa : %x", 0xCACA);
+    
 }
 
 void sleep(int c) {
