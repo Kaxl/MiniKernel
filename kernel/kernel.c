@@ -24,10 +24,11 @@
 void runKernel() {
 
 #ifdef TEST
+    gdt_init();
     runKernelTest();
 #else
     // Init of gdt ???
-    //gdt_init();
+    gdt_init();
 
     initScreen();
     printString("Welcome to Snapfish OS !");

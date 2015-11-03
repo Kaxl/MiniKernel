@@ -162,7 +162,7 @@ void printf(const char *s, ...) {
                     //va_arg(args, int);
                     break;
                 case 'c':
-                    ch = va_arg(args, char);
+                    //ch = va_arg(args, char);
                     printCharacter(ch);
                     break;
                 case 's':
