@@ -174,7 +174,7 @@ void printf(char *s, ...) {
                     break;
                 case 'd':
                     // integer
-                    int d = *((int *)p; // Get the arg value
+                    d = *((int *)p); // Get the arg value
                     p += sizeof(int);   // Go to the next arg
                     printCharacter('d');
                     itoa(d, string);    // Conversion to char array
@@ -182,7 +182,7 @@ void printf(char *s, ...) {
                     break;
                 case 'x':
                     // hexadecimal in lowercase
-                    int d = *((int *)p; // Get the arg value
+                    d = *((int *)p); // Get the arg value
                     p += sizeof(int);   // Go to the next arg
                     xtoa(d, string);    // Conversion to hex string
                     printCharacter('x');
