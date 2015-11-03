@@ -77,18 +77,21 @@ void runKernelTest() {
     //
 
     printString("                ");
+    char *s = "J'aime les licornes...";
+    printString(s);
+    printf("Test string : %s", s);
+    printString("                ");
+
     char c = 'z';
+    char d = 'a';
+    printf("Test char : %c et %c", c, d);
+    printString("                ");
 
-    printf("Test char : %c\n", c);
+    printf("Test integer : %d et %d", 4213, 99);
+    printString("                ");
+    printf("Test hexa : %x et %x", 0xBABA, 0xA);
+    printString("                ");
 
-    char s[23] = "J'aime les licornes...";
-    //printString(s);
-    //printf("Test string : %s", &s);
-
-    
-    printf("Test integer : %d  ", 4213);
-    printf("Test hexa : %x", 0xCACA);
-    
 }
 
 void sleep(int c) {

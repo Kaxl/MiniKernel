@@ -18,7 +18,6 @@
 
 #include "screen.h"
 #include "base.h"
-#include <stdarg.h>
 
 // Screen properties
 volatile screen s = {
@@ -148,10 +147,13 @@ void printString(char* string) {
 ////////////////////////////////////////////////////////////////////////////////////////
 void printf(char *s, ...) {
 
-    char* p = (char *)(&s) + sizeof(s);
-    char c;
+    //void* p = &s + sizeof(s);
+    uint32_t* p = ((uint32_t*)&s);
     char* string;
-    int d;
+    printString("  HEX:");
+    xtoa(p, string);    // Conversion to hex string
+    printString(string);
+    p++;
     while (*s) {
         // If we have a '%', check the next char for the type and print the value
         if (strncmp(s, "%", 1) == 0) {
@@ -161,39 +163,40 @@ void printf(char *s, ...) {
                 // 4 bytes plus haut, l'argument suivant
                 case 'c':
                     // character
-                    c = *((char *)p);   // Get the arg value
-                    p += sizeof(char);  // Go to the next arg
-                    printCharacter(c);
+                    printCharacter('c');
+                    printCharacter(*((char *)(p)));   // Print the character value
+                    //p += sizeof(char);  // Go to the next arg
                     break;
                 case 's':
-                    // string (array of character)
-                    string = *((char *)&p);   // Get the arg value
-                    p += sizeof(char*);  // Go to the next arg
                     printCharacter('s');
-                    printString(string);
+                    // string (array of character)
+                    printString(*(char **)(p)); // Give string address
+                    //p += sizeof(char*);  // Go to the next arg
                     break;
                 case 'd':
-                    // integer
-                    d = *((int *)p); // Get the arg value
-                    p += sizeof(int);   // Go to the next arg
                     printCharacter('d');
-                    itoa(d, string);    // Conversion to char array
+                    // integer
+                    itoa(*((int *)(p)), string);    // Conversion to char array
                     printString(string);
+                    //p += sizeof(int);   // Go to the next arg
                     break;
                 case 'x':
-                    // hexadecimal in lowercase
-                    d = *((int *)p); // Get the arg value
-                    p += sizeof(int);   // Go to the next arg
-                    xtoa(d, string);    // Conversion to hex string
                     printCharacter('x');
+                    // hexadecimal in lowercase
+                    xtoa(*((int *)(p)), string);    // Conversion to hex string
                     printString(string);
+                    //p += sizeof(int);   // Go to the next arg
                     break;
             }
-            s++; // Skip the type
+            printString("  HEX:");
+            xtoa(p, string);    // Conversion to hex string
+            printString(string);
+            p++; // Next argument
         }
         else {
-            printCharacter(*(s++));
+            printCharacter(*(s));
         }
+        s++; // Next character
     }
 }
 
@@ -278,7 +281,7 @@ void xtoa(int n, char* s) {
     char const *hexa = "0123456789ABCDEF";
 
     // Number is negative so we have to print a '-' before
-    if (n < 0) { 
+    if (n < 0) {
         *(p++) = '-';
         n *= -1;
     }
@@ -293,7 +296,7 @@ void xtoa(int n, char* s) {
         tmp_n = tmp_n / 16;
         p++;
     }
-    
+
     // Adding the last character
     *p = '\0';
 
