@@ -70,7 +70,7 @@ void runKernelTest() {
     // Color check
     setTextColor(C_CYAN);
     setBackgroundColor(C_WHITE);
-    printString("Text written with different color\n");
+    printString("Text written with different color\r\n");
 
 /*
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -109,14 +109,14 @@ void runKernelTest() {
 
     //// hex
     //printf("Test hex : %x and %x (should be 0xBABA and 0x42)", 0xBABA, 0x42);
-
+*/
 ////////////////////////////////////////////////////////////////////////////////////////
     // Cursor check (set / get)
     sleep(20);
     clearScreen();
     uchar x, y;
-    x = 1;
-    y = 1;
+    x = 20;
+    y = 20;
     printf("Set cursor position at (%d, %d).", x, y);
     setCursorPosition(x, y);
     getCursorPosition(&x, &y);
@@ -126,7 +126,7 @@ void runKernelTest() {
     outb(0x23000, 'A');
     printf("%d", inb(0x23000));
 ////////////////////////////////////////////////////////////////////////////////////////
-*/
+
 
 }
 

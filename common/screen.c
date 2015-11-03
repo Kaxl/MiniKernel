@@ -126,7 +126,7 @@ void printCharacter(char character) {
     *s.cursor = 0x0;
 
     // Set the text and bg color
-    //*s.cursor = (s.bgColor << 12) | (s.textColor << 8);
+    *s.cursor = (s.bgColor << 12) | (s.textColor << 8);
 
     // Check if character is /n, /r, ...
     switch (character) {
@@ -134,7 +134,7 @@ void printCharacter(char character) {
             s.cursor += SCREEN_WIDTH;
             break;
         case '\r':
-            //s.cursor = s.cursor - (s.cursor % (ushort *)(SCREEN_WIDTH));
+            s.cursor = s.cursor - ((int)(*s.cursor) % (SCREEN_WIDTH));
             break;
         default:
             // Move the cursor
@@ -149,6 +149,8 @@ void printCharacter(char character) {
         // Reset the cursor at the beginning of the line
         s.cursor -= SCREEN_WIDTH;
         // Each line is replaced by the next one (+SCREEN_WIDTH)
+        // To remove the last line, we need to remove (SCREEN_WIDTH-1) * 2
+        // because each char is coded on 16 bits
         for (ushort* i = (ushort *)FIRST_ADDR; i < (ushort *)(LAST_ADDR - ((SCREEN_WIDTH - 1) * 2)); i++) {
             *i = *(i + SCREEN_WIDTH);
         }
@@ -181,7 +183,7 @@ void printString(char* string) {
 void printf(char *s, ...) {
 
     uint32_t* p = ((uint32_t*)&s);
-    char string[128];
+    char string[128];   // Buffer to store the string during conversion
     p++;
     while (*s) {
         // If we have a '%', check the next char for the type and print the value
@@ -235,7 +237,7 @@ void setCursorPosition(uchar x, uchar y) {
 ////////////////////////////////////////////////////////////////////////////////////////
 void getCursorPosition(uchar* x, uchar* y) {
     int pos;
-    ushort msb, lsb;
+    int msb, lsb;
     outb(0x3d4, 0xE);
     msb = (ushort)(inw(0x3d5)); // MSB of pos
     outb(0x3d4, 0xF);
@@ -243,8 +245,19 @@ void getCursorPosition(uchar* x, uchar* y) {
 
     pos = lsb;
     pos = pos | (msb << 8);
+    printf("lsb: %d\n", lsb);
+    printf("msb: %d\n", msb);
+    printf("pos: %d\n", pos);
+    //pos = 0x0;
+    //pos = pos | (msb << 16) | lsb;
 
-    lineToGrid(pos, x, y);
+
+    //pos = s.cursor;
+
+
+    //lineToGrid(pos, x, y);
+    *x = (uchar)(((pos - FIRST_ADDR) / 2) % SCREEN_WIDTH);
+    *y = (uchar)(((pos - FIRST_ADDR) / 2) / SCREEN_WIDTH);
     //lineToGrid(*s.cursor, x, y);
 }
 
