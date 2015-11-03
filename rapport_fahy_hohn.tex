@@ -1,0 +1,168 @@
+\documentclass[a4paper]{article}
+
+% Packages
+\usepackage{listings}
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+\usepackage{listingsutf8}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{fancyhdr}
+\usepackage[T1]{fontenc}
+\usepackage{pmboxdraw}
+%\usepackage[top=2cm, bottom=2cm, left=3.5cm, right=2cm]{geometry} % Les marges.
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry} % Les marges.
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{bggray}{rgb}{0.95, 0.95, 0.95}
+\lstset{inputencoding=utf8/latin1}
+\lstset{ %
+    backgroundcolor=\color{bggray},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+    basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+    breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+    breaklines=true,                 % sets automatic line breaking
+    captionpos=b,                    % sets the caption-position to bottom
+    commentstyle=\color{mygreen},    % comment style
+    deletekeywords={...},            % if you want to delete keywords from the given language
+    escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+    extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+    frame=single,                    % adds a frame around the code
+    frameround=tttt                  % tttt for having the corner round.
+    keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+    keywordstyle=\color{blue},       % keyword style
+    language=Matlab,                 % the language of the code
+    morekeywords={*,...},            % if you want to add more keywords to the set
+    numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+    numbersep=5pt,                   % how far the line-numbers are from the code
+    numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+    rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+    showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+    showstringspaces=false,          % underline spaces within strings only
+    showtabs=false,                  % show tabs within strings adding particular underscores
+    stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+    stringstyle=\color{mymauve},     % string literal style
+    tabsize=2,                       % sets default tabsize to 2 spaces
+    title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+% Header
+\pagestyle{fancy}
+\fancyhead[L]{Rudolf Höhn \& Axel Fahy}
+\fancyhead[R]{\today}
+
+
+\title{TP1 - MiniKernel with Display Management\\Advanced System Programming}
+\author{Rudolf Höhn \& Axel Fahy}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+\section{Project structure}
+\begin{verbatim}
+.
+├── common
+│   ├── base.c
+│   ├── base.h
+│   ├── colors.h
+│   ├── controller_asm.s
+│   ├── screen.c
+│   ├── screen.h
+│   ├── string.c
+│   ├── string.h
+│   └── types.h
+├── grub
+│   └── grub.cfg
+├── kernel
+│   ├── bootloader.s
+│   ├── const.inc
+│   ├── gdt_asm.s
+│   ├── gdt.c
+│   ├── gdt.h
+│   ├── kernel.c
+│   ├── kernel.h
+│   ├── kernel.ld
+│   ├── makefile
+│   └── x86.h
+├── makefile
+├── test
+│   ├── test_cases.c
+│   └── test_cases.h
+├── tools
+└── user
+
+\end{verbatim}
+\begin{description}
+\item[\textit{base.*}] \hfill \\
+Functions to handle memory.\\
+Implementation of \textit{memset}, \textit{memcpy} and \textit{strncmp}.
+
+\item[\textit{controller\_asm.s}] \hfill \\
+Functions to access peripherals and communicate with them.\\
+Implementation of \textit{outb}, \textit{outw}, \textit{inb}, and \textit{inw}.
+
+\item[\textit{screen.*}] \hfill \\
+Functions for the screen management.\\
+These files contain functions to initialize the screen and use it. It allows to change background and text color and print string.
+
+We use a structure for the cursor and colors management :
+
+\begin{verbatim}
+typedef struct screen {
+    ushort* cursor;
+    uchar textColor;
+    uchar bgColor;
+} screen;
+\end{verbatim}
+
+The \textit{cursor} attribut contains the current position of the cursor.
+Each time a character is written, this variable is updated.
+The \textit{textColor} and \textit{bgColor} attributs are used to know the current color. 
+
+\begin{verbatim}
+void setTextColor(uchar color);
+\end{verbatim}
+
+This function sets the current color of the character. For example, the current font color is white and you set the color using this function, only the next characters will have the new color. All the characters already written keep their font color.  
+
+\begin{verbatim}
+void setAllTextColor(uchar color);
+\end{verbatim}
+
+This function sets the current color of the character and the color of all the other characters already written.
+
+\begin{verbatim}
+void setBackgroundColor(uchar color);
+void setAllBackgroundColor(uchar color);
+\end{verbatim}
+
+The difference between these two functions is the same as the functions which sets the text color but there are for the background of characters.
+
+\item[\textit{string.*}] \hfill \\
+Functions to use strings easier. \\
+Implementation of \textit{itoa} which converts an integer to an array of char and \textit{xtoa} which converts an hexadecimal to an array.
+
+\item[\textit{colors.h}] \hfill \\
+Definitions of colors.
+
+\item[\textit{test\_cases.*}] \hfill \\
+Testing file.\\
+We test different things, all of them are listed below :
+\begin{itemize}
+\item \textbf{Scroll} : Print numbers on the first column of the screen.
+\item \textbf{Scroll2} : Writing a lot of characters.
+\item \textbf{Color} : Update the text color and the background color.
+\item \textbf{printf} : Call \textit{printf} with one or multiple arguments of different types.
+\item \textbf{Cursor} : Call \textit{setCursorPosition} and \textit{getCursorPosition} and compare the values by printing them on the screen.
+\end{itemize}
+
+\end{description}
+
+\section{Work repartition}
+For this project, we worked together. We had to think about how we wanted to realize each parts. It would have been more difficult to work separately because of the architecture of the project and its complexity.
+\end{document}
+
+

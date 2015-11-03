@@ -112,15 +112,19 @@ void runKernelTest() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
     // Cursor check (set / get)
-    //sleep(20);
-    //clearScreen();
-    //uchar x, y;
-    //x = 2;
-    //y = 3;
-    //printf("Set cursor position at (%d, %d).", x, y);
-    //setCursorPosition(x, y);
-    //getCursorPosition(&x, &y);
+    sleep(20);
+    clearScreen();
+    uchar x, y;
+    x = 1;
+    y = 1;
+    printf("Set cursor position at (%d, %d).", x, y);
+    setCursorPosition(x, y);
+    getCursorPosition(&x, &y);
     //printf("Position after get function (%d, %d).", x, y);
+    printf("(%d, %d)", x, y);
+    setCursorPosition(0, 2);
+    outb(0x23000, 'A');
+    printf("%d", inb(0x23000));
 ////////////////////////////////////////////////////////////////////////////////////////
 */
 
