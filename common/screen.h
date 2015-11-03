@@ -188,5 +188,9 @@ ushort gridToLine(uchar x, uchar y);
  */
 void lineToGrid(ushort pos, uchar* x, uchar* y);
 
+void itoa(int n, char* s);
+
+void xtoa(int n, char* s);
+
 #endif
 
