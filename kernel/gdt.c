@@ -58,7 +58,7 @@ void gdt_init() {
     gdt[1] = code_segment(0, gdt_ptr.limit, 0);
     gdt[2] = data_segment(0, gdt_ptr.limit, 0);
 
-    gdt_ptr.base = gdt; // Base of gdt is the first segment
+    gdt_ptr.base = (uint32_t)gdt; // Base of gdt is the first segment
 
     // Load the GDT
     gdt_flush(&gdt_ptr);
