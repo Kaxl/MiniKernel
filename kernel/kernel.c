@@ -17,7 +17,7 @@
  */
 
 #include "kernel.h"
-#include "test_cases.h"
+#include "../test/test_cases.h"
 #include "gdt.h"
 #include "../common/screen.h"
 

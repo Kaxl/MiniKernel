@@ -3,7 +3,7 @@
  *
  *       Filename:  screen.h
  *
- *    Description:
+ *    Description:  Function for the screen management.
  *
  *        Version:  1.0
  *        Created:  10/16/2015 11:21:47 AM
@@ -67,12 +67,12 @@ void clearScreen();
 
 /**
  * @brief Set the text color of all the screen
+ * and change the current text color.
  *
  * @paramn color
  * @return
  */
 void setAllTextColor(uchar color);
-// parcourt tous les caracteres et fait setTextColor
 
 /**
  * @brief Set the text color
@@ -94,6 +94,7 @@ uchar getTextColor();
 
 /**
  * @brief Set the background color of all the screen
+ * and changes the current background color.
  *
  * @param color Color to set
  * @return
@@ -180,33 +181,7 @@ void setCursorPosition(uchar x, uchar y);
  */
 void getCursorPosition(uchar* x, uchar* y);
 
-/**
- * @brief Convert 2 dimensions coordinate to 1 dimension position
- *
- * @return The 1 dim position
- */
-ushort gridToLine(uchar x, uchar y);
 
-/**
- * @brief Convert 1 dimension position to 2 dimensions coordinate
- *
- * @return The 2 dim coordinate
- */
-void lineToGrid(ushort pos, uchar* x, uchar* y);
-
-/**
- * @brief Convert an integer into a string 
- *
- * @return
- **/
-void itoa(int n, char* s);
-
-/**
- * @brief Convert an integer into a string of hexa 
- *
- * @return
- **/
-void xtoa(int n, char* s);
 
 #endif
 

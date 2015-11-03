@@ -18,6 +18,7 @@
 
 #include "screen.h"
 #include "base.h"
+#include "../common/string.h"
 
 // Screen properties
 volatile screen s = {
@@ -25,6 +26,20 @@ volatile screen s = {
     .textColor = C_WHITE,
     .bgColor = C_BLACK
 };
+
+/**
+ * @brief Convert 2 dimensions coordinate to 1 dimension position
+ *
+ * @return The 1 dim position
+ */
+static ushort gridToLine(uchar x, uchar y);
+
+/**
+ * @brief Convert 1 dimension position to 2 dimensions coordinate
+ *
+ * @return The 2 dim coordinate
+ */
+static void lineToGrid(ushort pos, uchar* x, uchar* y);
 
 void initScreen() {
     // Default color
@@ -59,7 +74,8 @@ void clearScreen() {
 ////////////////////////////////////////////////////////////////////////////////////////
 void setAllTextColor(uchar color) {
     // Change text color of all screen
-    // Warning : doesn't change the current text color
+    // Warning : it changes the current text color
+    setTextColor(color);
     for (ushort* i = (ushort *)FIRST_ADDR; i <= (ushort *)LAST_ADDR; i++) {
         *i = *i & ~(0xF00);
         *i = *i | (color << 8);
@@ -82,7 +98,8 @@ uchar getTextColor() {
 ////////////////////////////////////////////////////////////////////////////////////////
 void setAllBackgroundColor(uchar color) {
     // Change background color of all screen
-    // Warning : doesn't change the current background color
+    // Warning : it changes the current background color
+    setBackgroundColor(color);
     for (ushort* i = (ushort *)FIRST_ADDR; i <= (ushort *)LAST_ADDR; i++) {
         *i = *i & ~(0xF000);
         *i = *i | (color << 12);
@@ -150,47 +167,38 @@ void printf(char *s, ...) {
     //void* p = &s + sizeof(s);
     uint32_t* p = ((uint32_t*)&s);
     char* string;
-    printString("  HEX:");
-    xtoa(p, string);    // Conversion to hex string
-    printString(string);
+    //printString("  HEX:");
+    //xtoa(p, string);    // Conversion to hex string
+    //printString(string);
     p++;
     while (*s) {
         // If we have a '%', check the next char for the type and print the value
         if (strncmp(s, "%", 1) == 0) {
-            //p += sizeof();
             s++; // Skip the %
             switch(*s) {
                 // 4 bytes plus haut, l'argument suivant
                 case 'c':
                     // character
-                    printCharacter('c');
                     printCharacter(*((char *)(p)));   // Print the character value
-                    //p += sizeof(char);  // Go to the next arg
                     break;
                 case 's':
-                    printCharacter('s');
                     // string (array of character)
                     printString(*(char **)(p)); // Give string address
-                    //p += sizeof(char*);  // Go to the next arg
                     break;
                 case 'd':
-                    printCharacter('d');
                     // integer
                     itoa(*((int *)(p)), string);    // Conversion to char array
                     printString(string);
-                    //p += sizeof(int);   // Go to the next arg
                     break;
                 case 'x':
-                    printCharacter('x');
                     // hexadecimal in lowercase
                     xtoa(*((int *)(p)), string);    // Conversion to hex string
                     printString(string);
-                    //p += sizeof(int);   // Go to the next arg
                     break;
             }
-            printString("  HEX:");
-            xtoa(p, string);    // Conversion to hex string
-            printString(string);
+            //printString("  HEX:");
+            //xtoa(p, string);    // Conversion to hex string
+            //printString(string);
             p++; // Next argument
         }
         else {
@@ -217,11 +225,12 @@ void setCursorPosition(uchar x, uchar y) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void getCursorPosition(uchar* x, uchar* y) {
-    int pos, msb, lsb;
+    int pos;
+    ushort msb, lsb;
     outb(0x3d4, 0xE);
-    msb = (int)(inw(0x3d5)); // MSB of pos
+    msb = (ushort)(inw(0x3d5)); // MSB of pos
     outb(0x3d4, 0xF);
-    lsb = (int)(inw(0x3d5)); // LSB of pos
+    lsb = (ushort)(inw(0x3d5)); // LSB of pos
 
     pos = lsb;
     pos = pos | (msb << 8);
@@ -230,80 +239,16 @@ void getCursorPosition(uchar* x, uchar* y) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// NOT USED
-ushort gridToLine(uchar x, uchar y) {
+static ushort gridToLine(uchar x, uchar y) {
     // We need to multiply by 2 because each character is on 2 bytes
     return y * SCREEN_WIDTH + x;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void lineToGrid(ushort pos, uchar* x, uchar* y) {
+static void lineToGrid(ushort pos, uchar* x, uchar* y) {
     // x is the division, y the modulo
-    *x = (uchar)(((pos) - FIRST_ADDR) / SCREEN_WIDTH);
-    *y = (uchar)(((pos) - FIRST_ADDR) % SCREEN_WIDTH);
+    *x = (uchar)(((pos - FIRST_ADDR) / 2) % SCREEN_WIDTH);
+    *y = (uchar)(((pos - FIRST_ADDR) / 2) / SCREEN_WIDTH);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-void itoa(int n, char* s) {
-    char* p = s;
-    char const *digit = "0123456789";
-
-    // Number is negative so we have to print a '-' before
-    if (n < 0) {
-        *(p++) = '-';
-        n *= -1;
-    }
-
-    // Save the size of the array
-    int tmp_n = n;
-    while (tmp_n) {
-        tmp_n = tmp_n / 10;
-        p++;
-    }
-
-    // Adding the last character
-    *p = '\0';
-
-    // Write the integer from the back
-    tmp_n = n;
-    while (tmp_n) {
-        *(--p) = digit[tmp_n%10];
-        tmp_n = tmp_n / 10;
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-void xtoa(int n, char* s) {
-    char* p = s;
-    char const *hexa = "0123456789ABCDEF";
-
-    // Number is negative so we have to print a '-' before
-    if (n < 0) {
-        *(p++) = '-';
-        n *= -1;
-    }
-
-    // As n is a hex number, we have to print '0x' before
-    *(p++) = '0';
-    *(p++) = 'x';
-
-    // Save the size of the array
-    int tmp_n = n;
-    while (tmp_n) {
-        tmp_n = tmp_n / 16;
-        p++;
-    }
-
-    // Adding the last character
-    *p = '\0';
-
-    // Write the hex from the back
-    tmp_n = n;
-    while (tmp_n) {
-        *(--p) = hexa[tmp_n%16];
-        tmp_n = tmp_n / 16;
-    }
-}
