@@ -19,38 +19,38 @@
 #include "test_cases.h"
 #include "../common/screen.h"
 
-
+////////////////////////////////////////////////////////////////////////////////////////
 void runKernelTest() {
 
     initScreen();
-    setCursorPosition(12, 20);
-    printCharacter('X');
-    printCharacter('Y');
-    setCursorPosition(1, 1);
-    printCharacter('a');
-    clearScreen();
-    setCursorPosition(0, 0);
-    printCharacter('A');
-    setCursorPosition(0, 5);
-    printCharacter('B');
-    printString("Hello");
-    setCursorPosition(5, 10);
+    //setCursorPosition(12, 20);
+    //printCharacter('X');
+    //printCharacter('Y');
+    //setCursorPosition(1, 1);
+    //printCharacter('a');
+    //clearScreen();
+    //setCursorPosition(0, 0);
+    //printCharacter('A');
+    //setCursorPosition(0, 5);
+    //printCharacter('B');
+    //printString("Hello");
+    //setCursorPosition(5, 10);
     setTextColor(C_LIGHT_GREEN);
     setBackgroundColor(C_DARK_GRAY);
-    printCharacter('C');
-    setCursorPosition(77, 23);
-    printCharacter('E');
-    printString("Pikachu");
+    //printCharacter('C');
+    //setCursorPosition(77, 23);
+    //printCharacter('E');
+    //printString("Pikachu");
 
-    clearScreen();
+    //clearScreen();
 
-    for (int i = 0; i < SCREEN_HEIGHT; i++) {
-        setCursorPosition(0, i);
-        printCharacter(i + 48);
-    }
+    //for (int i = 0; i < SCREEN_HEIGHT; i++) {
+    //    setCursorPosition(0, i);
+    //    printCharacter(i + 48);
+    //}
 
-    setCursorPosition(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
-    printString("New Line");
+    //setCursorPosition(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
+    //printString("New Line");
 
     //setAllTextColor(C_BLACK);
     //setAllBackgroundColor(C_WHITE);
@@ -67,49 +67,51 @@ void runKernelTest() {
 
     //clearScreen();
 
-    //for (int i = 0; i < SCREEN_HEIGHT; i++) {
-    //    setCursorPosition(0, i);
-    //    printCharacter(i + 48);
-    //}
+////////////////////////////////////////////////////////////////////////////////////////
+    // Shift check
+    // Print number on first column
+    for (int i = 0; i < 70; i++) {
+        setCursorPosition(0, i);
+        printCharacter(i + 48);
+    }
 
+    // Writes some characters in order to shift the screen (with a delay)
     //for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
     //    printCharacter(i % 255);
-    //    sleep(15);
+    //    //sleep(15);
     //}
-    //
+////////////////////////////////////////////////////////////////////////////////////////
+    // Printf test
+    char *s = "printf function";
+    printf("Test : %s", s);
 
-    printString("                ");
-    char *s = "J'aime les licornes...";
-    printString(s);
-    printf("Test string : %s", s);
-    printString("                ");
+    // char
+    char c1 = 'a';
+    char c2 = 'b';
+    printf("Test char : %c is followed by %c", c1, c2);
 
-    char c = 'z';
-    char d = 'a';
-    printf("Test char : %c et %c", c, d);
-    printString("                ");
+    // integer
+    printf("Test integer : %d and %d (should be 4213 and 99)", 4213, 99);
 
-    printf("Test integer : %d et %d", 4213, 99);
-    printString("                ");
-    printf("Test hexa : %x et %x", 0xBABA, 0xA);
-    printString("                ");
+    // hex
+    printf("Test hex : %x and %x (should be 0xBABA and 0x42)", 0xBABA, 0x42);
 
 ////////////////////////////////////////////////////////////////////////////////////////
-    // Check cursor functions (set / get)
-    uchar x, y;
-    x = 2;
-    y = 3;
-    setCursorPosition(x, y);
+    // Cursor check (set / get)
+    //sleep(20);
+    //clearScreen();
+    //uchar x, y;
+    //x = 2;
+    //y = 3;
     //printf("Set cursor position at (%d, %d).", x, y);
-    getCursorPosition(&x, &y);
-    printf("X:%d", x);
-    printf("Y:%d", y);
+    //setCursorPosition(x, y);
+    //getCursorPosition(&x, &y);
     //printf("Position after get function (%d, %d).", x, y);
 ////////////////////////////////////////////////////////////////////////////////////////
 
-
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void sleep(int c) {
     for (int i = 0; i < c * 1000; i++);
 }

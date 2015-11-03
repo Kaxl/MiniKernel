@@ -41,6 +41,7 @@ static ushort gridToLine(uchar x, uchar y);
  */
 static void lineToGrid(ushort pos, uchar* x, uchar* y);
 
+////////////////////////////////////////////////////////////////////////////////////////
 void initScreen() {
     // Default color
     setTextColor(C_WHITE);
@@ -133,7 +134,7 @@ void printCharacter(char character) {
     if (s.cursor > (ushort *)(LAST_ADDR)) {
         // Reset the cursor at the beginning of the line
         s.cursor -= SCREEN_WIDTH;
-        // Each line is replaced by the next one
+        // Each line is replaced by the next one (+SCREEN_WIDTH)
         for (ushort* i = (ushort *)FIRST_ADDR; i < (ushort *)(LAST_ADDR - SCREEN_WIDTH); i++) {
             *i = *(i + SCREEN_WIDTH);
         }
@@ -164,12 +165,8 @@ void printString(char* string) {
 ////////////////////////////////////////////////////////////////////////////////////////
 void printf(char *s, ...) {
 
-    //void* p = &s + sizeof(s);
     uint32_t* p = ((uint32_t*)&s);
-    char* string;
-    //printString("  HEX:");
-    //xtoa(p, string);    // Conversion to hex string
-    //printString(string);
+    char string[128];
     p++;
     while (*s) {
         // If we have a '%', check the next char for the type and print the value
@@ -179,11 +176,11 @@ void printf(char *s, ...) {
                 // 4 bytes plus haut, l'argument suivant
                 case 'c':
                     // character
-                    printCharacter(*((char *)(p)));   // Print the character value
+                    printCharacter(*((char *)(p))); // Print the character value
                     break;
                 case 's':
                     // string (array of character)
-                    printString(*(char **)(p)); // Give string address
+                    printString(*(char **)(p));     // Give string address
                     break;
                 case 'd':
                     // integer
@@ -196,9 +193,6 @@ void printf(char *s, ...) {
                     printString(string);
                     break;
             }
-            //printString("  HEX:");
-            //xtoa(p, string);    // Conversion to hex string
-            //printString(string);
             p++; // Next argument
         }
         else {
@@ -236,18 +230,18 @@ void getCursorPosition(uchar* x, uchar* y) {
     pos = pos | (msb << 8);
 
     lineToGrid(pos, x, y);
+    //lineToGrid(*s.cursor, x, y);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 static ushort gridToLine(uchar x, uchar y) {
-    // We need to multiply by 2 because each character is on 2 bytes
     return y * SCREEN_WIDTH + x;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 static void lineToGrid(ushort pos, uchar* x, uchar* y) {
-    // x is the division, y the modulo
+    // x is the modulo, x the division
     *x = (uchar)(((pos - FIRST_ADDR) / 2) % SCREEN_WIDTH);
     *y = (uchar)(((pos - FIRST_ADDR) / 2) / SCREEN_WIDTH);
 }
