@@ -241,6 +241,7 @@ void lineToGrid(ushort pos, uchar* x, uchar* y) {
     *y = (uchar)(((pos) - FIRST_ADDR) % SCREEN_WIDTH);
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////////////
 void itoa(int n, char* s) {
     char* p = s;
@@ -255,7 +256,7 @@ void itoa(int n, char* s) {
         tmp_n = tmp_n / 10;
         p++;
     }
-    
+
     // Write the integer from the back
     tmp_n = n;
     while (tmp_n) {
@@ -264,11 +265,12 @@ void itoa(int n, char* s) {
     }
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////////////
 void xtoa(int n, char* s) {
     char* p = s;
     char const hexa = "0123456789ABCDEF";
-   
+
     // Number is negative so we have to print a '-' before
     if (n < 0) *(p++) = '-';
 
@@ -286,7 +288,7 @@ void xtoa(int n, char* s) {
     // Write the hex from the back
     tmp_n = n;
     while (tmp_n > 15) {
-        *(p--) = hex[tmp_n%16];
+        *(p--) = hexa[tmp_n%16];
         tmp_n = tmp_n / 16;
     }
 }
