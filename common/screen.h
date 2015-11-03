@@ -159,7 +159,7 @@ void printString(char* string);
  *
  * @return
  */
-void printf(const char* s, ...);
+void printf(char* s, ...);
 
 /**
  * @brief Set cursor position

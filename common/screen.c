@@ -146,27 +146,47 @@ void printString(char* string) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void printf(const char *s, ...) {
+void printf(char *s, ...) {
 
+    char* p = (char *)(&s) + sizeof(s);
+    char c;
+    char* string;
+    int d;
     while (*s) {
         // If we have a '%', check the next char for the type and print the value
         if (strncmp(s, "%", 1) == 0) {
+            //p += sizeof();
             s++; // Skip the %
             switch(*s) {
                 // 4 bytes plus haut, l'argument suivant
                 case 'c':
                     // character
-                    //ch = va_arg(args, char);
-                    printCharacter('a');
+                    c = *((char *)p);   // Get the arg value
+                    p += sizeof(char);  // Go to the next arg
+                    printCharacter(c);
                     break;
                 case 's':
                     // string (array of character)
+                    string = *((char *)&p);   // Get the arg value
+                    p += sizeof(char*);  // Go to the next arg
+                    printCharacter('s');
+                    printString(string);
                     break;
                 case 'd':
                     // integer
+                    int d = *((int *)p; // Get the arg value
+                    p += sizeof(int);   // Go to the next arg
+                    printCharacter('d');
+                    itoa(d, string);    // Conversion to char array
+                    printString(string);
                     break;
                 case 'x':
                     // hexadecimal in lowercase
+                    int d = *((int *)p; // Get the arg value
+                    p += sizeof(int);   // Go to the next arg
+                    xtoa(d, string);    // Conversion to hex string
+                    printCharacter('x');
+                    printString(string);
                     break;
             }
             s++; // Skip the type

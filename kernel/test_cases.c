@@ -77,9 +77,13 @@ void runKernelTest() {
     //
 
     printString("                ");
-    char c = 'x';
+    char c = 'z';
 
-    printf("Test : %c", c);
+    printf("Test char : %c", c);
+
+    char s[23] = "J'aime les licornes...";
+    printString(s);
+    printf("Test string : %s", &s);
 
 }
 
