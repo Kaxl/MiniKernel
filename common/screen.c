@@ -113,7 +113,7 @@ void printCharacter(char character) {
     // Move the cursor
     s.cursor++;
 
-    // Shift the screen
+    // Shift the screen if cursor is bigger than the last address
     if (s.cursor > (ushort *)(LAST_ADDR)) {
         // Reset the cursor at the beginning of the line
         s.cursor -= SCREEN_WIDTH;
@@ -148,25 +148,25 @@ void printString(char* string) {
 ////////////////////////////////////////////////////////////////////////////////////////
 void printf(const char *s, ...) {
 
-    va_list args;
-    char ch;
-
-    va_start(args, s);
-
     while (*s) {
         // If we have a '%', check the next char for the type and print the value
         if (strncmp(s, "%", 1) == 0) {
             s++; // Skip the %
             switch(*s) {
-                case 'd':
-                    //va_arg(args, int);
-                    break;
+                // 4 bytes plus haut, l'argument suivant
                 case 'c':
+                    // character
                     //ch = va_arg(args, char);
-                    printCharacter(ch);
+                    printCharacter('a');
                     break;
                 case 's':
-                    //va_arg(args, char*);
+                    // string (array of character)
+                    break;
+                case 'd':
+                    // integer
+                    break;
+                case 'x':
+                    // hexadecimal in lowercase
                     break;
             }
             s++; // Skip the type
@@ -175,8 +175,6 @@ void printf(const char *s, ...) {
             printCharacter(*(s++));
         }
     }
-
-    va_end(args);
 }
 
 

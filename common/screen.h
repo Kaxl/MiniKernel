@@ -141,6 +141,8 @@ void printString(char* string);
 /**
  * @brief Printf function
  *
+ * Each time we found a '%', we check the type and get the next argument.
+ *
  * Implementations of %c, %s, %d, %x
  *
  * %c : character
@@ -150,6 +152,10 @@ void printString(char* string);
  * %d : integer
  *
  * %x : lower case in hexadecimal
+ *
+ * @param ... List of arguments
+ *
+ * Each arguments can be get from the stack, s+=4 will be the first argument, etc
  *
  * @return
  */
