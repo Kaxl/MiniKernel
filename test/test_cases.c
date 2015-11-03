@@ -66,35 +66,49 @@ void runKernelTest() {
     //setBackgroundColor(C_BLACK);
 
     //clearScreen();
-
 ////////////////////////////////////////////////////////////////////////////////////////
-    // Shift check
+    // Color check
+    setTextColor(C_CYAN);
+    setBackgroundColor(C_WHITE);
+    printString("Text written with different color\n");
+
+/*
+////////////////////////////////////////////////////////////////////////////////////////
+    // Scroll check
     // Print number on first column
-    for (int i = 0; i < 70; i++) {
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
+        // Print in line
         setCursorPosition(0, i);
         printCharacter(i + 48);
+        // Print in diagonale
+        for (int j = i + 10; j < SCREEN_WIDTH; j+=10) {
+            setCursorPosition(j, i);
+            printCharacter(i + 48);
+        }
     }
+    setCursorPosition(SCREEN_WIDTH - 2, SCREEN_HEIGHT - 1);
+    printString("NewLine");
 
     // Writes some characters in order to shift the screen (with a delay)
-    //for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
-    //    printCharacter(i % 255);
-    //    //sleep(15);
-    //}
+    for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH * 2; i++) {
+        printCharacter(i % 100);
+        sleep(15);
+    }
 ////////////////////////////////////////////////////////////////////////////////////////
     // Printf test
-    char *s = "printf function";
-    printf("Test : %s", s);
+    //char *s = "printf function";
+    //printf("Test : %s", s);
 
-    // char
-    char c1 = 'a';
-    char c2 = 'b';
-    printf("Test char : %c is followed by %c", c1, c2);
+    //// char
+    //char c1 = 'a';
+    //char c2 = 'b';
+    //printf("Test char : %c is followed by %c", c1, c2);
 
-    // integer
-    printf("Test integer : %d and %d (should be 4213 and 99)", 4213, 99);
+    //// integer
+    //printf("Test integer : %d and %d (should be 4213 and 99)", 4213, 99);
 
-    // hex
-    printf("Test hex : %x and %x (should be 0xBABA and 0x42)", 0xBABA, 0x42);
+    //// hex
+    //printf("Test hex : %x and %x (should be 0xBABA and 0x42)", 0xBABA, 0x42);
 
 ////////////////////////////////////////////////////////////////////////////////////////
     // Cursor check (set / get)
@@ -108,6 +122,7 @@ void runKernelTest() {
     //getCursorPosition(&x, &y);
     //printf("Position after get function (%d, %d).", x, y);
 ////////////////////////////////////////////////////////////////////////////////////////
+*/
 
 }
 

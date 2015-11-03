@@ -125,23 +125,38 @@ void printCharacter(char character) {
     // Reset char
     *s.cursor = 0x0;
 
-    // Set char (text and bg color and character value)
-    *s.cursor = (s.bgColor << 12) | (s.textColor << 8) | character;
-    // Move the cursor
-    s.cursor++;
+    // Set the text and bg color
+    //*s.cursor = (s.bgColor << 12) | (s.textColor << 8);
+
+    // Check if character is /n, /r, ...
+    switch (character) {
+        case '\n':
+            s.cursor += SCREEN_WIDTH;
+            break;
+        case '\r':
+            //s.cursor = s.cursor - (s.cursor % (ushort *)(SCREEN_WIDTH));
+            break;
+        default:
+            // Move the cursor
+            // Set char (text and bg color and character value)
+            *s.cursor = (s.bgColor << 12) | (s.textColor << 8) | character;
+            s.cursor++;
+            break;
+    }
 
     // Shift the screen if cursor is bigger than the last address
     if (s.cursor > (ushort *)(LAST_ADDR)) {
         // Reset the cursor at the beginning of the line
         s.cursor -= SCREEN_WIDTH;
         // Each line is replaced by the next one (+SCREEN_WIDTH)
-        for (ushort* i = (ushort *)FIRST_ADDR; i < (ushort *)(LAST_ADDR - SCREEN_WIDTH); i++) {
+        for (ushort* i = (ushort *)FIRST_ADDR; i < (ushort *)(LAST_ADDR - ((SCREEN_WIDTH - 1) * 2)); i++) {
             *i = *(i + SCREEN_WIDTH);
         }
         // Clear the last line
         // Text and bg color are kept
-        for (ushort* i = (ushort *)LAST_ADDR; i >= (ushort *)(LAST_ADDR - SCREEN_WIDTH); i--) {
-            *i = (s.bgColor << 12) | (s.textColor << 8) | 0x0;
+        for (ushort* i = (ushort *)LAST_ADDR; i >= (ushort *)(LAST_ADDR - ((SCREEN_WIDTH - 1) * 2)); i--) {
+            *i = 0x0;
+            *i = (s.bgColor << 12) | (s.textColor << 8);
         }
     }
 
