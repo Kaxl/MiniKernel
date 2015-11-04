@@ -8,8 +8,7 @@
 #
 
 CC=gcc
-#CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra
-CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra -DTEST
+CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra $(DEBUG)
 
 .PHONY: clean
 

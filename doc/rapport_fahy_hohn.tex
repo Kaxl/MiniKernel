@@ -74,6 +74,9 @@
 │   ├── string.c
 │   ├── string.h
 │   └── types.h
+├── doc
+│   ├── rapport_fahy_hohn.pdf
+│   └── rapport_fahy_hohn.tex
 ├── grub
 │   └── grub.cfg
 ├── kernel
@@ -118,9 +121,9 @@ typedef struct screen {
 } screen;
 \end{verbatim}
 
-The \textit{cursor} attribut contains the current position of the cursor.
+The \textit{cursor} attribute contains the current position of the cursor.
 Each time a character is written, this variable is updated.
-The \textit{textColor} and \textit{bgColor} attributs are used to know the current color. 
+The \textit{textColor} and \textit{bgColor} attributes are used to know the current color. 
 
 \begin{verbatim}
 void setTextColor(uchar color);
@@ -159,7 +162,25 @@ We test different things, all of them are listed below :
 \item \textbf{Cursor} : Call \textit{setCursorPosition} and \textit{getCursorPosition} and compare the values by printing them on the screen.
 \end{itemize}
 
+\item[\textit{doc}] \hfill \\
+The doc folder contains the report.
+
 \end{description}
+\newpage
+\section{Execution}
+
+There are two modes of execution : 
+
+\begin{itemize}
+  \item \textbf{Test} : Test of functions. To run this mode, run \textit{make} this way :
+    \begin{verbatim}
+    make run MODE=-DTEST
+    \end{verbatim}
+  \item \textbf{Default} : Default mode start the kernel and print a welcome message.
+    \begin{verbatim}
+    make run
+    \end{verbatim}
+\end{itemize}
 
 \section{Work repartition}
 For this project, we worked together. We had to think about how we wanted to realize each parts. It would have been more difficult to work separately because of the architecture of the project and its complexity.
