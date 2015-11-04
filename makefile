@@ -20,8 +20,8 @@ kernel.elf:
 	cp kernel/kernel.elf boot/
 	cp grub/grub.cfg boot/grub/
 
-run: kernel.iso
-	qemu-system-i386 -hda $^
+run: clean kernel.iso
+	qemu-system-i386 -hda kernel.iso
 
 clean:
 	rm -f *.o
