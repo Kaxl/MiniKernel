@@ -120,11 +120,11 @@ void runKernelTest() {
     printf("Set cursor position at (%d, %d).", x, y);
     setCursorPosition(x, y);
     getCursorPosition(&x, &y);
-    //printf("Position after get function (%d, %d).", x, y);
+    //printf("Position after get function (%d, %d).", x & (0x00FF), y & (0x00FF));
     printf("(%d, %d)", x, y);
     setCursorPosition(0, 2);
-    outb(0x23000, 'A');
-    printf("%d", inb(0x23000));
+    outw(0x3d5, 'B');
+    printf("B : %d", inw(0x3d5) & (0x00FF));
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
