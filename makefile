@@ -27,6 +27,8 @@ clean:
 	rm -f *.o
 	rm -rf boot/
 	rm -f kernel.iso
+	rm -f doc/*.aux
+	rm -f doc/*.log
 	cd kernel && $(MAKE) clean
 
 
