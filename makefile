@@ -20,10 +20,8 @@ kernel.elf:
 	cp kernel/kernel.elf boot/
 	cp grub/grub.cfg boot/grub/
 
-# Before the run, we clean the files because of compatibility problem
-# with computer from hepia
-run: clean kernel.iso
-	qemu-system-i386 -hda kernel.iso
+run: kernel.iso
+	qemu-system-i386 -hda $^
 
 clean:
 	rm -f *.o

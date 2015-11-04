@@ -10,6 +10,7 @@
 \usepackage{fancyhdr}
 \usepackage[T1]{fontenc}
 \usepackage{pmboxdraw}
+\usepackage{parskip}
 %\usepackage[top=2cm, bottom=2cm, left=3.5cm, right=2cm]{geometry} % Les marges.
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry} % Les marges.
 
@@ -181,6 +182,9 @@ There are two modes of execution :
     make run
     \end{verbatim}
 \end{itemize}
+
+With computers from hepia, we need to execute \textit{make clean} before any call to \textit{make}. 
+Otherwise, \textit{xorriso} will fail.
 
 \section{Work repartition}
 For this project, we worked together. We had to think about how we wanted to realize each parts. It would have been more difficult to work separately because of the architecture of the project and its complexity.
