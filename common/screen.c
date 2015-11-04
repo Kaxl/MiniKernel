@@ -27,19 +27,6 @@ volatile screen s = {
     .bgColor = C_BLACK
 };
 
-/**
- * @brief Convert 2 dimensions coordinate to 1 dimension position
- *
- * @return The 1 dim position
- */
-static ushort gridToLine(uchar x, uchar y);
-
-/**
- * @brief Convert 1 dimension position to 2 dimensions coordinate
- *
- * @return The 2 dim coordinate
- */
-static void lineToGrid(ushort pos, uchar* x, uchar* y);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void initScreen() {
@@ -122,11 +109,6 @@ uchar getBackgroundColor() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void printCharacter(char character) {
-    // Reset char
-    *s.cursor = 0x0;
-
-    // Set the text and bg color
-    *s.cursor = (s.bgColor << 12) | (s.textColor << 8);
 
     // Check if character is /n, /r, ...
     switch (character) {
@@ -134,9 +116,15 @@ void printCharacter(char character) {
             s.cursor += SCREEN_WIDTH;
             break;
         case '\r':
-            s.cursor = s.cursor - ((int)(*s.cursor) % (SCREEN_WIDTH));
+            s.cursor = (ushort *)((uint)(s.cursor) & ~(0xFF));
             break;
         default:
+            // Reset char
+            *s.cursor = 0x0;
+
+            // Set the text and bg color
+            *s.cursor = (s.bgColor << 12) | (s.textColor << 8);
+
             // Move the cursor
             // Set char (text and bg color and character value)
             *s.cursor = (s.bgColor << 12) | (s.textColor << 8) | character;
@@ -239,38 +227,15 @@ void getCursorPosition(uchar* x, uchar* y) {
     int pos;
     int msb, lsb;
     outb(0x3d4, 0xE);
-    msb = (ushort)(inw(0x3d5)); // MSB of pos
+    msb = (ushort)(inb(0x3d5)); // MSB of pos
     outb(0x3d4, 0xF);
-    lsb = (ushort)(inw(0x3d5)); // LSB of pos
+    lsb = (ushort)(inb(0x3d5)); // LSB of pos
 
     pos = lsb;
     pos = pos | (msb << 8);
-    printf("lsb: %d\n", lsb);
-    printf("msb: %d\n", msb);
-    printf("pos: %d\n", pos);
-    //pos = 0x0;
-    //pos = pos | (msb << 16) | lsb;
 
-
-    //pos = s.cursor;
-
-
-    //lineToGrid(pos, x, y);
-    *x = (uchar)(((pos - FIRST_ADDR) / 2) % SCREEN_WIDTH);
-    *y = (uchar)(((pos - FIRST_ADDR) / 2) / SCREEN_WIDTH);
-    //lineToGrid(*s.cursor, x, y);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-static ushort gridToLine(uchar x, uchar y) {
-    return y * SCREEN_WIDTH + x;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-static void lineToGrid(ushort pos, uchar* x, uchar* y) {
-    // x is the modulo, x the division
-    *x = (uchar)(((pos - FIRST_ADDR) / 2) % SCREEN_WIDTH);
-    *y = (uchar)(((pos - FIRST_ADDR) / 2) / SCREEN_WIDTH);
+    // Conversion in (x, y) coordinates
+    *x = (uchar)(pos % SCREEN_WIDTH);
+    *y = (uchar)(pos / SCREEN_WIDTH);
 }
 
