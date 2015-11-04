@@ -56,6 +56,7 @@ void runKernelTest() {
     setCursorPosition(0, 0);
     printf("Scrolling check");
     sleep(20000);
+    clearScreen();
 
     // Print number on first column
     for (int i = 0; i < SCREEN_HEIGHT; i++) {
@@ -92,17 +93,17 @@ void runKernelTest() {
     sleep(20000);
     char *s = "printf function";
     printf("Test : %s\r\n", s);
-    sleep(10000);
+    sleep(20000);
 
     // char
     char c1 = 'a';
     char c2 = 'b';
     printf("Test char : %c is followed by %c\n", c1, c2);
-    sleep(10000);
+    sleep(20000);
 
     // integer
     printf("Test integer : %d and %d (should be 4213 and 99)\r\n", 4213, 99);
-    sleep(10000);
+    sleep(20000);
 
     // hex
     printf("Test hex : %x and %x (should be 0xBABA and 0x42)\r\n", 0xBABA, 0x42);
@@ -111,6 +112,7 @@ void runKernelTest() {
 ////////////////////////////////////////////////////////////////////////////////////////
     // Cursor check (set / get)
     sleep(20000);
+    setAllBackgroundColor(C_RED);
     clearScreen();
     setCursorPosition(0, 0);
     printf("Cursor check\r\n");
@@ -120,8 +122,10 @@ void runKernelTest() {
     printf("Set cursor position at (%d, %d).", x, y);
     setCursorPosition(x, y);
     getCursorPosition(&x, &y);
-    //printf("Position after get function (%d, %d).", x & (0x00FF), y & (0x00FF));
-    printf("Position after get function (%d, %d).", x, y);
+    sleep(10000);
+    printf("Position after get function (%d, %d).\r\n", x, y);
+    sleep(20000);
+    printf("The end - have a good day :)");
 ////////////////////////////////////////////////////////////////////////////////////////
 }
 

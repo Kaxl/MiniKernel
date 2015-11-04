@@ -39,3 +39,7 @@ boot/
 
 # ISO file
 *.iso
+
+# Tex tmp files
+*.log
+*.aux
