@@ -33,8 +33,8 @@ base.o: base.c base.h
 screen.o: screen.c screen.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-controller_asm.o: controller_asm.s
-	nasm -f elf32 $^
+controller_asm.o: controller_asm.s controller.h
+	nasm -f elf32 $<
 
 string.o: string.c string.h
 	$(CC) $(CFLAGS) -c $< -o $@

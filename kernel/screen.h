@@ -21,6 +21,7 @@
 
 #include "../common/types.h"
 #include "colors.h"
+#include "controller.h"
 
 #define SCREEN_WIDTH    80
 #define SCREEN_HEIGHT   25
@@ -28,13 +29,6 @@
 #define FIRST_ADDR      753664
 #define LAST_ADDR       FIRST_ADDR + SCREEN_WIDTH * SCREEN_HEIGHT * 2 - 2
 #define CHAR_COUNT      SCREEN_WIDTH * SCREEN_HEIGHT
-
-// Functions written in controller_asm.s
-extern void outb(ushort port, uchar data);
-extern void outw(ushort port, ushort data);
-extern uchar inb(ushort port);
-extern ushort inw(ushort port);
-
 
 /**
  * Screen structure to store the cursor position
