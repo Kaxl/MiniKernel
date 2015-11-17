@@ -12,10 +12,10 @@
 .PHONY: run, clean
 
 kernel.iso: kernel.elf
-	grub-mkrescue -o $@ .
+	grub-mkrescue -d /usr/lib/grub/i386-pc -o $@ .
 	
 kernel.elf:
-	cd kernel && $(MAKE) DEBUG=$(MODE)
+	cd kernel && $(MAKE) DEBUG=$(MODE) 
 	mkdir -p boot/grub
 	cp kernel/kernel.elf boot/
 	cp grub/grub.cfg boot/grub/
@@ -27,8 +27,6 @@ clean:
 	rm -f *.o
 	rm -rf boot/
 	rm -f kernel.iso
-	rm -f doc/*.aux
-	rm -f doc/*.log
 	cd kernel && $(MAKE) clean
 
 

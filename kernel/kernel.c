@@ -19,7 +19,7 @@
 #include "kernel.h"
 #include "../test/test_cases.h"
 #include "gdt.h"
-#include "../common/screen.h"
+#include "screen.h"
 
 void runKernel() {
 
@@ -27,7 +27,7 @@ void runKernel() {
     gdt_init();
     runKernelTest();
 #else
-    // Init of gdt ???
+    // Init of gdt 
     gdt_init();
 
     initScreen();

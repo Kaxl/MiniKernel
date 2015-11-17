@@ -21,12 +21,12 @@
  *
  * @return
  **/
-void itoa(int n, char* s);
+extern void itoa(int n, char* s);
 
 /**
  * @brief Convert an integer into a string of hexa
  *
  * @return
  **/
-void xtoa(int n, char* s);
+extern void xtoa(int n, char* s);
 

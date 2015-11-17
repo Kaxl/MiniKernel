@@ -19,7 +19,7 @@
 #ifndef _BASE_H_
 #define _BASE_H_
 
-#include "types.h"
+#include "../common/types.h"
 
 /**
  * @brief Fill memory with a constant byte
@@ -33,7 +33,7 @@
  *
  * @return
  */
-void *memset(void *dst, int value, uint count);
+extern void *memset(void *dst, int value, uint count);
 
 /**
  * @brief Copy memory area
@@ -47,7 +47,7 @@ void *memset(void *dst, int value, uint count);
  *
  * @return
  */
-void *memcpy(void *dst, void *src, uint count);
+extern void *memcpy(void *dst, void *src, uint count);
 
 /**
  * @brief Compares two strings
@@ -62,7 +62,7 @@ void *memcpy(void *dst, void *src, uint count);
  *
  * @return int (-1, 0, 1) following the size of the first string and the second one
  */
-int strncmp(const char *p, const char *q, uint n);
+extern int strncmp(const char *p, const char *q, uint n);
 
 #endif
 

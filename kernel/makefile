@@ -12,38 +12,37 @@ CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra $(DEBUG)
 
 .PHONY: clean
 
-kernel.elf: kernel.o gdt.o bootloader.o ../common/base.o gdt_asm.o ../common/screen.o ../common/controller_asm.o ../common/string.o ../test/test_cases.o
+kernel.elf: kernel.o gdt.o bootloader.o base.o gdt_asm.o screen.o controller_asm.o string.o ../test/test_cases.o
 	ld -melf_i386 -T kernel.ld $^ -o $@
 
-kernel.o: kernel.c
-	$(CC) $(CFLAGS) -c $^
+kernel.o: kernel.c kernel.h
+	$(CC) $(CFLAGS) -c $<
 
 bootloader.o: bootloader.s
 	nasm -f elf32 $^
 
-gdt.o: gdt.c
-	$(CC) $(CFLAGS) -c $^
+gdt.o: gdt.c gdt.h
+	$(CC) $(CFLAGS) -c $<
 
-gdt_asm.o: gdt_asm.s
+gdt_asm.o: gdt_asm.s 
 	nasm -f elf32 $^
 
-../common/base.o: ../common/base.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+base.o: base.c base.h
+	$(CC) $(CFLAGS) -c $< -o $@
 	
-../common/screen.o: ../common/screen.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+screen.o: screen.c screen.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-../common/controller_asm.o: ../common/controller_asm.s
+controller_asm.o: controller_asm.s
 	nasm -f elf32 $^
 
-../common/string.o: ../common/string.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+string.o: string.c string.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-../test/test_cases.o: ../test/test_cases.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+../test/test_cases.o: ../test/test_cases.c ../test/test_cases.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f ../common/*.o
-	rm -f ../test/*.o
 	rm -f *.o
 	rm -f *.elf
+	rm -f ../test/*.o

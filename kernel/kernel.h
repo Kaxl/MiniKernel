@@ -26,6 +26,6 @@
  * For now, there is just the initialization of the kernel
  * and a welcom message.
  */
-void runKernel();
+extern void runKernel();
 
 #endif

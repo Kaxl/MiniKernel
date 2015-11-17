@@ -17,7 +17,7 @@
  */
 
 #include "test_cases.h"
-#include "../common/screen.h"
+#include "../kernel/screen.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void runKernelTest() {

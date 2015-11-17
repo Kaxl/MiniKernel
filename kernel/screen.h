@@ -19,7 +19,7 @@
 #ifndef _SCREEN_H_
 #define _SCREEN_H_
 
-#include "types.h"
+#include "../common/types.h"
 #include "colors.h"
 
 #define SCREEN_WIDTH    80
@@ -54,7 +54,7 @@ typedef struct screen {
  *
  * @return
  */
-void initScreen();
+extern void initScreen();
 
 /**
  * @brief Clear the screen
@@ -63,7 +63,7 @@ void initScreen();
  *
  * @return
  */
-void clearScreen();
+extern void clearScreen();
 
 /**
  * @brief Set the text color of all the screen
@@ -72,7 +72,7 @@ void clearScreen();
  * @paramn color
  * @return
  */
-void setAllTextColor(uchar color);
+extern void setAllTextColor(uchar color);
 
 /**
  * @brief Set the text color
@@ -83,14 +83,14 @@ void setAllTextColor(uchar color);
  * @param color Color to set
  * @return
  */
-void setTextColor(uchar color);
+extern void setTextColor(uchar color);
 
 /**
  * @brief Get the text color
  *
  * @return The current color
  */
-uchar getTextColor();
+extern uchar getTextColor();
 
 /**
  * @brief Set the background color of all the screen
@@ -99,7 +99,7 @@ uchar getTextColor();
  * @param color Color to set
  * @return
  */
-void setAllBackgroundColor(uchar color);
+extern void setAllBackgroundColor(uchar color);
 
 /**
  * @brief Set the background color
@@ -110,14 +110,14 @@ void setAllBackgroundColor(uchar color);
  * @param color
  * @return
  */
-void setBackgroundColor(uchar color);
+extern void setBackgroundColor(uchar color);
 
 /**
  * @brief Get the background color
  *
  * @return The current background color
  */
-uchar getBackgroundColor();
+extern uchar getBackgroundColor();
 
 /**
  * @brief Print a character
@@ -129,7 +129,7 @@ uchar getBackgroundColor();
  * @param character Character to print
  * @return
  */
-void printCharacter(char character);
+extern void printCharacter(char character);
 
 
 /**
@@ -137,7 +137,7 @@ void printCharacter(char character);
  *
  * @return
  */
-void printString(char* string);
+extern void printString(char* string);
 
 /**
  * @brief Printf function
@@ -160,7 +160,7 @@ void printString(char* string);
  *
  * @return
  */
-void printf(char* s, ...);
+extern void printf(char* s, ...);
 
 /**
  * @brief Set cursor position
@@ -169,7 +169,7 @@ void printf(char* s, ...);
  * @param y New y position
  * @return
  */
-void setCursorPosition(uchar x, uchar y);
+extern void setCursorPosition(uchar x, uchar y);
 
 /**
  * @brief Get cursor position
@@ -179,7 +179,7 @@ void setCursorPosition(uchar x, uchar y);
  *
  * @return
  */
-void getCursorPosition(uchar* x, uchar* y);
+extern void getCursorPosition(uchar* x, uchar* y);
 
 
 
