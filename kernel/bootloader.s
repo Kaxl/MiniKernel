@@ -32,15 +32,6 @@ entrypoint:
 
 
     ; Main function
-    ; TODO
-    ; Print a smiley
-    mov     eax,0xB8000
-    mov     word [eax], 0x0E01
-
-	; TODO : appeler la fonction principale du kernel (code C)
-	; Celle-ci doit etre visible par le linker
-	; ...
-
     call runKernel 
 
 	; infinite loop (should never get here)

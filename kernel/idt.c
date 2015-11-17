@@ -1,3 +1,10 @@
+
+// Declaration of IDT
+static idt_entry_t idt[256];
+
+// Pointer on the IDT
+static idt_ptr_t idt_ptr;
+
 // CPU context used when saving/restoring context from an interrupt
 typedef struct regs_st {
     uint32_t gs, fs, es, ds;
@@ -31,5 +38,44 @@ void exception_handler(regs_t *regs) {
 
 void idt_init() {
 
+    // Set limit of idt_ptr and point it on the IDT
+    //idt_ptr.limit = sizeof(idt) - 1;     // Limit is the size of IDT - 1
+    idt_ptr.limit = 0xFFFF;     // Limit is the size of IDT - 1
+
+    // Creation of entries in IDT
+    // Processor exception
+    idt[0] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[1] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[2] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[3] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[4] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[5] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[6] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[7] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[8] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[9] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[10] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[11] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[12] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[13] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[14] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[15] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[16] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[17] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[18] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[19] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[20] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+
+    // IRQ : Interrupt request
+
+    idt_ptr.base = (uint32_t)idt; // Base of idt is the first element of idt
+
+    // Load the IDT
+
+    LIDT [EAX] ou eax contient l'address de la struture idtr
+
+
 }
+
+exception_handler();
 
