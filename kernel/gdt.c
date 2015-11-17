@@ -50,7 +50,7 @@ static gdt_entry_t data_segment(uint32_t base, uint32_t limit, uint8_t dpl) {
 // Initialize the GDT
 void gdt_init() {
     // Set limit of gdt_ptr and point it on the GDT
-    gdt_ptr.limit = 0xFFFFF;     // Pointer is on 20 bits
+    gdt_ptr.limit = 0xFFFF;     // Pointer is on 16 bits
 
     // Creation of segments (code and data segments) in a "FLAT" mode
     // Code and data segments have access to the same memory (DPL = 0)
