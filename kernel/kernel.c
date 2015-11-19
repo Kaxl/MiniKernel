@@ -21,8 +21,14 @@
 #include "gdt.h"
 #include "idt.h"
 #include "screen.h"
+#include "x86.h"
+#include "pic.h"
 
 void runKernel() {
+
+    // Remap interruptions
+    // Needs to be done before activate them
+    pic_init();
 
 #ifdef TEST
     gdt_init();
@@ -35,6 +41,9 @@ void runKernel() {
     // Init of idt
     idt_init();
 
+    // Activation of interruption
+    sti();
+
     printf("Init of GDT - Done\r\n");
     printf("Init of screen - Done\r\n");
     printf("Init of IDT - Done\r\n");
@@ -42,6 +51,4 @@ void runKernel() {
     printf("Welcome to Snapfish OS !\r\n");
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
 #endif
-
 }
-

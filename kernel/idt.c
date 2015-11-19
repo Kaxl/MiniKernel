@@ -2,6 +2,7 @@
 #include "x86.h"
 #include "screen.h"
 #include "colors.h"
+#include "pic.h"
 
 // Declaration of IDT
 static idt_entry_t idt[256];
@@ -37,9 +38,8 @@ static idt_entry_t idt_build_entry(uint16_t selector, uint32_t offset, uint8_t t
 
 // Exception handler
 void exception_handler(regs_t *regs) {
-    /* TODO : switch sur regs, printf de la bonne exception */
-
-    printf("except");
+    //printf("except");
+    printf("%d ", regs->number);
     switch (regs->number) {
         case 0:
             printf("");
@@ -111,8 +111,7 @@ void exception_handler(regs_t *regs) {
 
 // Interruption handler
 void interruption_handler(regs_t *regs) {
-    /* TODO : switch sur regs, printf de la bonne exception */
-    printf("irq");
+    // printf("irq");
     switch (regs->number) {
         case 0:
             printf("");
@@ -167,13 +166,14 @@ void interruption_handler(regs_t *regs) {
         default:
             break;
     }
+    pic_eoi(regs->number);
 }
 
 void idt_init() {
 
     // Set limit of idt_ptr and point it on the IDT
-    //idt_ptr.limit = sizeof(idt) - 1;     // Limit is the size of IDT - 1
-    idt_ptr.limit = 0xFFFF;     // Limit is the size of IDT - 1
+    idt_ptr.limit = sizeof(idt) - 1;     // Limit is the size of IDT - 1
+    //idt_ptr.limit = 0xFFFF;     // Limit is the size of IDT - 1
 
     // Creation of entries in IDT
     // Processor exception
