@@ -44,67 +44,67 @@ void exception_handler(regs_t *regs) {
     setTextColor(C_RED);
     switch (regs->number) {
         case 0:
-            printf("");
+            printf("Exception 0 - Divide Error");
             break;
         case 1:
-            printf("");
+            printf("Exception 1 - RESERVED");
             break;
         case 2:
-            printf("");
+            printf("Exception 2 - NMI Interrupt");
             break;
         case 3:
-            printf("");
+            printf("Exception 3 - Breakpoint");
             break;
         case 4:
-            printf("");
+            printf("Exception 4 - Overflow");
             break;
         case 5:
-            printf("");
+            printf("Exception 5 - BOUND Range Exceeded");
             break;
         case 6:
-            printf("");
+            printf("Exception 6 - Invalid Opcode (Undefined Opcode)");
             break;
         case 7:
-            printf("");
+            printf("Exception 7 - Device Not Available (No Math Coprocessor)");
             break;
         case 8:
-            printf("");
+            printf("Exception 8 - Double Fault");
             break;
         case 9:
-            printf("");
+            printf("Exception 9 - Coprocessor Segment Overrun (reserved)");
             break;
         case 10:
-            printf("");
+            printf("Exception 10 - Invalid TSS");
             break;
         case 11:
-            printf("");
+            printf("Exception 11 - Segment Not Present");
             break;
         case 12:
-            printf("");
+            printf("Exception 12 - Stack-Segment Fault");
             break;
         case 13:
-            printf("");
+            printf("Exception 13 - General Protection");
             break;
         case 14:
-            printf("");
+            printf("Exception 14 - Page Fault");
             break;
         case 15:
-            printf("");
+            printf("Exception 15 - (Inter reserved. Do not use.)");
             break;
         case 16:
-            printf("");
+            printf("Exception 16 - Alignment Check");
             break;
         case 17:
-            printf("");
+            printf("Exception 17 - Machine Check");
             break;
         case 18:
-            printf("");
+            printf("Exception 18 - SIMD Floating-Point Exception");
             break;
         case 19:
-            printf("");
+            printf("Exception 19 - Virtualization Exception");
             break;
         case 20:
-            printf("");
+            printf("Exception 20 - Inter reserved. Do not use.");
             break;
         default:
             break;
@@ -116,52 +116,52 @@ void interruption_handler(regs_t *regs) {
     // printf("irq");
     switch (regs->number) {
         case 0:
-            printf("");
+            printf("Timer interruption");
             break;
         case 1:
             keyboard_handler();
             break;
         case 2:
-            printf("");
+            printf("Redirected to slave PIC");
             break;
         case 3:
-            printf("");
+            printf("Serial port (COM2/COM4)");
             break;
         case 4:
-            printf("");
+            printf("Serial port (COM1/COM3)");
             break;
         case 5:
-            printf("");
+            printf("Sound card");
             break;
         case 6:
-            printf("");
+            printf("Floppy disk controller");
             break;
         case 7:
-            printf("");
+            printf("Parallel port");
             break;
         case 8:
-            printf("");
+            printf("Real time clock");
             break;
         case 9:
-            printf("");
+            printf("Redirected to IRQ2");
             break;
         case 10:
-            printf("");
+            printf("Reserved");
             break;
         case 11:
-            printf("");
+            printf("Reserved");
             break;
         case 12:
-            printf("");
+            printf("PS/2 mouse");
             break;
         case 13:
-            printf("");
+            printf("Math coprocessor");
             break;
         case 14:
-            printf("");
+            printf("Hard disk controller");
             break;
         case 15:
-            printf("");
+            printf("Reserved");
             break;
         default:
             break;
