@@ -5,4 +5,6 @@ extern void keyboard_init();
 extern void keyboard_handler();
 extern int getc();
 
+char ch_layout[256];
+
 #endif
