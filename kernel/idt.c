@@ -1,5 +1,6 @@
 #include "idt.h"
 #include "x86.h"
+#include "screen.h"
 
 // Declaration of IDT
 static idt_entry_t idt[256];
@@ -37,12 +38,130 @@ static idt_entry_t idt_build_entry(uint16_t selector, uint32_t offset, uint8_t t
 void exception_handler(regs_t *regs) {
     /* TODO : switch sur regs, printf de la bonne exception */
 
+    switch (regs->number) {
+        case 0:
+            printf("");
+            break;
+        case 1:
+            printf("");
+            break;
+        case 2:
+            printf("");
+            break;
+        case 3:
+            printf("");
+            break;
+        case 4:
+            printf("");
+            break;
+        case 5:
+            printf("");
+            break;
+        case 6:
+            printf("");
+            break;
+        case 7:
+            printf("");
+            break;
+        case 8:
+            printf("");
+            break;
+        case 9:
+            printf("");
+            break;
+        case 10:
+            printf("");
+            break;
+        case 11:
+            printf("");
+            break;
+        case 12:
+            printf("");
+            break;
+        case 13:
+            printf("");
+            break;
+        case 14:
+            printf("");
+            break;
+        case 15:
+            printf("");
+            break;
+        case 16:
+            printf("");
+            break;
+        case 17:
+            printf("");
+            break;
+        case 18:
+            printf("");
+            break;
+        case 19:
+            printf("");
+            break;
+        case 20:
+            printf("");
+            break;
+        default:
+            break;
+    }
 }
 
 // Interruption handler
 void interruption_handler(regs_t *regs) {
     /* TODO : switch sur regs, printf de la bonne exception */
-
+    switch (regs->number) {
+        case 0:
+            printf("");
+            break;
+        case 1:
+            printf("");
+            break;
+        case 2:
+            printf("");
+            break;
+        case 3:
+            printf("");
+            break;
+        case 4:
+            printf("");
+            break;
+        case 5:
+            printf("");
+            break;
+        case 6:
+            printf("");
+            break;
+        case 7:
+            printf("");
+            break;
+        case 8:
+            printf("");
+            break;
+        case 9:
+            printf("");
+            break;
+        case 10:
+            printf("");
+            break;
+        case 11:
+            printf("");
+            break;
+        case 12:
+            printf("");
+            break;
+        case 13:
+            printf("");
+            break;
+        case 14:
+            printf("");
+            break;
+        case 15:
+            printf("");
+            break;
+        default:
+            break;
+    }
 }
 
 void idt_init() {
