@@ -3,6 +3,7 @@
 #include "screen.h"
 #include "colors.h"
 #include "pic.h"
+#include "keyboard.h"
 
 // Declaration of IDT
 static idt_entry_t idt[256];
@@ -40,6 +41,7 @@ static idt_entry_t idt_build_entry(uint16_t selector, uint32_t offset, uint8_t t
 void exception_handler(regs_t *regs) {
     //printf("except");
     printf("%d ", regs->number);
+    setTextColor(C_RED);
     switch (regs->number) {
         case 0:
             printf("");
@@ -169,9 +171,12 @@ void interruption_handler(regs_t *regs) {
 
 void idt_init() {
 
+    // Fill the IDT with 0x0
+    for (int i = 0; i < 256; i++)
+        idt[i] = idt_build_entry(0, 0, 0, 0);
+
     // Set limit of idt_ptr and point it on the IDT
     idt_ptr.limit = sizeof(idt) - 1;     // Limit is the size of IDT - 1
-    //idt_ptr.limit = 0xFFFF;     // Limit is the size of IDT - 1
 
     // Creation of entries in IDT
     // Processor exception
