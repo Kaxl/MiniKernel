@@ -1,3 +1,5 @@
+#include "idt.h"
+#include "x86.h"
 
 // Declaration of IDT
 static idt_entry_t idt[256];
@@ -33,6 +35,13 @@ static idt_entry_t idt_build_entry(uint16_t selector, uint32_t offset, uint8_t t
 
 // Exception handler
 void exception_handler(regs_t *regs) {
+    /* TODO : switch sur regs, printf de la bonne exception */
+
+}
+
+// Interruption handler
+void interruption_handler(regs_t *regs) {
+    /* TODO : switch sur regs, printf de la bonne exception */
 
 }
 
@@ -44,7 +53,7 @@ void idt_init() {
 
     // Creation of entries in IDT
     // Processor exception
-    idt[0] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+    idt[0] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, (uint32_t)&_exception_1, TYPE_INTERRUPT_GATE, DPL_KERNEL);
     idt[1] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
     idt[2] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
     idt[3] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, 0, TYPE_INTERRUPT_GATE, DPL_KERNEL);
@@ -72,10 +81,8 @@ void idt_init() {
 
     // Load the IDT
 
-    LIDT [EAX] ou eax contient l'address de la struture idtr
+    //LIDT [EAX] ou eax contient l'address de la struture idtr
 
 
 }
-
-exception_handler();
 

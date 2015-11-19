@@ -12,7 +12,7 @@ CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra $(DEBUG)
 
 .PHONY: clean
 
-kernel.elf: kernel.o gdt.o bootloader.o base.o gdt_asm.o screen.o controller_asm.o string.o ../test/test_cases.o
+kernel.elf: kernel.o gdt.o idt.o bootloader.o base.o gdt_asm.o idt_asm.o screen.o controller_asm.o string.o ../test/test_cases.o
 	ld -melf_i386 -T kernel.ld $^ -o $@
 
 kernel.o: kernel.c kernel.h
@@ -25,6 +25,12 @@ gdt.o: gdt.c gdt.h
 	$(CC) $(CFLAGS) -c $<
 
 gdt_asm.o: gdt_asm.s 
+	nasm -f elf32 $^
+
+idt.o: idt.c idt.h
+	$(CC) $(CFLAGS) -c $<
+
+idt_asm.o: idt_asm.s 
 	nasm -f elf32 $^
 
 base.o: base.c base.h
