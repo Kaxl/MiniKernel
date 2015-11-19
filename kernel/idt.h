@@ -27,6 +27,7 @@ typedef struct idt_ptr_st {
 } __attribute__((packed)) idt_ptr_t;
 
 extern void idt_init();
+extern void idt_load();
 
 // Exception handler
 extern void _exception_0();

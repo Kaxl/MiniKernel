@@ -22,7 +22,7 @@ _exception_%1:
 %endmacro
 ; Creation of all exception (0 to 20)
 %assign i 0
-%rep 20
+%rep 21
 exception i
 %assign i i+1
 %endrep
@@ -40,7 +40,7 @@ _irq_%1:
 %endmacro
 ; Creation of all irq (0 to 15)
 %assign i 0
-%rep 15
+%rep 16
 irq i
 %assign i i+1
 %endrep
@@ -138,4 +138,13 @@ interruptions_wrapper:
 	; Fix the stack pointer due to the 2 push done before the call to exception_wrapper
     add     esp,8
     iret
+
+;------------------------------------------------
+; Load the IDT
+global idt_load
+; Argument : address of idt structure
+idt_load:
+    mov eax,[esp+4]
+    lidt [eax]
+
 

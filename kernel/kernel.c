@@ -19,6 +19,7 @@
 #include "kernel.h"
 #include "../test/test_cases.h"
 #include "gdt.h"
+#include "idt.h"
 #include "screen.h"
 
 void runKernel() {
@@ -27,13 +28,19 @@ void runKernel() {
     gdt_init();
     runKernelTest();
 #else
-    // Init of gdt 
+    // Init of gdt
     gdt_init();
-
     initScreen();
-    printString("Welcome to Snapfish OS !");
-    setCursorPosition(0, 1);
-    printString("You're awesome, what can I do for you on this beautiful day ?");
+
+    // Init of idt
+    idt_init();
+
+    printf("Init of GDT - Done\r\n");
+    printf("Init of screen - Done\r\n");
+    printf("Init of IDT - Done\r\n");
+
+    printf("Welcome to Snapfish OS !\r\n");
+    printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
 #endif
 
 }
