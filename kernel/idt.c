@@ -117,9 +117,7 @@ void interruption_handler(regs_t *regs) {
             printf("");
             break;
         case 1:
-            // Set text color in red
-            setAllTextColor(C_RED);
-            printf("kikoo");
+            keyboard_handler();
             break;
         case 2:
             printf("");
