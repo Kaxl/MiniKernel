@@ -15,8 +15,8 @@ char buffer[1024];
 int i_read = 0;
 int i_write = 0;
 
-char us_layout[100] =       "--1234567890-=--qwertyuiop[]--asdfghjkl;\,\,-<zxcvbnm,./-12 4567";
-char us_layout_shift[100] = "--1234567890-=--QWERTYUIOP[]--ASDFGHJKL;\,\,-<ZXCVBNM,./-12 4567";
+char us_layout[100] =       "--1234567890-=--qwertyuiop[]--asdfghjkl;'`,\\zxcvbnm,./-12 456789abcdefghijklknopqrtuwv<zy";
+char us_layout_shift[100] = "--!@#$%^&*()_+--QWERTYUIOP{}--ASDFGHJKL:\"~,|ZXCVBNM<>?-12 4567------------------------>--";
 
 static shift = false;
 static capslock = false;
@@ -53,6 +53,9 @@ void keyboard_handler() {
                 break;
             case ESC:
                 // Exit insert mode
+                break;
+            case TAB:
+                printf("\t");
                 break;
             default:    // Any other key
                 i_write &= 1023;

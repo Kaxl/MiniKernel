@@ -125,6 +125,9 @@ void printCharacter(char character) {
             s.cursor = (ushort *)FIRST_ADDR;    // Go to first address
             s.cursor += (ushort)pos;            // Add the pos
             break;
+        case '\t':
+                
+            break;
         default:
             // Reset char
             *s.cursor = 0x0;
