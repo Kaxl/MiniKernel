@@ -1,5 +1,6 @@
 #include "keyboard.h"
 #include "screen.h"
+#include "../common/types.h"
 #include "controller.h"
 
 #define SHIFT_LEFT  0x2A
@@ -10,16 +11,18 @@
 #define TAB         0x0F
 #define ESC         0x01
 
+#define BUFFER_SIZE 1024    // Must be a power of 2
+
 //int layout = LAYOUT_US;
-char buffer[1024];
+char buffer[BUFFER_SIZE];
 int i_read = 0;
 int i_write = 0;
 
 char us_layout[100] =       "--1234567890-=--qwertyuiop[]--asdfghjkl;'`,\\zxcvbnm,./-12 456789abcdefghijklknopqrtuwv<zy";
 char us_layout_shift[100] = "--!@#$%^&*()_+--QWERTYUIOP{}--ASDFGHJKL:\"~,|ZXCVBNM<>?-12 4567------------------------>--";
 
-static shift = false;
-static capslock = false;
+static int shift = false;       // TODO : Boolean en C ???
+static int capslock = false;
 
 void keyboard_init() {
 
@@ -28,7 +31,11 @@ void keyboard_init() {
 void keyboard_handler() {
     int c = (int)(inb(0x60));
     // Check if buffer is full
-    if (i_read - i_write == 0) {
+    int n = 0;
+    if (i_write != i_read)
+        n = i_write > i_read ? i_write - i_read : i_write + BUFFER_SIZE - i_read;
+
+    if (n >= BUFFER_SIZE - 1) {
         int color = getTextColor();
         setTextColor(C_RED);
         printf("Error with keyboard : Buffer is full.\r\n");
@@ -40,7 +47,7 @@ void keyboard_handler() {
         switch (c) {
             case SHIFT_LEFT:
             case SHIFT_RIGHT:
-                shift = true;
+                shift = 1;
                 break;
             case CAPSLOCK:
                 capslock = ~capslock;
@@ -49,7 +56,8 @@ void keyboard_handler() {
                 printf("\r\n");
                 break;
             case BACKSPACE:
-                // todo
+                // In screen.c, \b is process to remove the character and set the cursor
+                printf("\b");
                 break;
             case ESC:
                 // Exit insert mode
@@ -58,7 +66,7 @@ void keyboard_handler() {
                 printf("\t");
                 break;
             default:    // Any other key
-                i_write &= 1023;
+                i_write &= (BUFFER_SIZE - 1);
                 if ((shift || capslock) && !(shift && capslock)) {
                     buffer[i_write] = us_layout_shift[c];
                 }
@@ -67,20 +75,19 @@ void keyboard_handler() {
                 }
                 i_write++;
                 break;
-
         }
     }
     else  {     // Else, the key is released
         c &= ~(0x1 << 7);   // Set the bit 8 to 0x0 to get the caracter value
         if (c  == SHIFT_LEFT || c == SHIFT_RIGHT) {  // Shift key
-            shift = false;
+            shift = 0;
         }
     }
 }
 
 int getc() {
     while ((i_read < i_write) || (i_read - i_write > 512)) {
-        i_read &= 1023;
+        i_read &= (BUFFER_SIZE - 1);
         printf("%c", buffer[i_read++]);
     }
     return 0;

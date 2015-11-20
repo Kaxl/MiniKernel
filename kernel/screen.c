@@ -114,6 +114,13 @@ void printCharacter(char character) {
 
     // Check if character is /n, /r, ...
     switch (character) {
+        case '\b':
+            s.cursor--;
+            // Reset char
+            *s.cursor = 0x0;
+            // Set the text and bg color
+            *s.cursor = (s.bgColor << 12) | (s.textColor << 8);
+            break;
         case '\n':
             s.cursor += SCREEN_WIDTH;
             break;
