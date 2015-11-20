@@ -116,7 +116,7 @@ void interruption_handler(regs_t *regs) {
     // printf("irq");
     switch (regs->number) {
         case 0:
-            printf("Timer interruption");
+            //printf("Timer interruption");
             break;
         case 1:
             keyboard_handler();

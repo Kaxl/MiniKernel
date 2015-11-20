@@ -23,6 +23,7 @@
 #include "screen.h"
 #include "x86.h"
 #include "pic.h"
+#include "keyboard.h"
 
 void runKernel() {
 
@@ -50,5 +51,9 @@ void runKernel() {
 
     printf("Welcome to Snapfish OS !\r\n");
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
+
+    for (;;) {
+        getc();
+    }
 #endif
 }
