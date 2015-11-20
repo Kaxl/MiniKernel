@@ -110,6 +110,7 @@ uchar getBackgroundColor() {
 ////////////////////////////////////////////////////////////////////////////////////////
 void printCharacter(char character) {
     ushort i;
+    int offset;
 
     // Check if character is /n, /r, ...
     switch (character) {
@@ -126,7 +127,12 @@ void printCharacter(char character) {
             s.cursor += (ushort)pos;            // Add the pos
             break;
         case '\t':
-                
+            // Get offset position
+            offset = (int)(s.cursor) % 8;
+            if (offset == 0)        // Make an entire tab
+                s.cursor = (ushort *)((int)(s.cursor) + 8);
+            else                    // Make a partial tab
+                s.cursor = (ushort *)((int)(s.cursor) + offset);
             break;
         default:
             // Reset char
