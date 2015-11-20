@@ -4,6 +4,12 @@
 
 #define SHIFT_LEFT  0x2A
 #define SHIFT_RIGHT 0x36
+#define CAPSLOCK    0x3A
+#define RETURN      0x1C
+#define BACKSPACE   0x0E
+#define TAB         0x0F
+#define ESC         0x01
+
 //int layout = LAYOUT_US;
 char buffer[1024];
 int i_read = 0;
@@ -13,6 +19,7 @@ char us_layout[100] =       "--1234567890-=--qwertyuiop[]--asdfghjkl;\,\,-<zxcvb
 char us_layout_shift[100] = "--1234567890-=--QWERTYUIOP[]--ASDFGHJKL;\,\,-<ZXCVBNM,./-12 4567";
 
 static shift = false;
+static capslock = false;
 
 void keyboard_init() {
 
@@ -22,18 +29,34 @@ void keyboard_handler() {
     int c = (int)(inb(0x60));
     // Push key
     if (!(c >> 7)) {    // If bit 8 is 0x0, the key is push
-        if (c == SHIFT_LEFT || c == SHIFT_RIGHT) {  // Shift key
-            shift = true;
-        }
-        else {  // Any other key
-            i_write &= 1023;
-            if (shift) {
-                buffer[i_write] = us_layout_shift[c];
-            }
-            else {
-                buffer[i_write] = us_layout[c];
-            }
-            i_write++;
+        switch (c) {
+            case SHIFT_LEFT:
+            case SHIFT_RIGHT:
+                shift = true;
+                break;
+            case CAPSLOCK:
+                capslock = ~capslock;
+                break;
+            case RETURN:
+                printf("\r\n");
+                break;
+            case BACKSPACE:
+                // todo
+                break;
+            case ESC:
+                // Exit insert mode
+                break;
+            default:    // Any other key
+                i_write &= 1023;
+                if ((shift || capslock) && !(shift && capslock)) {
+                    buffer[i_write] = us_layout_shift[c];
+                }
+                else {
+                    buffer[i_write] = us_layout[c];
+                }
+                i_write++;
+                break;
+
         }
     }
     else  {     // Else, the key is released
