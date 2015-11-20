@@ -27,6 +27,14 @@ void keyboard_init() {
 
 void keyboard_handler() {
     int c = (int)(inb(0x60));
+    // Check if buffer is full
+    if (i_read - i_write == 0) {
+        int color = getTextColor();
+        setTextColor(C_RED);
+        printf("Error with keyboard : Buffer is full.\r\n");
+        setTextColor(color);    // Restaure previous color
+        return;
+    }
     // Push key
     if (!(c >> 7)) {    // If bit 8 is 0x0, the key is push
         switch (c) {
