@@ -57,7 +57,7 @@ void runKernel() {
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
 
     printf("Before timer\r\n");
-    sleep(5000);
+    sleep(2000);
     printf("After timer\r\n");
 
     for (;;) {

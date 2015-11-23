@@ -8,20 +8,16 @@ volatile timer t = {
 };
 
 void timer_init(uint32_t freq_hz) {
-
     uint16_t div = 0;
+    // Check the frequency
     if (freq_hz < MIN_FREQ)
         div = MIN_DIV;
     else if (freq_hz > MAX_FREQ)
         div = MAX_DIV;
     else {
-        printf("Else : %d", freq_hz);
         //div = (int)(freq_hz * (MAX_DIV / MAX_FREQ));
-        div = (uint16_t)(freq_hz * (65535 / 1193180));
-        div = 55;
+        div = MAX_FREQ / freq_hz;
     }
-
-    printf("Div : %d\r\n", div);
 
     // Programmation of PIT
     outb(0x43, 0x36);
@@ -40,10 +36,10 @@ uint get_ticks() {
     return t.tick;
 }
 
-void sleep(uint cs) {
-    uint32_t end = get_ticks() + (cs / 100 * t.freq_hz);
+void sleep(uint ms) {
+    uint32_t end = get_ticks() + (ms / 1000 * t.freq_hz);
 
-    while (get_ticks() < end);
+    while (get_ticks() != end);
 }
 
 
