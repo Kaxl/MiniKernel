@@ -24,6 +24,7 @@
 #include "x86.h"
 #include "pic.h"
 #include "keyboard.h"
+#include "timer.h"
 
 void runKernel() {
 
@@ -39,18 +40,25 @@ void runKernel() {
     gdt_init();
     initScreen();
 
-    // Init of idt
-    idt_init();
-
     // Activation of interruption
     sti();
 
     printf("Init of GDT - Done\r\n");
     printf("Init of screen - Done\r\n");
+    // Init of idt
+    idt_init();
     printf("Init of IDT - Done\r\n");
+
+    // Init of timer
+    timer_init(1000);
+    printf("Init of Timer at 1000[hz] - Done\r\n");
 
     printf("Welcome to Snapfish OS !\r\n");
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
+
+    printf("Before timer\r\n");
+    sleep(5000);
+    printf("After timer\r\n");
 
     for (;;) {
         getc();

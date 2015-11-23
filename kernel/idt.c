@@ -4,6 +4,7 @@
 #include "colors.h"
 #include "pic.h"
 #include "keyboard.h"
+#include "timer.h"
 
 // Declaration of IDT
 static idt_entry_t idt[256];
@@ -37,10 +38,18 @@ static idt_entry_t idt_build_entry(uint16_t selector, uint32_t offset, uint8_t t
 	return entry;
 }
 
-// Exception handler
+/**
+ * @brief Exception handler
+ *
+ * When an exception occurs, write the exception description in red and
+ * exit the kernel with 'halt' function.
+ *
+ * @param regs  Processor context during the interruption
+ */
 void exception_handler(regs_t *regs) {
-    //printf("except");
-    printf("%d ", regs->number);
+    clearScreen();
+    setBackgroundColor(C_BLUE);     // Set background in blue #Windows
+    setCursorPosition(0, 0);
     setTextColor(C_RED);
     switch (regs->number) {
         case 0:
@@ -109,14 +118,14 @@ void exception_handler(regs_t *regs) {
         default:
             break;
     }
+    halt();
 }
 
 // Interruption handler
 void interruption_handler(regs_t *regs) {
-    // printf("irq");
     switch (regs->number) {
         case 0:
-            //printf("Timer interruption");
+            timer_handler();
             break;
         case 1:
             keyboard_handler();

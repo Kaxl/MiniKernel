@@ -19,6 +19,8 @@
 #ifndef _CONTROLLER_H_
 #define _CONTROLLER_H_
 
+#include "../common/types.h"
+
 // Functions written in controller_asm.s
 extern void outb(ushort port, uchar data);
 
