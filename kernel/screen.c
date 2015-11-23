@@ -139,7 +139,7 @@ void printCharacter(char character) {
             if (offset == 0)        // Make an entire tab
                 s.cursor = (ushort *)((int)(s.cursor) + 8);
             else                    // Make a partial tab
-                s.cursor = (ushort *)((int)(s.cursor) + offset);
+                s.cursor = (ushort *)((int)(s.cursor) + (8 - offset));
             break;
         default:
             // Reset char
