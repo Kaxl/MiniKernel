@@ -50,11 +50,13 @@ void runKernel() {
     printf("Init of IDT - Done\r\n");
 
     // Init of timer
-    timer_init(5000);
+    timer_init(100);
     printf("Init of Timer at 100[hz] - Done\r\n");
 
     printf("Welcome to Snapfish OS !\r\n");
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
+
+    sleep(3000);
 
     for (;;) {
         char c = (char)(getc());

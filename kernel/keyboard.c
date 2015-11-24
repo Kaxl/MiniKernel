@@ -11,7 +11,8 @@
 #define TAB         0x0F
 #define ESC         0x01
 
-#define BUFFER_SIZE 1024    // Must be a power of 2
+//#define BUFFER_SIZE 1024    // Must be a power of 2
+#define BUFFER_SIZE 16    // Must be a power of 2
 
 //int layout = LAYOUT_US;
 char buffer[BUFFER_SIZE];
@@ -40,10 +41,13 @@ void keyboard_handler() {
     if (i_write != i_read)
         n = i_write > i_read ? i_write - i_read : i_write + BUFFER_SIZE - i_read;
 
-    if (n >= BUFFER_SIZE - 1) {
+    if (n > BUFFER_SIZE - 1) {
         int color = getTextColor();
         setTextColor(C_RED);
         printf("Error with keyboard : Buffer is full.\r\n");
+        printf("iread : %d\n\r", i_read);
+        printf("iwrite : %d\n\r", i_write);
+        printf("iread : %d / iwrite : %d\n\r", i_read, i_write);
         setTextColor(color);    // Restaure previous color
         return;
     }

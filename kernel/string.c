@@ -29,6 +29,10 @@ void itoa(int n, char* s) {
         n *= -1;
     }
 
+    // If n = 0
+    if (n == 0)
+        p++;
+
     // Save the size of the array
     int tmp_n = n;
     while (tmp_n) {
@@ -45,6 +49,9 @@ void itoa(int n, char* s) {
         *(--p) = digit[tmp_n%10];
         tmp_n = tmp_n / 10;
     }
+
+    if (n == 0)
+        *(--p) = digit[0];
 }
 
 
