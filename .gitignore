@@ -43,3 +43,4 @@ boot/
 # Tex tmp files
 *.log
 *.aux
+*.gz
