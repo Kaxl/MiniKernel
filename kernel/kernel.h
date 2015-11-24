@@ -19,6 +19,9 @@
 #ifndef _KERNEL_H_
 #define _KERNEL_H_
 
+// Default frequency for timer
+#define DEFAULT_FREQ 100
+
 /**
  * @brief Start the kernel
  *

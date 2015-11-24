@@ -17,51 +17,88 @@
  */
 
 #include "kernel.h"
-#include "../test/test_cases.h"
+#include "x86.h"
+#include "pic.h"
 #include "gdt.h"
 #include "idt.h"
 #include "screen.h"
-#include "x86.h"
-#include "pic.h"
 #include "keyboard.h"
 #include "timer.h"
+#include "screen.h"
+
 
 void runKernel() {
+
+    // Init of gdt
+    gdt_init();
 
     // Remap interruptions
     // Needs to be done before activate them
     pic_init();
 
-#ifdef TEST
-    gdt_init();
-    runKernelTest();
-#else
-    // Init of gdt
-    gdt_init();
+    // Activation of interruption
+    sti();
 
     // Init of screen
     initScreen();
 
-    // Activation of interruption
-    sti();
-
-    printf("Init of GDT - Done\r\n");
-    printf("Init of screen - Done\r\n");
-
     // Init of idt
     idt_init();
-    printf("Init of IDT - Done\r\n");
-
-    // Init of keyboard
-    keyboard_init(LAYOUT_CH);
-    printf("Init of keyboard - Done\r\n");
 
     // Init of timer
-    timer_init(100);
-    printf("Init of Timer at 100[hz] - Done\r\n");
+    timer_init(DEFAULT_FREQ);
 
-    printf("Welcome to Snapfish OS !\r\n");
+    // Init of keyboard with CH layout
+    keyboard_init(LAYOUT_CH);
+
+    // Messages of initialization
+    printf("Starting GDT                                                           [  ");
+    setTextColor(C_GREEN);
+    printf("OK");
+    setTextColor(C_WHITE);
+    printf("  ]\r\n");
+
+    printf("Starting screen                                                        [  ");
+    setTextColor(C_GREEN);
+    printf("OK");
+    setTextColor(C_WHITE);
+    printf("  ]\r\n");
+
+    printf("Starting PIC                                                           [  ");
+    setTextColor(C_GREEN);
+    printf("OK");
+    setTextColor(C_WHITE);
+    printf("  ]\r\n");
+
+    printf("Enabling interruptions                                                 [  ");
+    setTextColor(C_GREEN);
+    printf("OK");
+    setTextColor(C_WHITE);
+    printf("  ]\r\n");
+
+    printf("Starting IDT                                                           [  ");
+    setTextColor(C_GREEN);
+    printf("OK");
+    setTextColor(C_WHITE);
+    printf("  ]\r\n");
+
+    printf("Starting timer at %d[Hz]                                              [  ", DEFAULT_FREQ);
+    setTextColor(C_GREEN);
+    printf("OK");
+    setTextColor(C_WHITE);
+    printf("  ]\r\n");
+
+    printf("Starting keyboard                                                      [  ");
+    setTextColor(C_GREEN);
+    printf("OK");
+    setTextColor(C_WHITE);
+    printf("  ]\r\n");
+
+    printf("\r\nWelcome to Snapfish OS !\r\n");
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
+    printf("> ");
+
+    printf("Div 0 %d", 5 / 0);
 
     for (;;) {
         char c = (char)(getc());
@@ -71,11 +108,10 @@ void runKernel() {
                 sleep(1000);
                 printf("\r\nNOW !");
                 halt();
-            } else {
+            }
+            else {
                 printf("%c", c);
             }
         }
     }
-
-#endif
 }
