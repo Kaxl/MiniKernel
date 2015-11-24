@@ -50,6 +50,7 @@ void itoa(int n, char* s) {
         tmp_n = tmp_n / 10;
     }
 
+    // If n = 0
     if (n == 0)
         *(--p) = digit[0];
 }

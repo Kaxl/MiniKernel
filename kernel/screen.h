@@ -175,7 +175,5 @@ extern void setCursorPosition(uchar x, uchar y);
  */
 extern void getCursorPosition(uchar* x, uchar* y);
 
-
-
 #endif
 
