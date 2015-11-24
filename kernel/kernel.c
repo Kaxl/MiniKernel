@@ -50,18 +50,25 @@ void runKernel() {
     printf("Init of IDT - Done\r\n");
 
     // Init of timer
-    timer_init(1000);
-    printf("Init of Timer at 1000[hz] - Done\r\n");
+    timer_init(10000);
+    printf("Init of Timer at 100[hz] - Done\r\n");
 
     printf("Welcome to Snapfish OS !\r\n");
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
 
-    printf("Before timer\r\n");
-    sleep(2000);
-    printf("After timer\r\n");
-
     for (;;) {
-        getc();
+        char c = (char)(getc());
+        if ((int)(c) >= 0) {
+            if (c == 'Q') {
+                printf("\r\nShutdown of the system in 1 second.");
+                sleep(1000);
+                printf("\r\nNOW !");
+                halt();
+            } else {
+                printf("%c", c);
+            }
+        }
     }
+
 #endif
 }

@@ -15,7 +15,6 @@ void timer_init(uint32_t freq_hz) {
     else if (freq_hz > MAX_FREQ)
         div = MAX_DIV;
     else {
-        //div = (int)(freq_hz * (MAX_DIV / MAX_FREQ));
         div = MAX_FREQ / freq_hz;
     }
 

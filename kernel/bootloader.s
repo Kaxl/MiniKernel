@@ -37,7 +37,7 @@ entrypoint:
 	; infinite loop (should never get here)
 .forever:
 	hlt
-	jmp .forever
+    jmp .forever
 
 ;---------------------------------------------------------------------------------------------------
 ; stack section

@@ -48,8 +48,8 @@ static idt_entry_t idt_build_entry(uint16_t selector, uint32_t offset, uint8_t t
  */
 void exception_handler(regs_t *regs) {
     clearScreen();
-    setBackgroundColor(C_BLUE);     // Set background in blue #Windows
-    setCursorPosition(0, 0);
+    setBackgroundColor(0);
+    //setCursorPosition(0,0);
     setTextColor(C_RED);
     switch (regs->number) {
         case 0:

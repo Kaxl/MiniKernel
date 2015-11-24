@@ -21,7 +21,7 @@ int i_write = 0;
 char us_layout[100] =       "--1234567890-=--qwertyuiop[]--asdfghjkl;'`,\\zxcvbnm,./-12 456789abcdefghijklknopqrtuwv<zy";
 char us_layout_shift[100] = "--!@#$%^&*()_+--QWERTYUIOP{}--ASDFGHJKL:\"~,|ZXCVBNM<>?-12 4567------------------------>--";
 
-static int shift = false;       // TODO : Boolean en C ???
+static int shift = false;       
 static int capslock = false;
 
 void keyboard_init() {
@@ -86,9 +86,9 @@ void keyboard_handler() {
 }
 
 int getc() {
-    while ((i_read < i_write) || (i_read - i_write > 512)) {
+    if ((i_read < i_write) || (i_read - i_write > 512)) {
         i_read &= (BUFFER_SIZE - 1);
-        printf("%c", buffer[i_read++]);
+        return buffer[i_read++];
     }
-    return 0;
+    return -1;
 }
