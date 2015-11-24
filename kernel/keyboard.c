@@ -20,8 +20,13 @@ int i_write = 0;
 
 char us_layout[100] =       "--1234567890-=--qwertyuiop[]--asdfghjkl;'`,\\zxcvbnm,./-12 456789abcdefghijklknopqrtuwv<zy";
 char us_layout_shift[100] = "--!@#$%^&*()_+--QWERTYUIOP{}--ASDFGHJKL:\"~,|ZXCVBNM<>?-12 4567------------------------>--";
+char ch_layout[100] =       "--1234567890'^--qwertzuiope---asdfghjklea-,\\yxcvbnm,.--12 456789abcdefghijklknopqrtuwv<yz";
+char ch_layout_shift[100] = "--+\"*c%&/()=?`--QWERTZUIOPu!--ASDFGHJKLeo-LYXCVBNM;:_-12 4567------------------------>--";
+char* layout = ch_layout;
+char* layout_shift = ch_layout_shift;
+// £ç
 
-static int shift = false;       
+static int shift = false;
 static int capslock = false;
 
 void keyboard_init() {
@@ -68,10 +73,10 @@ void keyboard_handler() {
             default:    // Any other key
                 i_write &= (BUFFER_SIZE - 1);
                 if ((shift || capslock) && !(shift && capslock)) {
-                    buffer[i_write] = us_layout_shift[c];
+                    buffer[i_write] = layout_shift[c];
                 }
                 else {
-                    buffer[i_write] = us_layout[c];
+                    buffer[i_write] = layout[c];
                 }
                 i_write++;
                 break;
