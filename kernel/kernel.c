@@ -56,8 +56,6 @@ void runKernel() {
     printf("Welcome to Snapfish OS !\r\n");
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
 
-    sleep(3000);
-
     for (;;) {
         char c = (char)(getc());
         if ((int)(c) >= 0) {
