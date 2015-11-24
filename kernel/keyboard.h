@@ -12,8 +12,7 @@
 #define LAYOUT_US 1
 #define LAYOUT_CH 2
 
-//#define BUFFER_SIZE 1024
-#define BUFFER_SIZE 16
+#define BUFFER_SIZE 1024
 
 #include "../common/types.h"
 
@@ -42,9 +41,9 @@ extern void keyboard_init(int model);
 extern void keyboard_handler();
 
 /**
- * @brief Get a character from the buffer 
+ * @brief Get a character from the buffer
  *
- * @return The character from the buffer, 
+ * @return The character from the buffer,
  *         -1 if there is no character in the buffer
  */
 extern int getc();

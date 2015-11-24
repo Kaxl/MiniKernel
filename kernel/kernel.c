@@ -98,8 +98,6 @@ void runKernel() {
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
     printf("> ");
 
-    printf("Div 0 %d", 5 / 0);
-
     for (;;) {
         char c = (char)(getc());
         if ((int)(c) >= 0) {
