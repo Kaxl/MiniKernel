@@ -38,26 +38,9 @@ typedef struct idt_ptr_st {
 extern void idt_init();
 
 /**
- * @brief Assembly function to load the IDT. 
+ * @brief Assembly function to load the IDT.
  */
 extern void idt_load();
-
-/**
- * @brief Exception handler
- *
- * When an exception occurs, write the exception description in red and
- * exit the kernel with 'halt' function.
- *
- * @param regs  Processor context during the interruption
- */
-extern void exception_handler(regs_t *regs);
-
-/**
- * @brief Interruption handler 
- *
- * @param regs  Processor context during the interruption
- */
-extern void interruption_handler(regs_t *regs) {
 
 // Exception handler
 extern void _exception_0();

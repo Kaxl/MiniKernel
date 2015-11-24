@@ -39,6 +39,14 @@ static idt_entry_t idt_build_entry(uint16_t selector, uint32_t offset, uint8_t t
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief Exception handler
+ *
+ * When an exception occurs, write the exception description in red and
+ * exit the kernel with 'halt' function.
+ *
+ * @param regs  Processor context during the interruption
+ */
 void exception_handler(regs_t *regs) {
     clearScreen();
     setBackgroundColor(0);
@@ -115,6 +123,11 @@ void exception_handler(regs_t *regs) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief Interruption handler 
+ *
+ * @param regs  Processor context during the interruption
+ */
 void interruption_handler(regs_t *regs) {
     switch (regs->number) {
         case 0:
