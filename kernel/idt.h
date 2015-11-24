@@ -26,8 +26,38 @@ typedef struct idt_ptr_st {
     uint32_t base;    // Address of the first entry
 } __attribute__((packed)) idt_ptr_t;
 
+/**
+ * @brief Initialization of IDT
+ *
+ * - Fill the table IDT with 0.
+ * - Creation of entries for exception.
+ * - Creation of entries for interruption.
+ * - Set the base and the size of IDT.
+ * - Load IDT with assembly function. (see 'idt_asm.s')
+ */
 extern void idt_init();
+
+/**
+ * @brief Assembly function to load the IDT. 
+ */
 extern void idt_load();
+
+/**
+ * @brief Exception handler
+ *
+ * When an exception occurs, write the exception description in red and
+ * exit the kernel with 'halt' function.
+ *
+ * @param regs  Processor context during the interruption
+ */
+extern void exception_handler(regs_t *regs);
+
+/**
+ * @brief Interruption handler 
+ *
+ * @param regs  Processor context during the interruption
+ */
+extern void interruption_handler(regs_t *regs) {
 
 // Exception handler
 extern void _exception_0();

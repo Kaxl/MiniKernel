@@ -38,14 +38,7 @@ static idt_entry_t idt_build_entry(uint16_t selector, uint32_t offset, uint8_t t
 	return entry;
 }
 
-/**
- * @brief Exception handler
- *
- * When an exception occurs, write the exception description in red and
- * exit the kernel with 'halt' function.
- *
- * @param regs  Processor context during the interruption
- */
+////////////////////////////////////////////////////////////////////////////////////////
 void exception_handler(regs_t *regs) {
     clearScreen();
     setBackgroundColor(0);
@@ -121,7 +114,7 @@ void exception_handler(regs_t *regs) {
     halt();
 }
 
-// Interruption handler
+////////////////////////////////////////////////////////////////////////////////////////
 void interruption_handler(regs_t *regs) {
     switch (regs->number) {
         case 0:
@@ -178,16 +171,7 @@ void interruption_handler(regs_t *regs) {
     pic_eoi(regs->number);
 }
 
-/**
- * @brief Initialization of IDT
- *
- * - Fill the table IDT with 0.
- * - Creation of entries for exception.
- * - Creation of entries for interruption.
- * - Set the base and the size of IDT.
- * - Load IDT with assembly function. (see 'idt_asm.s')
- *
- */
+////////////////////////////////////////////////////////////////////////////////////////
 void idt_init() {
     // Fill the IDT with 0x0
     for (int i = 0; i < 256; i++)

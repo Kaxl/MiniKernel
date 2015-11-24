@@ -3,51 +3,44 @@
 #include "../common/types.h"
 #include "controller.h"
 
-#define SHIFT_LEFT  0x2A
-#define SHIFT_RIGHT 0x36
-#define CAPSLOCK    0x3A
-#define RETURN      0x1C
-#define BACKSPACE   0x0E
-#define TAB         0x0F
-#define ESC         0x01
+// Buffer
+volatile buffer b = {
+    .data = {},
+    .counter = 0,
+    .i_read = 0,
+    .i_write = 0
+};
 
-//#define BUFFER_SIZE 1024    // Must be a power of 2
-#define BUFFER_SIZE 16    // Must be a power of 2
-
-//int layout = LAYOUT_US;
-char buffer[BUFFER_SIZE];
-int i_read = 0;
-int i_write = 0;
-
+// Characters of layouts (US / CH)
 char us_layout[100] =       "--1234567890-=--qwertyuiop[]--asdfghjkl;'`,\\zxcvbnm,./-12 456789abcdefghijklknopqrtuwv<zy";
 char us_layout_shift[100] = "--!@#$%^&*()_+--QWERTYUIOP{}--ASDFGHJKL:\"~,|ZXCVBNM<>?-12 4567------------------------>--";
 char ch_layout[100] =       "--1234567890'^--qwertzuiope---asdfghjklea-,\\yxcvbnm,.--12 456789abcdefghijklknopqrtuwv<yz";
 char ch_layout_shift[100] = "--+\"*c%&/()=?`--QWERTZUIOPu!--ASDFGHJKLeo-LYXCVBNM;:_-12 4567------------------------>--";
-char* layout = ch_layout;
-char* layout_shift = ch_layout_shift;
-// £ç
+char* layout;
+char* layout_shift;
 
 static int shift = false;
 static int capslock = false;
 
-void keyboard_init() {
-
+////////////////////////////////////////////////////////////////////////////////////////
+void keyboard_init(int model) {
+    if (model == LAYOUT_US) {
+        layout = us_layout;
+        layout_shift = us_layout_shift;
+    }
+    else {
+        layout = ch_layout;
+        layout_shift = ch_layout_shift;
+    }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void keyboard_handler() {
     int c = (int)(inb(0x60));
     // Check if buffer is full
-    int n = 0;
-    if (i_write != i_read)
-        n = i_write > i_read ? i_write - i_read : i_write + BUFFER_SIZE - i_read;
-
-    if (n > BUFFER_SIZE - 1) {
+    if (b.counter > BUFFER_SIZE - 1) {
         int color = getTextColor();
         setTextColor(C_RED);
-        printf("Error with keyboard : Buffer is full.\r\n");
-        printf("iread : %d\n\r", i_read);
-        printf("iwrite : %d\n\r", i_write);
-        printf("iread : %d / iwrite : %d\n\r", i_read, i_write);
         setTextColor(color);    // Restaure previous color
         return;
     }
@@ -75,14 +68,16 @@ void keyboard_handler() {
                 printf("\t");
                 break;
             default:    // Any other key
-                i_write &= (BUFFER_SIZE - 1);
+                // Writes the character in the buffer
+                b.i_write &= (BUFFER_SIZE - 1);
                 if ((shift || capslock) && !(shift && capslock)) {
-                    buffer[i_write] = layout_shift[c];
+                    b.data[b.i_write] = layout_shift[c];
                 }
                 else {
-                    buffer[i_write] = layout[c];
+                    b.data[b.i_write] = layout[c];
                 }
-                i_write++;
+                b.i_write++;
+                b.counter++;
                 break;
         }
     }
@@ -94,10 +89,13 @@ void keyboard_handler() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 int getc() {
-    if ((i_read < i_write) || (i_read - i_write > 512)) {
-        i_read &= (BUFFER_SIZE - 1);
-        return buffer[i_read++];
+    // Read a character from the buffer if not empty
+    if (b.counter > 0) {
+        b.i_read &= (BUFFER_SIZE - 1);
+        b.counter--;
+        return b.data[b.i_read++];
     }
     return -1;
 }

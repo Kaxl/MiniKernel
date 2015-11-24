@@ -38,6 +38,8 @@ void runKernel() {
 #else
     // Init of gdt
     gdt_init();
+
+    // Init of screen
     initScreen();
 
     // Activation of interruption
@@ -45,9 +47,14 @@ void runKernel() {
 
     printf("Init of GDT - Done\r\n");
     printf("Init of screen - Done\r\n");
+
     // Init of idt
     idt_init();
     printf("Init of IDT - Done\r\n");
+
+    // Init of keyboard
+    keyboard_init(LAYOUT_CH);
+    printf("Init of keyboard - Done\r\n");
 
     // Init of timer
     timer_init(100);
@@ -55,8 +62,6 @@ void runKernel() {
 
     printf("Welcome to Snapfish OS !\r\n");
     printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
-
-    sleep(3000);
 
     for (;;) {
         char c = (char)(getc());
