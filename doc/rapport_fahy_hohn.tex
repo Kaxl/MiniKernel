@@ -54,7 +54,7 @@
 \fancyhead[R]{\today}
 
 
-\title{TP1 - MiniKernel with Display Management\\Advanced System Programming}
+\title{TP2 - MiniKernel avec Gestion des interruptions et du clavier\\Programmation Système Avancée}
 \author{Rudolf Höhn \& Axel Fahy}
 \date{\today}
 
@@ -62,134 +62,23 @@
 \begin{document}
 \maketitle
 
-\section{Project structure}
-\begin{verbatim}
-.
-├── common
-│   ├── base.c
-│   ├── base.h
-│   ├── colors.h
-│   ├── controller_asm.s
-│   ├── screen.c
-│   ├── screen.h
-│   ├── string.c
-│   ├── string.h
-│   └── types.h
-├── doc
-│   ├── rapport_fahy_hohn.pdf
-│   └── rapport_fahy_hohn.tex
-├── grub
-│   └── grub.cfg
-├── kernel
-│   ├── bootloader.s
-│   ├── const.inc
-│   ├── gdt_asm.s
-│   ├── gdt.c
-│   ├── gdt.h
-│   ├── kernel.c
-│   ├── kernel.h
-│   ├── kernel.ld
-│   ├── makefile
-│   └── x86.h
-├── makefile
-├── test
-│   ├── test_cases.c
-│   └── test_cases.h
-├── tools
-└── user
+\section{Questions}
+\begin{enumerate}
+\item \textbf{Comment vous êtes-vous réparti le travail ?}\\
+Nous avons travaillé en parallèle et à chaque fois, les deux ensemble. 
+\item \textbf{Votre kernel comporte-t-il des bugs ? Si oui, lesquels et comment pourriez-vous les corriger ?}\\
+\item \textbf{Dans quel ordre vous avez initialisé les différents points ci-dessus dans votre kernel ? Justifiez}\\
 
-\end{verbatim}
-\begin{description}
-\item[\textit{base.*}] \hfill \\
-Functions to handle memory.\\
-Implementation of \textit{memset}, \textit{memcpy} and \textit{strncmp}.
+\item \textbf{Pourquoi remappe-t-on les IRQ 0 à 7 aux interruptions 32 à 39 ?}\\
+Pour ne plus que les IRQ entrent en conflit avec les exceptions processeurs (qui sont des interruptions allant de 0 à 31).
+\item \textbf{Que se passerait-il si on ne le faisait pas ?}\\
+On ne pourrait pas faire la différence entre par exemple une interruption de timer et une exception de division par 0.
+\item \textbf{Comment pouvez-vous tester que votre gestionnaire d'interruption pour les exceptions fonctionne correctement ?}
+\item \textbf{Quelles exceptions avez-vous pu générer et comment avez-vous fait ?}
+\item \textbf{Quelle taille de buffer clavier avez-vous choisie et pourquoi ?}
+\item \textbf{Comment pouvez-vous causer une situation de buffer plein quelle que soit la taille du buffer (dans les limites du raisonnable) ?}
+\end{enumerate}
 
-\item[\textit{controller\_asm.s}] \hfill \\
-Functions to access peripherals and communicate with them.\\
-Implementation of \textit{outb}, \textit{outw}, \textit{inb}, and \textit{inw}.
-
-\item[\textit{screen.*}] \hfill \\
-Functions for the screen management.\\
-These files contain functions to initialize the screen and use it. It allows to change background and text color and print string.
-
-We use a structure for the cursor and colors management :
-
-\begin{verbatim}
-typedef struct screen {
-    ushort* cursor;
-    uchar textColor;
-    uchar bgColor;
-} screen;
-\end{verbatim}
-
-The \textit{cursor} attribute contains the current position of the cursor.
-Each time a character is written, this variable is updated.
-The \textit{textColor} and \textit{bgColor} attributes are used to know the current color. 
-
-\begin{verbatim}
-void setTextColor(uchar color);
-\end{verbatim}
-
-This function sets the current color of the character. For example, the current font color is white and you set the color using this function, only the next characters will have the new color. All the characters already written keep their font color.  
-
-\begin{verbatim}
-void setAllTextColor(uchar color);
-\end{verbatim}
-
-This function sets the current color of the character and the color of all the other characters already written.
-
-\begin{verbatim}
-void setBackgroundColor(uchar color);
-void setAllBackgroundColor(uchar color);
-\end{verbatim}
-
-The difference between these two functions is the same as the functions which sets the text color but these are for the background of characters.
-
-\item[\textit{string.*}] \hfill \\
-Functions to use strings easier. \\
-Implementation of \textit{itoa} which converts an integer to an array of char and \textit{xtoa} which converts an hexadecimal to an array.
-
-\item[\textit{colors.h}] \hfill \\
-Definitions of colors.
-
-\item[\textit{test\_cases.*}] \hfill \\
-Testing file.\\
-We test different things, all of them are listed below :
-\begin{itemize}
-\item \textbf{Color} : Update the text color and the background color.
-\item \textbf{Scroll} : Print numbers on the first column of the screen.
-\item \textbf{Scroll2} : Writing a lot of characters.
-\item \textbf{printf} : Call \textit{printf} with one or multiple arguments of different types.
-\item \textbf{Cursor} : Call \textit{setCursorPosition} and \textit{getCursorPosition} and compare the values by printing them on the screen.
-\end{itemize}
-
-\item[\textit{doc}] \hfill \\
-The doc folder contains the report.
-
-\end{description}
-\newpage
-\section{Execution}
-
-Before any change of execution mode, a call to \textit{make clean} is mandatory.
-
-There are two modes of execution : 
-
-\begin{itemize}
-  \item \textbf{Test} : Test of functions. To run this mode, run \textit{make} this way :
-    \begin{verbatim}
-    make run MODE=-DTEST
-    \end{verbatim}
-  \item \textbf{Default} : Default mode start the kernel and print a welcome message.
-    \begin{verbatim}
-    make run
-    \end{verbatim}
-\end{itemize}
-
-With computers from hepia, we need to execute \textit{make clean} before any call to \textit{make}. 
-Otherwise, \textit{xorriso} will fail.
-
-\section{Work repartition}
-For this project, we worked together. We had to think about how we wanted to realize each parts. It would have been more difficult to work separately because of the architecture of the project and its complexity.
 \end{document}
 
 
