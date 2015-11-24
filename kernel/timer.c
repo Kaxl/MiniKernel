@@ -29,6 +29,7 @@ void timer_init(uint32_t freq_hz) {
 void timer_handler() {
     // wait for tick
     t.tick++;
+    printf("_");
 }
 
 uint get_ticks() {

@@ -50,7 +50,7 @@ void runKernel() {
     printf("Init of IDT - Done\r\n");
 
     // Init of timer
-    timer_init(10000);
+    timer_init(5000);
     printf("Init of Timer at 100[hz] - Done\r\n");
 
     printf("Welcome to Snapfish OS !\r\n");
