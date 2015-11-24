@@ -32,15 +32,15 @@ void runKernel() {
     // Init of gdt
     gdt_init();
 
+    // Init of screen
+    initScreen();
+
     // Remap interruptions
     // Needs to be done before activate them
     pic_init();
 
     // Activation of interruption
     sti();
-
-    // Init of screen
-    initScreen();
 
     // Init of idt
     idt_init();
@@ -95,7 +95,6 @@ void runKernel() {
     printf("  ]\r\n");
 
     printf("\r\nWelcome to Snapfish OS !\r\n");
-    printf("You're awesome, what can I do for you on this beautiful day ?\r\n");
     printf("> ");
 
     for (;;) {

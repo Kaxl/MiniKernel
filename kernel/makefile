@@ -8,11 +8,11 @@
 #
 
 CC=gcc
-CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra $(DEBUG)
+CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra
 
 .PHONY: clean
 
-kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o pic.o gdt_asm.o idt_asm.o screen.o controller_asm.o string.o ../test/test_cases.o
+kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o pic.o gdt_asm.o idt_asm.o screen.o controller_asm.o string.o
 	ld -melf_i386 -T kernel.ld $^ -o $@
 
 kernel.o: kernel.c kernel.h
@@ -52,9 +52,6 @@ controller_asm.o: controller_asm.s controller.h
 	nasm -f elf32 $<
 
 string.o: string.c string.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-../test/test_cases.o: ../test/test_cases.c ../test/test_cases.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
