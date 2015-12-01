@@ -27,12 +27,11 @@ entrypoint:
 	cli  ; disable hardware interrupts
 
     ; Init of stack pointer and base pointer
-    mov     esp, stack      ; Init at end of stack 
-    mov     ebp, stack      ; Init at end of stack 
-
+    mov     esp, stack      ; Init at end of stack
+    mov     ebp, stack      ; Init at end of stack
 
     ; Main function
-    call runKernel 
+    call runKernel
 
 	; infinite loop (should never get here)
 .forever:
@@ -44,4 +43,4 @@ entrypoint:
 section .stack
     align   4                   ; Alignment on 4 bytes
     stack:  resb  STACK_SIZE    ; Reserve 256KB (not initialized)
-    
+
