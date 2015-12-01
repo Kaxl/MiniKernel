@@ -7,6 +7,7 @@
 
 #include "ide.h"
 #include "io.h"
+#include "controller.h"
 
 /**
  * Wait for the disk drive to be ready.
