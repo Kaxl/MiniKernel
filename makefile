@@ -12,7 +12,7 @@
 .PHONY: run, clean
 
 kernel.iso: kernel.elf
-	grub-mkrescue -o $@ .
+	grub-mkrescue -d /usr/lib/grub/i386-pc -o $@ .
 
 kernel.elf:
 	cd kernel && $(MAKE)
@@ -21,7 +21,7 @@ kernel.elf:
 	cp grub/grub.cfg boot/grub/
 
 run: kernel.iso
-	qemu-system-i386 -hda $^
+	qemu-system-i386 -cdrom $^
 
 clean:
 	rm -f *.o
