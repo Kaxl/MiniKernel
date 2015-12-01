@@ -12,7 +12,7 @@ CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra
 
 .PHONY: clean
 
-kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o pic.o gdt_asm.o idt_asm.o screen.o controller_asm.o string.o
+kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o controller_asm.o string.o
 	ld -melf_i386 -T kernel.ld $^ -o $@
 
 kernel.o: kernel.c kernel.h
@@ -37,6 +37,9 @@ gdt_asm.o: gdt_asm.s
 	nasm -f elf32 $^
 
 idt.o: idt.c idt.h
+	$(CC) $(CFLAGS) -c $<
+
+ide.o: ide.c ide.h
 	$(CC) $(CFLAGS) -c $<
 
 idt_asm.o: idt_asm.s

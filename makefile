@@ -21,7 +21,7 @@ kernel.elf:
 	cp grub/grub.cfg boot/grub/
 
 run: kernel.iso
-	qemu-system-i386 -hda $^
+	qemu-system-i386 -cdrom $^
 
 clean:
 	rm -f *.o
