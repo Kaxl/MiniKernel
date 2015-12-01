@@ -38,13 +38,13 @@ void initScreen() {
 
     // Change cursor
     // Cursor always visible
-    outb(0x3d4, 0xA);
-    outw(0x3d5, (int)inw(0x3d5) & ~(0x1 << 5));
+    outb(COMMAND_PORT, 0xA);
+    outw(DATA_PORT, (int)inw(DATA_PORT) & ~(0x1 << 5));
     // Cursor fill
-    outb(0x3d4, 0xA);
-    outw(0x3d5, 0);
-    outb(0x3d4, 0xB);
-    outw(0x3d5, 0x1F);
+    outb(COMMAND_PORT, 0xA);
+    outw(DATA_PORT, 0);
+    outb(COMMAND_PORT, 0xB);
+    outw(DATA_PORT, 0x1F);
 }
 
 
@@ -235,10 +235,10 @@ void printf(char *s, ...) {
 void setCursorPosition(uchar x, uchar y) {
     ushort pos = y * SCREEN_WIDTH + x;
 
-    outb(0x3d4, 0xE);
-    outw(0x3d5, (ushort)(pos >> 8));    // MSB of pos
-    outb(0x3d4, 0xF);
-    outw(0x3d5, (ushort)(pos & 0xFF));  // LSB of pos
+    outb(COMMAND_PORT, 0xE);
+    outw(DATA_PORT, (ushort)(pos >> 8));    // MSB of pos
+    outb(COMMAND_PORT, 0xF);
+    outw(DATA_PORT, (ushort)(pos & 0xFF));  // LSB of pos
 
     s.cursor = (ushort *)FIRST_ADDR;    // Go to first address
     s.cursor += (ushort)pos;            // Add the pos
@@ -249,10 +249,10 @@ void setCursorPosition(uchar x, uchar y) {
 void getCursorPosition(uchar* x, uchar* y) {
     int pos;
     int msb, lsb;
-    outb(0x3d4, 0xE);
-    msb = (ushort)(inb(0x3d5)); // MSB of pos
-    outb(0x3d4, 0xF);
-    lsb = (ushort)(inb(0x3d5)); // LSB of pos
+    outb(COMMAND_PORT, 0xE);
+    msb = (ushort)(inb(DATA_PORT)); // MSB of pos
+    outb(COMMAND_PORT, 0xF);
+    lsb = (ushort)(inb(DATA_PORT)); // LSB of pos
 
     pos = lsb;
     pos = pos | (msb << 8);

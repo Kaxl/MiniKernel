@@ -27,8 +27,8 @@ entrypoint:
 	cli  ; disable hardware interrupts
 
     ; Init of stack pointer and base pointer
-    mov     esp, stack      ; Init at end of stack
-    mov     ebp, stack      ; Init at end of stack
+    mov     esp, stack + STACK_SIZE     ; Init at end of stack
+    mov     ebp, stack + STACK_SIZE     ; Init at end of stack
 
     ; Main function
     call runKernel

@@ -6,7 +6,6 @@
  */
 
 #include "ide.h"
-#include "io.h"
 #include "controller.h"
 
 /**
