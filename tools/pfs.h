@@ -49,7 +49,7 @@ typedef struct pfsconf_t {
 typedef struct fileentry_t {
     char filename[32];                  // Name of the file
     unsigned int size;                  // Sie of the file (4 bytes)
-    unsigned short int* index;          // Index of block (2 bytes)
+    unsigned short int index[110];      // Index of block (2 bytes)
 } fileentry_t;
 
 #endif
