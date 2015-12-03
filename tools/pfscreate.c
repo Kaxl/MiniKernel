@@ -23,6 +23,13 @@
 #include "pfs.h"
 #include "const.h"
 
+void fill_zero(void* data, int size) {
+    // TODO: Not sector_size but bloc_size
+    for (int i = size; i < SECTOR_SIZE; i++) {
+        data[i] = '\0';
+    }
+}
+
 // create an empty file with blocks of x size (must be a 512 multiple), with y file entries and with z data blocks available 
 void pfscreate(char* filename, int x, int y, int z) {
     // Verif if x is a multiple of a sector size
@@ -43,10 +50,10 @@ void pfscreate(char* filename, int x, int y, int z) {
     };
 
     // Create and fill the bitmap
-    
+    char bitmap_size[superbloc.bitmap_size + (superbloc.bitmap_size % z)];
     
     // Initialize all of the file entries
-
+    
 
     // Initlalize all the data blocks
 
@@ -67,8 +74,8 @@ void main(int argc, char *argv[]) {
     if (argc < 5) {
         printf("Error, not enough arguments\npfscreate FILENAME X Y Z\n");
         printf("filename : name of the PFS file\n");
-        printf("x : size of one block (multiple of 512)");
-        printf("y : number of file entries" );
+        printf("x : size of one block (multiple of 512)\n");
+        printf("y : number of file entries\n");
         printf("z : data blocks available \n" );
     }
 
