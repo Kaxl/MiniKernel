@@ -1,4 +1,4 @@
-#ifndef __PFS__H 
+#ifndef __PFS__H
 #define __PFS__H
 
 /*
@@ -19,8 +19,11 @@
  * =====================================================================================
  */
 
+/**
+ * @brief
+ */
 typedef struct superbloc_t {
-    char signature[8];                // Signature of the file system
+    char signature[8];                  // Signature of the file system
     unsigned int nb_sectors_b;          // Number of sectors by bloc
     unsigned int bitmap_size;           // Size of the bitmap in bloc
     unsigned int nb_file_entries;       // Number of file entries
@@ -28,11 +31,25 @@ typedef struct superbloc_t {
     unsigned int nb_data_blocks;        // Number of data blocs
 } superbloc_t;
 
+
+/**
+ * @brief
+ */
 typedef struct pfsconf_t {
     char* filename;
     int x;
     int y;
     int z;
 } pfsconst_t;
+
+
+/**
+ * @brief File entry structure
+ */
+typedef struct fileentry_t {
+    char filename[32];                  // Name of the file
+    unsigned int size;                  // Sie of the file (4 bytes)
+    unsigned short int* index;          // Index of block (2 bytes)
+} fileentry_t;
 
 #endif
