@@ -3,7 +3,7 @@
  *
  *       Filename:  pfscreate.c
  *
- *    Description:  Create a PFS file empty 
+ *    Description:  Create a PFS file empty
  *
  *        Version:  1.0
  *        Created:  12/03/2015 04:00:7 PM
@@ -23,6 +23,12 @@
 #include "pfs.h"
 #include "const.h"
 
+/**
+ * @brief
+ *
+ * @param data
+ * @param size
+ */
 void fill_zero(void* data, int size) {
     // TODO: Not sector_size but bloc_size
     for (int i = size; i < SECTOR_SIZE; i++) {
@@ -30,7 +36,15 @@ void fill_zero(void* data, int size) {
     }
 }
 
-// create an empty file with blocks of x size (must be a 512 multiple), with y file entries and with z data blocks available 
+// create an empty file with blocks of x size (must be a 512 multiple), with y file entries and with z data blocks available
+/**
+ * @brief
+ *
+ * @param filename
+ * @param x
+ * @param y
+ * @param z
+ */
 void pfscreate(char* filename, int x, int y, int z) {
     // Verif if x is a multiple of a sector size
     if ((x % SECTOR_SIZE) != 0) {
@@ -38,9 +52,9 @@ void pfscreate(char* filename, int x, int y, int z) {
         return;
     }
 
-    // Creation of the the superbloc
+    // Creation of the the superblock
     // Each data bloc is one bit
-    superbloc_t superbloc = {
+    superblock_t superblock = {
         .signature = SIGNATURE,
         .nb_sectors_b = x / SECTOR_SIZE,
         .bitmap_size = z / 8,
@@ -50,10 +64,10 @@ void pfscreate(char* filename, int x, int y, int z) {
     };
 
     // Create and fill the bitmap
-    char bitmap_size[superbloc.bitmap_size + (superbloc.bitmap_size % z)];
-    
+    char bitmap_size[superblock.bitmap_size + (superblock.bitmap_size % z)];
+
     // Initialize all of the file entries
-    
+
 
     // Initlalize all the data blocks
 
@@ -61,7 +75,7 @@ void pfscreate(char* filename, int x, int y, int z) {
     // Open of the file
     FILE* fp;
     fp = fopen(filename, "wb");
-    
+
     // Write in the file all the blocs
 
 

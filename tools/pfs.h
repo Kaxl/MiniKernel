@@ -22,14 +22,14 @@
 /**
  * @brief
  */
-typedef struct superbloc_t {
+typedef struct superblock_t {
     char signature[8];                  // Signature of the file system
     unsigned int nb_sectors_b;          // Number of sectors by bloc
     unsigned int bitmap_size;           // Size of the bitmap in bloc
     unsigned int nb_file_entries;       // Number of file entries
     unsigned int file_entries_size;     // Size of a file entry in byte
     unsigned int nb_data_blocks;        // Number of data blocs
-} superbloc_t;
+} superblock_t;
 
 
 /**
