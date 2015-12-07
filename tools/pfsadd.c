@@ -76,10 +76,10 @@ void pfsadd(char* img, char* filename) {
     printf("nbDataBlocks : %d\n", superblock->nbDataBlocks);
 
     // Creation of file entry
-    file_entry_t* fileEntry = malloc(sizeof(file_entry_t));;
-    memcpy(fileEntry->filename, filename, sizeof(filename));
+    file_entry_t newFileEntry;
+    memcpy(newFileEntry.filename, filename, sizeof(filename));
     // Last character is 0 (end of string)
-    fileEntry->filename[31] = 0;
+    newFileEntry.filename[31] = 0;
 
     // Calculate the size of a block
     int blockSize = superblock->nbSectorsB * SECTOR_SIZE;
@@ -94,6 +94,8 @@ void pfsadd(char* img, char* filename) {
     // Look for the first free position
     for (int i = 0; i < superblock->nbFileEntries; i++) {
         if (!arrayFileEntries[i].filename[0]) {
+            // Add the file entry in the array
+            arrayFileEntries[i] = newFileEntry;
             break;
         }
         //char* tmpFileEntry = calloc(superblock->fileEntrySize, sizeof(char));
@@ -108,6 +110,9 @@ void pfsadd(char* img, char* filename) {
         //    break;
         //}
     }
+    // Write the array of file entry in the image
+    fseek(image, SEEK_SET, firstFileEntry);
+    fwrite(arrayFileEntries, superblock->fileEntrySize, superblock->nbFileEntries, image);
     // Add the file entry at the current position
     //fwrite(fileEntry, sizeof(file_entry_t), 1, image);
 
