@@ -41,6 +41,7 @@ void keyboard_handler() {
     if (b.counter > BUFFER_SIZE - 1) {
         int color = getTextColor();
         setTextColor(C_RED);
+        printf("Error with keyboard : Buffer is full.\r\n");
         setTextColor(color);    // Restaure previous color
         return;
     }
