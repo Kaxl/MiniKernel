@@ -22,6 +22,8 @@
 #include "pfs.h"
 #include "const.h"
 
+superblock_t getSuperBlock(char* img);
+
 /**
  * @brief Add a file in the image
  *
@@ -54,6 +56,9 @@ void pfsadd(char* img, char* filename) {
         printf("Error, the filename is too long");
     }
 
+    // Get the superblock
+    superblock_t superblock = getSuperBlock(img);
+
     // Creation of file entry
     file_entry_t fileEntry = NULL;
     file_entry.filename = filename;
@@ -63,8 +68,14 @@ void pfsadd(char* img, char* filename) {
     // Look for the first free position after the bitmap
     int posFileEntry =
 
-    // TODO : Fonction pour avoir le superblock.
-    // Recuperer le nombre de secteurs par block pour connaitre la taille du superblock
+    // Calculate the size of a block
+    int blockSize = superblock.nb_sectors_b * SECTOR_SIZE;
+    // Go after the bitmap
+    fseek(file, SEEK_SET, blockSize + superblock.bitmap_size * blockSize);
+    // Look for the first free position
+
+
+
     // et pouvoir le charger, bitmap size, ...
 
     // Write the data
@@ -88,6 +99,27 @@ void main(int argc, char *argv[]) {
     pfsadd(argv[1], atoi(argv[2]));
 }
 
+
+superblock_t getSuperBlock(char* img) {
+    FILE* file = fopen(filename, "rb");
+
+    if (file == NULL) {
+        printf("Error while opening the file");
+        return 1;
+    }
+    // Set the pointer at the beginning of the file
+    fseek(file, SEEK_SET, 0);
+    // Create the superblock structure with data from image
+    superblock_t s = NULL;
+    fread(s.signature, 1, 8, file);
+    fread(s.nb_sectors_b, 4, 1, file);
+    fread(s.bitmap_size, 4, 1, file);
+    fread(s.nb_file_entries, 4, 1, file);
+    fread(s.nb_data_block, 4, 1, file);
+
+    fclose(file);
+    return s;
+}
 
 
 

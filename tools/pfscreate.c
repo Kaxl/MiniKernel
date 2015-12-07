@@ -59,7 +59,7 @@ void pfscreate(char* filename, int x, int y, int z) {
         .nb_sectors_b = x / SECTOR_SIZE,
         .bitmap_size = z / 8,
         .nb_file_entries = y,
-        .file_entries_size = FILE_ENTRY_SIZE,
+        .file_entry_size = FILE_ENTRY_SIZE,
         .nb_data_blocks = z
     };
 
