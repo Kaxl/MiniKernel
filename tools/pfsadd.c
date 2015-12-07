@@ -64,6 +64,7 @@ void pfsadd(char* img, char* filename) {
     int blockSize = superblock->nbSectorsB * SECTOR_SIZE;
 
     // Load the bitmap
+    fseek(image, blockSize, SEEK_SET);
     unsigned char* bitmap = calloc(superblock->bitmapSize * blockSize / 8, sizeof(char));
     int bitmapSize = superblock->bitmapSize * blockSize / 8;
     fread(bitmap, sizeof(char), bitmapSize, image);
@@ -143,10 +144,14 @@ void pfsadd(char* img, char* filename) {
  */
 int allocBlock(unsigned char* bitmap, int size) {
     for (int i = 0; i < size; i++) {
-        for (int j = 0; j < 8; j++) {
-            if (!(bitmap[i] & (0x8 >> j))) {
-                bitmap[i] |= (0x8 >> j);
-                return (i * 8 + (8 - j));
+        // If all bits are taken
+        if (bitmap[i] == 0xf) {
+            continue;
+        }
+        for (int j = 7; j >= 0; j--) {
+            if (!(bitmap[i] & (0x1 << j))) {
+                bitmap[i] |= (0x1 << j);
+                return (i * 0x8 + (0x8 - j));
             }
         }
     }
