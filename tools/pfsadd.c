@@ -63,9 +63,12 @@ void pfsadd(char* img, char* filename) {
 
     // Set the pointer at the beginning of the file
     fseek(image, SEEK_SET, 0);
-    // Get the superblock
+    // Load the superblock
     superblock_t* superblock = calloc(1, sizeof(superblock_t));
     fread(superblock, sizeof(superblock_t), 1, image);
+    // Load the bitmap
+    
+
 
     printf("Superblock\n");
     printf("signature : %s\n", superblock->signature);
@@ -98,33 +101,22 @@ void pfsadd(char* img, char* filename) {
             arrayFileEntries[i] = newFileEntry;
             break;
         }
-        //char* tmpFileEntry = calloc(superblock->fileEntrySize, sizeof(char));
-        ////for (int j = 0; j < superblock->fileEntrySize) {
-        ////    tmpFileEntry[j] = arrayFileEntries[i * superblock->fileEntrySize + j];
-        ////}
-        //fseek(file, SEEK_SET, firstFileEntry + i * superblock->fileEntrySize);
-        //char* tmp = calloc(superblock->fileEntrySize, sizeof(char));
-        //fread(tmp, superblock->fileEntrySize, 1, image);
-        //if (!tmp) {
-        //    printf("test");
-        //    break;
-        //}
     }
     // Write the array of file entry in the image
     fseek(image, SEEK_SET, firstFileEntry);
     fwrite(arrayFileEntries, superblock->fileEntrySize, superblock->nbFileEntries, image);
-    // Add the file entry at the current position
-    //fwrite(fileEntry, sizeof(file_entry_t), 1, image);
-
-    // et pouvoir le charger, bitmap size, ...
 
     // Write the data
     // Run over the file from block size to block size
     // For each block, find the first free bitmap, set it has taken.
     // Then go to the corresponding block and fill it
+    char* arrayData = calloc(sizeof(char), blockSize);
+    while (fread(arrayData, sizeof(char), blockSize, image) > 0) {
+
+    }
 
 
-    // Close the file
+    // Close the files
     fclose(image);
     fclose(file);
 }
