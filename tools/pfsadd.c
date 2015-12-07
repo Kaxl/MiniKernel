@@ -60,21 +60,29 @@ void pfsadd(char* img, char* filename) {
     superblock_t superblock = getSuperBlock(img);
 
     // Creation of file entry
-    file_entry_t fileEntry = NULL;
-    file_entry.filename = filename;
-    file_entry.filename[31] = 0;
+    file_entry_t* fileEntry = NULL;
+    file_entry->filename = filename;
+    file_entry->filename[31] = 0;
 
     // Position to write the file entry
     // Look for the first free position after the bitmap
     int posFileEntry =
 
     // Calculate the size of a block
-    int blockSize = superblock.nb_sectors_b * SECTOR_SIZE;
+    int blockSize = superblock.nbSectorsB * SECTOR_SIZE;
     // Go after the bitmap
-    fseek(file, SEEK_SET, blockSize + superblock.bitmap_size * blockSize);
+    firstFileEntry = blockSize + superblock.bitmapSize * blockSize;
+    fseek(file, SEEK_SET, blockSize + superblock.bitmapSize * blockSize);
     // Look for the first free position
-
-
+    for (int i = 0; i < superblock.nbFileEntries; i++) {
+        fseek(file, SEEK_SET, firstFileEntry + i * superblock.fileEntrySize);
+        void* tmp = calloc(superblock.fileEntrySize, sizeof(void));
+        memcpy(tmp, file, superblock.fileEntrySize);
+        if (!tmp)
+            break;
+    }
+    // Add the file entry at the current position
+    fwrite(fileEntry, sizeof(file_entry_t), 1, file);
 
     // et pouvoir le charger, bitmap size, ...
 
@@ -112,10 +120,10 @@ superblock_t getSuperBlock(char* img) {
     // Create the superblock structure with data from image
     superblock_t s = NULL;
     fread(s.signature, 1, 8, file);
-    fread(s.nb_sectors_b, 4, 1, file);
-    fread(s.bitmap_size, 4, 1, file);
-    fread(s.nb_file_entries, 4, 1, file);
-    fread(s.nb_data_block, 4, 1, file);
+    fread(s.nbSectorsB, 4, 1, file);
+    fread(s.bitmapSize, 4, 1, file);
+    fread(s.nbFileEntries, 4, 1, file);
+    fread(s.nbDataBlocks, 4, 1, file);
 
     fclose(file);
     return s;
