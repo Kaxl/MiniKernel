@@ -1,4 +1,4 @@
-CMD=pfscreate pfsadd sfslist sfsdel
+CMD=pfscreate pfsadd pfslist pfsdel
 
 all: $(CMD)
 
