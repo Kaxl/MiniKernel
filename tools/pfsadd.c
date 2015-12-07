@@ -89,10 +89,12 @@ void pfsadd(char* img, char* filename) {
     fseek(image, SEEK_SET, blockSize + superblock->bitmapSize * blockSize);
     // Look for the first free position
     for (int i = 0; i < superblock->nbFileEntries; i++) {
+        printf("%d", i);
         fseek(file, SEEK_SET, firstFileEntry + i * superblock->fileEntrySize);
         void* tmp = calloc(superblock->fileEntrySize, sizeof(void));
         memcpy(tmp, image, superblock->fileEntrySize);
         if (!tmp)
+            printf("FREE");
             break;
     }
     // Add the file entry at the current position
