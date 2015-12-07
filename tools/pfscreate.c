@@ -56,24 +56,26 @@ void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksA
     superblock_t superblock = {
         .signature = SIGNATURE,
         .nbSectorsB = blockSize / SECTOR_SIZE,
-        .bitmapSize = dataBlocksAvailable / 8,
+        .bitmapSize = (dataBlocksAvailable % blockSize == 0) ? dataBlocksAvailable / blockSize : dataBlocksAvailable / blockSize + 1,
         .nbFileEntries = nbFileEntries,
         .fileEntrySize = FILE_ENTRY_SIZE,
         .nbDataBlocks = dataBlocksAvailable
     };
-    
     int len = sizeof(struct superblock_t);
     unsigned char * raw = calloc(blockSize, sizeof(unsigned char));
     memcpy(raw, &superblock, len);
 
     // Create and fill the bitmap
-    char bitmap[superblock.bitmapSize + (superblock.bitmapSize % dataBlocksAvailable)];
+    int bitmapSize = superblock.bitmapSize * blockSize;
+    char* bitmap = calloc(bitmapSize, sizeof(char));
 
     // Initialize all of the file entries
-
+    int fileEntriesSize = FILE_ENTRY_SIZE*(nbFileEntries + nbFileEntries % 2);
+    char* fileEntries = calloc(fileEntriesSize, sizeof(char));
 
     // Initlalize all the data blocks
-
+    int dataBlocksSize = dataBlocksAvailable * blockSize;
+    char* dataBlocks = calloc(dataBlocksSize, sizeof(char));
 
     // Open of the file
     FILE* fp;
@@ -81,8 +83,10 @@ void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksA
 
     // Write in the file all the blocs
     fwrite(raw, sizeof(unsigned char), blockSize, fp);
-    // fwrite(bitmap, sizeof(char), superblock.bitmap_size + (superblock.bitmap_size % dataBlocksAvailable), fp);
-
+    fwrite(bitmap, sizeof(char), bitmapSize, fp);
+    fwrite(fileEntries, sizeof(char), fileEntriesSize, fp);
+    fwrite(dataBlocks, sizeof(char), dataBlocksSize, fp);
+    
     // close the file
     fclose(fp);
     return;
@@ -95,6 +99,7 @@ void main(int argc, char *argv[]) {
         printf("x : size of one block (multiple of 512)\n");
         printf("y : number of file entries\n");
         printf("z : data blocks available \n" );
+        return;
     }
 
     pfscreate(argv[1], atoi(argv[2]), atoi(argv[3]), atoi(argv[4]));
