@@ -39,34 +39,24 @@ void pfslist(char* img) {
     }
 
     // Set the pointer at the beginning of the file
-    fseek(image, SEEK_SET, 0);
+    fseek(image, 0, SEEK_SET);
     
     // Get the superblock
     superblock_t* superblock = calloc(1, sizeof(superblock_t));
     fread(superblock, sizeof(superblock_t), 1, image);
-
-    // Test printfs
-    //printf("Superblock\n");
-    //printf("signature : %s\n", superblock->signature);
-    //printf("nbSectorsB : %d\n", superblock->nbSectorsB);
-    //printf("bitmapSize : %d\n", superblock->bitmapSize);
-    //printf("nbFileEntries : %d\n", superblock->nbFileEntries);
-    //printf("fileEntrySize : %d\n", superblock->fileEntrySize);
-    //printf("nbDataBlocks : %d\n", superblock->nbDataBlocks);
 
     // Calculate the size of a block
     int blockSize = superblock->nbSectorsB * SECTOR_SIZE;
     
     // Load the file entries
     file_entry_t* arrayFileEntries = calloc(superblock->fileEntrySize, superblock->nbFileEntries);
-    fseek(image, SEEK_SET, blockSize + superblock->bitmapSize * blockSize);
+    fseek(image, blockSize + superblock->bitmapSize * blockSize, SEEK_SET);
     fread(arrayFileEntries, sizeof(file_entry_t), superblock->nbFileEntries, image); 
     // Look for files in file entry
     for (int i = 0; i < superblock->nbFileEntries; i++) {
 
         // Stop the reading if no more file entries with data
         if (!arrayFileEntries[i].filename[0]) {
-            printf("NO FILES FOUND\n");
             break;
         }
 
