@@ -44,3 +44,9 @@ boot/
 *.log
 *.aux
 *.gz
+
+# PFS Files
+pfscreate
+pfsadd
+pfslist
+pfsdel
