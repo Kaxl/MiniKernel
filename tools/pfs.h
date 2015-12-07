@@ -46,10 +46,10 @@ typedef struct pfsconf_t {
 /**
  * @brief File entry structure
  */
-typedef struct fileentry_t {
+typedef struct file_entry_t {
     char filename[32];                  // Name of the file
-    unsigned int size;                  // Sie of the file (4 bytes)
+    unsigned int size;                  // Size of the file (4 bytes)
     unsigned short int index[110];      // Index of block (2 bytes)
-} fileentry_t;
+} file_entry_t;
 
 #endif
