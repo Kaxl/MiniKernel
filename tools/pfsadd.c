@@ -44,9 +44,14 @@ void pfsadd(char* img, char* filename) {
     //          indiquer le 1er bitmap dans le fileentry
     //          mettre data dans le bloc
 
-    FILE* file = fopen(filename, "r+b");
-
+    FILE* file = fopen(filename, "rb");
     if (file == NULL) {
+        printf("Error while opening the file");
+        return;
+    }
+
+    FILE* image = fopen(img, "r+b");
+    if (image == NULL) {
         printf("Error while opening the file");
         return;
     }
@@ -56,33 +61,42 @@ void pfsadd(char* img, char* filename) {
         printf("Error, the filename is too long");
     }
 
+    // Set the pointer at the beginning of the file
+    fseek(image, SEEK_SET, 0);
     // Get the superblock
-    superblock_t superblock = getSuperBlock(img);
+    superblock_t* superblock = calloc(1, sizeof(superblock_t));
+    fread(superblock, sizeof(superblock_t), 1, image);
+
+    printf("Superblock\n");
+    printf("signature : %s\n", superblock->signature);
+    printf("nbSectorsB : %d\n", superblock->nbSectorsB);
+    printf("bitmapSize : %d\n", superblock->bitmapSize);
+    printf("nbFileEntries : %d\n", superblock->nbFileEntries);
+    printf("fileEntrySize : %d\n", superblock->fileEntrySize);
+    printf("nbDataBlocks : %d\n", superblock->nbDataBlocks);
 
     // Creation of file entry
-    file_entry_t* fileEntry = NULL;
-    file_entry->filename = filename;
-    file_entry->filename[31] = 0;
-
-    // Position to write the file entry
-    // Look for the first free position after the bitmap
-    int posFileEntry =
+    file_entry_t* fileEntry = malloc(sizeof(file_entry_t));;
+    memcpy(fileEntry->filename, filename, sizeof(filename));
+    //fileEntry->filename = filename;
+    fileEntry->filename[31] = 0;
 
     // Calculate the size of a block
-    int blockSize = superblock.nbSectorsB * SECTOR_SIZE;
-    // Go after the bitmap
-    firstFileEntry = blockSize + superblock.bitmapSize * blockSize;
-    fseek(file, SEEK_SET, blockSize + superblock.bitmapSize * blockSize);
+    int blockSize = superblock->nbSectorsB * SECTOR_SIZE;
+    // Position to write the file entry
+    // Look for the first free position after the bitmap
+    int firstFileEntry = blockSize + superblock->bitmapSize * blockSize;
+    fseek(image, SEEK_SET, blockSize + superblock->bitmapSize * blockSize);
     // Look for the first free position
-    for (int i = 0; i < superblock.nbFileEntries; i++) {
-        fseek(file, SEEK_SET, firstFileEntry + i * superblock.fileEntrySize);
-        void* tmp = calloc(superblock.fileEntrySize, sizeof(void));
-        memcpy(tmp, file, superblock.fileEntrySize);
+    for (int i = 0; i < superblock->nbFileEntries; i++) {
+        fseek(file, SEEK_SET, firstFileEntry + i * superblock->fileEntrySize);
+        void* tmp = calloc(superblock->fileEntrySize, sizeof(void));
+        memcpy(tmp, image, superblock->fileEntrySize);
         if (!tmp)
             break;
     }
     // Add the file entry at the current position
-    fwrite(fileEntry, sizeof(file_entry_t), 1, file);
+    fwrite(fileEntry, sizeof(file_entry_t), 1, image);
 
     // et pouvoir le charger, bitmap size, ...
 
@@ -102,32 +116,10 @@ void main(int argc, char *argv[]) {
         printf("pfsadd img file\n");
         printf("img : image representing the filesystem\n");
         printf("file : file to add into the filesystem\n");
+        return;
     }
 
-    pfsadd(argv[1], atoi(argv[2]));
+    pfsadd(argv[1], argv[2]);
 }
-
-
-superblock_t getSuperBlock(char* img) {
-    FILE* file = fopen(filename, "rb");
-
-    if (file == NULL) {
-        printf("Error while opening the file");
-        return 1;
-    }
-    // Set the pointer at the beginning of the file
-    fseek(file, SEEK_SET, 0);
-    // Create the superblock structure with data from image
-    superblock_t s = NULL;
-    fread(s.signature, 1, 8, file);
-    fread(s.nbSectorsB, 4, 1, file);
-    fread(s.bitmapSize, 4, 1, file);
-    fread(s.nbFileEntries, 4, 1, file);
-    fread(s.nbDataBlocks, 4, 1, file);
-
-    fclose(file);
-    return s;
-}
-
 
 
