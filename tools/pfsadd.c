@@ -27,22 +27,14 @@ int allocBlock(unsigned char* bitmap, int size);
 /**
  * @brief Add a file in the image
  *
+ * Load the superblock, create the file entry at the right position, 
+ * then write each block by finding a free emplacement in the 
+ * bitmap and writing the data in the right block
+ *
  * @param img       image of destination (binary file)
  * @param filename  file to write into the image
  */
 void pfsadd(char* img, char* filename) {
-
-    // 1. Aller apres les bitmaps
-    //
-    //      prendre le 1er emplacement libre pour le fileentry, verifier si on a pas attend le nombre maximul de fileentry
-    //
-    //
-    // 2. Data
-    //      Parcourir le fichier de taille bloc en taille bloc
-    //      Pour chaque bloc :
-    //          trouver le 1er bitmap libre
-    //          indiquer le 1er bitmap dans le fileentry
-    //          mettre data dans le bloc
 
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
@@ -78,26 +70,35 @@ void pfsadd(char* img, char* filename) {
     // Set the first bitmap at 1, because we don't want to user it.
     bitmap[0] |= (0x1 << 7);
     
-    printf("Superblock\n");
-    printf("signature : %s\n", superblock->signature);
-    printf("nbSectorsB : %d\n", superblock->nbSectorsB);
-    printf("bitmapSize : %d\n", superblock->bitmapSize);
-    printf("nbFileEntries : %d\n", superblock->nbFileEntries);
-    printf("fileEntrySize : %d\n", superblock->fileEntrySize);
-    printf("nbDataBlocks : %d\n", superblock->nbDataBlocks);
-
     // Creation of file entry
     file_entry_t newFileEntry;
     strcpy(newFileEntry.filename, filename);
 
-    //memcpy(newFileEntry.filename, filename, sizeof(filename));
     // Last character is 0 (end of string)
     newFileEntry.filename[31] = 0;
 
     // Position to write the file entry
     // Look for the first free position after the bitmap
     int firstFileEntry = blockSize + superblock->bitmapSize * blockSize;
-    printf("FirstEntry=%d\n", firstFileEntry);
+
+    // Write the data
+    // Run over the file from block size to block size
+    // For each block, find the first free bitmap, set it has taken.
+    // Then go to the corresponding block and fill it
+    int firstDataBlock = firstFileEntry + superblock->nbFileEntries * superblock->fileEntrySize;
+    char* arrayData = calloc(sizeof(char), blockSize);
+    int index = 0;
+
+    while (fread(arrayData, sizeof(char), blockSize, file) > 0) {
+        // Get the first free block number
+        int blockNumber = allocBlock(bitmap, bitmapSize);
+        // Go in the right position in the file and write in it
+        fseek(image, blockNumber * blockSize + firstDataBlock, SEEK_SET);
+        fwrite(arrayData, blockSize, 1, image);
+        // Write the block number into the index of the file entry
+        newFileEntry.index[index] = blockNumber;
+        index++;
+    }
 
     // Load the file entries
     file_entry_t* arrayFileEntries = calloc(superblock->fileEntrySize, superblock->nbFileEntries);
@@ -117,33 +118,34 @@ void pfsadd(char* img, char* filename) {
     fseek(image, firstFileEntry, SEEK_SET);
     fwrite(arrayFileEntries, superblock->fileEntrySize, superblock->nbFileEntries, image);
 
-    // Write the data
-    // Run over the file from block size to block size
-    // For each block, find the first free bitmap, set it has taken.
-    // Then go to the corresponding block and fill it
-    int firstDataBlock = firstFileEntry + superblock->nbFileEntries * superblock->fileEntrySize;
-    printf("First data : %d", firstDataBlock);
-    char* arrayData = calloc(sizeof(char), blockSize);
-    while (fread(arrayData, sizeof(char), blockSize, file) > 0) {
-        int blockNumber = allocBlock(bitmap, bitmapSize);
-        printf("Block number : %d\n", blockNumber);
-        printf("Addr : %d", blockNumber * blockSize);
-
-        fseek(image, blockNumber * blockSize + firstDataBlock, SEEK_SET);
-        fwrite(arrayData, blockSize, 1, image);
-    }
+    // Write the bitmap
+    fseek(image, blockSize, SEEK_SET);
+    fwrite(bitmap, sizeof(char), bitmapSize, image);
 
     // Close the files
     fclose(image);
     fclose(file);
 }
 
+/**
+ * @brief Allocate a block by setting it at 1 in the bitmap and return the block number
+ *
+ * Run over the bitmap to find the first free entry 
+ * and return the corresponding block number
+ *
+ * The bitmap is an array of unsigned char, 
+ * so we need to check each bit of the char separately
+ *
+ * @param bitmap    Bitmap of image
+ * @param size      Size of bitmap (number of char)
+ *
+ * @return          The block number
+ */
 int allocBlock(unsigned char* bitmap, int size) {
     for (int i = 0; i < size; i++) {
-        printf("i=%d\n", i);
-        for (int j = 7; j >= 0; j--) {
+        for (int j = 0; j < 8; j++) {
             if (!(bitmap[i] & (0x8 >> j))) {
-                bitmap[i] |= 0x1 << j;
+                bitmap[i] |= (0x8 >> j);
                 return (i * 8 + (8 - j));
             }
         }
