@@ -27,7 +27,7 @@ superblock_t getSuperBlock(char* img);
 /**
  * @brief Add a file in the image
  *
- * @param img       image of destionation (binary file)
+ * @param img       image of destination (binary file)
  * @param filename  file to write into the image
  */
 void pfsadd(char* img, char* filename) {
@@ -78,7 +78,7 @@ void pfsadd(char* img, char* filename) {
     // Creation of file entry
     file_entry_t* fileEntry = malloc(sizeof(file_entry_t));;
     memcpy(fileEntry->filename, filename, sizeof(filename));
-    //fileEntry->filename = filename;
+    // Last character is 0 (end of string)
     fileEntry->filename[31] = 0;
 
     // Calculate the size of a block
@@ -86,19 +86,30 @@ void pfsadd(char* img, char* filename) {
     // Position to write the file entry
     // Look for the first free position after the bitmap
     int firstFileEntry = blockSize + superblock->bitmapSize * blockSize;
-    fseek(image, SEEK_SET, blockSize + superblock->bitmapSize * blockSize);
+    printf("FirstEntry=%d", firstFileEntry);
+    // Load the file entries
+    file_entry_t* arrayFileEntries = calloc(superblock->fileEntrySize, superblock->nbFileEntries);
+    fseek(image, SEEK_SET, firstFileEntry);
+    fread(arrayFileEntries, sizeof(file_entry_t), superblock->nbFileEntries, image); 
     // Look for the first free position
     for (int i = 0; i < superblock->nbFileEntries; i++) {
-        printf("%d", i);
-        fseek(file, SEEK_SET, firstFileEntry + i * superblock->fileEntrySize);
-        void* tmp = calloc(superblock->fileEntrySize, sizeof(void));
-        memcpy(tmp, image, superblock->fileEntrySize);
-        if (!tmp)
-            printf("FREE");
+        if (!arrayFileEntries[i].filename[0]) {
             break;
+        }
+        //char* tmpFileEntry = calloc(superblock->fileEntrySize, sizeof(char));
+        ////for (int j = 0; j < superblock->fileEntrySize) {
+        ////    tmpFileEntry[j] = arrayFileEntries[i * superblock->fileEntrySize + j];
+        ////}
+        //fseek(file, SEEK_SET, firstFileEntry + i * superblock->fileEntrySize);
+        //char* tmp = calloc(superblock->fileEntrySize, sizeof(char));
+        //fread(tmp, superblock->fileEntrySize, 1, image);
+        //if (!tmp) {
+        //    printf("test");
+        //    break;
+        //}
     }
     // Add the file entry at the current position
-    fwrite(fileEntry, sizeof(file_entry_t), 1, image);
+    //fwrite(fileEntry, sizeof(file_entry_t), 1, image);
 
     // et pouvoir le charger, bitmap size, ...
 
@@ -109,6 +120,7 @@ void pfsadd(char* img, char* filename) {
 
 
     // Close the file
+    fclose(image);
     fclose(file);
 }
 
