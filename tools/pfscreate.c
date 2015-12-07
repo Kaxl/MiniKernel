@@ -16,7 +16,6 @@
  * =====================================================================================
  */
 
-#include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,12 +28,12 @@
  * @param data
  * @param size
  */
-void fill_zero(void* data, int size) {
-    // TODO: Not sector_size but bloc_size
-    for (int i = size; i < SECTOR_SIZE; i++) {
-        data[i] = '\0';
-    }
-}
+//void fill_zero(void* data, int size) {
+//    // TODO: Not sector_size but bloc_size
+//    for (int i = size; i < SECTOR_SIZE; i++) {
+//        data[i] = '\0';
+//    }
+//}
 
 // create an empty file with blocks of x size (must be a 512 multiple), with y file entries and with z data blocks available
 /**
@@ -45,9 +44,9 @@ void fill_zero(void* data, int size) {
  * @param y
  * @param z
  */
-void pfscreate(char* filename, int x, int y, int z) {
-    // Verif if x is a multiple of a sector size
-    if ((x % SECTOR_SIZE) != 0) {
+void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksAvailable) {
+    // Verif if blockSize is a multiple of a sector size
+    if ((blockSize % SECTOR_SIZE) != 0) {
         printf("\n[ERROR] Bloc size is not a multiple of sector size\n");
         return;
     }
@@ -56,15 +55,19 @@ void pfscreate(char* filename, int x, int y, int z) {
     // Each data bloc is one bit
     superblock_t superblock = {
         .signature = SIGNATURE,
-        .nb_sectors_b = x / SECTOR_SIZE,
-        .bitmap_size = z / 8,
-        .nb_file_entries = y,
-        .file_entries_size = FILE_ENTRY_SIZE,
-        .nb_data_blocks = z
+        .nbSectorsB = blockSize / SECTOR_SIZE,
+        .bitmapSize = dataBlocksAvailable / 8,
+        .nbFileEntries = nbFileEntries,
+        .fileEntriesSize = FILE_ENTRY_SIZE,
+        .nbDataBlocks = dataBlocksAvailable
     };
+    
+    int len = sizeof(struct superblock_t);
+    unsigned char * raw = calloc(blockSize, sizeof(unsigned char));
+    memcpy(raw, &superblock, len);
 
     // Create and fill the bitmap
-    char bitmap_size[superblock.bitmap_size + (superblock.bitmap_size % z)];
+    char bitmap[superblock.bitmapSize + (superblock.bitmapSize % dataBlocksAvailable)];
 
     // Initialize all of the file entries
 
@@ -77,7 +80,8 @@ void pfscreate(char* filename, int x, int y, int z) {
     fp = fopen(filename, "wb");
 
     // Write in the file all the blocs
-
+    fwrite(raw, sizeof(unsigned char), blockSize, fp);
+    // fwrite(bitmap, sizeof(char), superblock.bitmap_size + (superblock.bitmap_size % dataBlocksAvailable), fp);
 
     // close the file
     fclose(fp);
