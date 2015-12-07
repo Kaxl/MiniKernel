@@ -22,27 +22,14 @@
 #include "pfs.h"
 #include "const.h"
 
+// 
 /**
- * @brief
- *
- * @param data
- * @param size
- */
-//void fill_zero(void* data, int size) {
-//    // TODO: Not sector_size but bloc_size
-//    for (int i = size; i < SECTOR_SIZE; i++) {
-//        data[i] = '\0';
-//    }
-//}
-
-// create an empty file with blocks of x size (must be a 512 multiple), with y file entries and with z data blocks available
-/**
- * @brief
+ * @brief Create an empty file with blocks of x size (must be a 512 multiple), with y file entries and with z data blocks available
  *
  * @param filename
- * @param x
- * @param y
- * @param z
+ * @param blockSize
+ * @param nbFileEntries
+ * @param dataBlocksAvailable
  */
 void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksAvailable) {
     // Verif if blockSize is a multiple of a sector size
