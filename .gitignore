@@ -50,3 +50,4 @@ pfscreate
 pfsadd
 pfslist
 pfsdel
+*.img
