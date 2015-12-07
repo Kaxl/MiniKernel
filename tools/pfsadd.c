@@ -80,7 +80,8 @@ void pfsadd(char* img, char* filename) {
 
     // Creation of file entry
     file_entry_t newFileEntry;
-    memcpy(newFileEntry.filename, filename, sizeof(filename));
+    strcpy(newFileEntry.filename, filename);
+    //memcpy(newFileEntry.filename, filename, sizeof(filename));
     // Last character is 0 (end of string)
     newFileEntry.filename[31] = 0;
 
@@ -89,10 +90,10 @@ void pfsadd(char* img, char* filename) {
     // Position to write the file entry
     // Look for the first free position after the bitmap
     int firstFileEntry = blockSize + superblock->bitmapSize * blockSize;
-    printf("FirstEntry=%d", firstFileEntry);
+    printf("FirstEntry=%d\n", firstFileEntry);
     // Load the file entries
     file_entry_t* arrayFileEntries = calloc(superblock->fileEntrySize, superblock->nbFileEntries);
-    fseek(image, SEEK_SET, firstFileEntry);
+    fseek(image, firstFileEntry, SEEK_SET);
     fread(arrayFileEntries, sizeof(file_entry_t), superblock->nbFileEntries, image); 
     // Look for the first free position
     for (int i = 0; i < superblock->nbFileEntries; i++) {
@@ -103,7 +104,7 @@ void pfsadd(char* img, char* filename) {
         }
     }
     // Write the array of file entry in the image
-    fseek(image, SEEK_SET, firstFileEntry);
+    fseek(image, firstFileEntry, SEEK_SET);
     fwrite(arrayFileEntries, superblock->fileEntrySize, superblock->nbFileEntries, image);
 
     // Write the data
