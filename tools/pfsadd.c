@@ -27,8 +27,8 @@ int allocBlock(unsigned char* bitmap, int size);
 /**
  * @brief Add a file in the image
  *
- * Load the superblock, create the file entry at the right position, 
- * then write each block by finding a free emplacement in the 
+ * Load the superblock, create the file entry at the right position,
+ * then write each block by finding a free emplacement in the
  * bitmap and writing the data in the right block
  *
  * @param img       image of destination (binary file)
@@ -63,6 +63,22 @@ void pfsadd(char* img, char* filename) {
     // Calculate the size of a block
     int blockSize = superblock->nbSectorsB * SECTOR_SIZE;
 
+/** TODO :
+ *  - Verif if filename already exists
+ *  - Verif if all file entries are already used
+ *  - Verif if all datablocks are used
+ *  - Si le fichier est trop grand (index fileentry ou blocks disponible)
+ */
+
+
+    // Check if filename already exists
+
+    // Check if all file entries are already used
+
+    // Check if file is too big to be stored in the filesystem
+    int maxFileSize =
+
+
     // Load the bitmap
     fseek(image, blockSize, SEEK_SET);
     unsigned char* bitmap = calloc(superblock->bitmapSize * blockSize / 8, sizeof(char));
@@ -70,7 +86,7 @@ void pfsadd(char* img, char* filename) {
     fread(bitmap, sizeof(char), bitmapSize, image);
     // Set the first bitmap at 1, because we don't want to user it.
     bitmap[0] |= (0x1 << 7);
-    
+
     // Creation of file entry
     file_entry_t newFileEntry;
     strcpy(newFileEntry.filename, filename);
@@ -101,7 +117,7 @@ void pfsadd(char* img, char* filename) {
         // Go in the right position in the file and write in it
         fseek(image, blockNumber * blockSize + firstDataBlock, SEEK_SET);
         fwrite(arrayData, blockSize, 1, image); // ==> move it extern of loop ?
-        
+
         // Write the block number into the index of the file entry
         newFileEntry.index[index] = blockNumber;
         index++;
@@ -110,7 +126,7 @@ void pfsadd(char* img, char* filename) {
     // Load the file entries
     file_entry_t* arrayFileEntries = calloc(superblock->fileEntrySize, superblock->nbFileEntries);
     fseek(image, firstFileEntry, SEEK_SET);
-    fread(arrayFileEntries, sizeof(file_entry_t), superblock->nbFileEntries, image); 
+    fread(arrayFileEntries, sizeof(file_entry_t), superblock->nbFileEntries, image);
 
     // Look for the first free position
     for (int i = 0; i < superblock->nbFileEntries; i++) {
@@ -135,21 +151,14 @@ void pfsadd(char* img, char* filename) {
 }
 
 
-/** TODO : 
- *  - Verif if filename already exists
- *  - Verif if all file entries are already used
- *  - Verif if all datablocks are used
- *  - Si le fichier est trop grand (index fileentry ou blocks disponible) 
- */
-
 
 /**
  * @brief Allocate a block by setting it at 1 in the bitmap and return the block number
  *
- * Run over the bitmap to find the first free entry 
+ * Run over the bitmap to find the first free entry
  * and return the corresponding block number
  *
- * The bitmap is an array of unsigned char, 
+ * The bitmap is an array of unsigned char,
  * so we need to check each bit of the char separately
  *
  * @param bitmap    Bitmap of image
