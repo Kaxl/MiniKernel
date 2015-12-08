@@ -41,6 +41,14 @@ unsigned long getFileSize(const char* filename);
  */
 int pfsadd(char* img, char* filename) {
 
+    // PFS structure
+    pfs_t pfs;
+
+    // Load the PFS structure
+    if ((loadPFS(&pfs, img)) < 0) {
+        return -1;
+    }
+
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
         printf("Error while opening the file");
@@ -61,14 +69,6 @@ int pfsadd(char* img, char* filename) {
 
     // Set the pointer at the beginning of the file
     fseek(image, 0, SEEK_SET);
-
-    // PFS structure
-    pfs_t pfs;
-
-    // Load the PFS structure
-    if ((loadPFS(&pfs, img)) < 0) {
-        return -1;
-    }
 
     // Check for the space left on device
     int bitmapSize = pfs.superblock.bitmapSize * pfs.blockSize / 8;
@@ -152,6 +152,9 @@ int pfsadd(char* img, char* filename) {
     // Close the files
     fclose(image);
     fclose(file);
+
+    // Free the memory
+    unloadPFS(&pfs);
 }
 
 /**
@@ -279,5 +282,4 @@ void main(int argc, char *argv[]) {
     if ((pfsadd(argv[1], argv[2]) < 0))
         printf("Error when adding the file\n");
 }
-
 
