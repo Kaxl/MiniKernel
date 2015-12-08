@@ -40,7 +40,6 @@ void pfslist(char* img) {
 
         // Stop the reading if no more file entries with data
         if (!pfs->fileEntries[i].filename[0]) {
-            printf("no files\n");
             break;
         }
 
