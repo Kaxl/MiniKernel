@@ -81,7 +81,7 @@ void pfsadd(char* img, char* filename) {
     }
 
     // Check if filename already exists
-    if (getFileEntry(pfs, filename)) {
+    if (getFileEntry(pfs, filename) != -1) {
         printf("Filename already exists\n");
         return;
     }
@@ -121,8 +121,6 @@ void pfsadd(char* img, char* filename) {
 
         // Get the first free block number
         blockNumber = allocBlock(pfs->bitmap, bitmapSize);
-        printf("Block : %d\n", blockNumber);
-        printf("FirstData : %d\n", pfs->firstDataBlock);
         if (blockNumber < 0) {
             printf("Error while writing the file\n");
             return;

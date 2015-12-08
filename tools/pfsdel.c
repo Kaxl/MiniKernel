@@ -44,6 +44,7 @@ void pfsdel(char* img, char* filename) {
 
     // Get the index of the file entry
     int index = getFileEntry(pfs, filename);
+    printf("index : %d\n", index);
 
     for (int i = 0; i < INDEX_SIZE; i++) {
         // If index is 0, exit the loop
@@ -53,12 +54,14 @@ void pfsdel(char* img, char* filename) {
         // If the index is used
         else {
             // Set the bit in the bitmap to 0
-            pfs->bitmap[index / 8] &= ~(0x1 << (index % 8));
+            printf("set 0 %d\n", pfs->fileEntries[index].index[i]);
+            int indexFile = pfs->fileEntries[index].index[i] - 1;
+            pfs->bitmap[indexFile / 8] &= ~(0x1 << (indexFile % 7)); // TODO : KO
         }
     }
 
     // Remove first byte of file entry (in filename)
-    pfs->fileEntries[index].filename[0] = 0;
+    pfs->fileEntries[index].filename[0] = 0; // TODO : KO
 
     // Write the array of file entry in the image
     fseek(image, pfs->firstFileEntry, SEEK_SET);
@@ -67,6 +70,9 @@ void pfsdel(char* img, char* filename) {
     // Write the bitmap
     fseek(image, pfs->blockSize, SEEK_SET);
     fwrite(pfs->bitmap, sizeof(char), pfs->superblock.bitmapSize, image);
+
+    // Close the image
+    fclose(image);
 
     // Free the pfs structure
     unloadPFS(pfs);

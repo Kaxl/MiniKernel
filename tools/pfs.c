@@ -39,12 +39,12 @@ int unloadFileEntries(file_entry_t** fileEntries);
 
 
 /**
- * @brief 
+ * @brief
  *
  * @param superblock
  * @param image
  *
- * @return 
+ * @return
  */
 int loadSuperblock(superblock_t* superblock, FILE* image) {
 
@@ -58,14 +58,14 @@ int loadSuperblock(superblock_t* superblock, FILE* image) {
 }
 
 /**
- * @brief 
+ * @brief
  *
  * @param bitmap
  * @param image
  * @param superblock
  * @param blockSize
  *
- * @return 
+ * @return
  */
 int loadBitmap(unsigned char** bitmap, FILE* image, superblock_t* superblock, int blockSize) {
 
@@ -79,14 +79,14 @@ int loadBitmap(unsigned char** bitmap, FILE* image, superblock_t* superblock, in
 }
 
 /**
- * @brief 
+ * @brief
  *
  * @param fileEntries
  * @param image
  * @param superblock
  * @param blockSize
  *
- * @return 
+ * @return
  */
 int loadFileEntries(file_entry_t** fileEntries, FILE* image, superblock_t* superblock, int blockSize) {
 
@@ -99,12 +99,12 @@ int loadFileEntries(file_entry_t** fileEntries, FILE* image, superblock_t* super
 }
 
 /**
- * @brief 
+ * @brief
  *
  * @param pfs
  * @param img
  *
- * @return 
+ * @return
  */
 int loadPFS(pfs_t* pfs, char* img) {
 
@@ -139,11 +139,11 @@ int loadPFS(pfs_t* pfs, char* img) {
 }
 
 /**
- * @brief 
+ * @brief
  *
  * @param superblock
  *
- * @return 
+ * @return
  */
 int unloadSuperblock(superblock_t* superblock) {
 
@@ -154,11 +154,11 @@ int unloadSuperblock(superblock_t* superblock) {
 }
 
 /**
- * @brief 
+ * @brief
  *
  * @param bitmap
  *
- * @return 
+ * @return
  */
 int unloadBitmap(unsigned char** bitmap) {
 
@@ -169,11 +169,11 @@ int unloadBitmap(unsigned char** bitmap) {
 }
 
 /**
- * @brief 
+ * @brief
  *
  * @param fileEntries
  *
- * @return 
+ * @return
  */
 int unloadFileEntries(file_entry_t** fileEntries) {
 
@@ -204,6 +204,6 @@ int getFileEntry(pfs_t* pfs, const char* filename) {
             return i;
         }
     }
-    return 0;
+    return -1;
 }
 
