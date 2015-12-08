@@ -56,23 +56,23 @@ typedef struct __attribute__((packed)) pfs_t {
     superblock_t superblock;
     unsigned char* bitmap;
     file_entry_t* fileEntries;
-    char* dataBlocks;
+    int firstDataBlocks;
     int blockSize;
 } pfs_t;
 
-int loadSuperblock(superblock_t* superblock, char* img);
-
-int loadBitmap(unsigned char* bitmap, char* img);
-
-int loadFileEntries(file_entry_t* fileEntries, char* img);
+//int loadSuperblock(superblock_t* superblock, char* img);
+//
+//int loadBitmap(unsigned char* bitmap, char* img);
+//
+//int loadFileEntries(file_entry_t* fileEntries, char* img);
 
 int loadPFS(pfs_t* pfs, char* img);
 
-int unloadSuperblock(superblock_t* superblock);
-
-int unloadBitmap(unsigned char* bitmap);
-
-int unloadFileEntries(file_entry_t* fileEntries);
+//int unloadSuperblock(superblock_t* superblock);
+//
+//int unloadBitmap(unsigned char* bitmap);
+//
+//int unloadFileEntries(file_entry_t* fileEntries);
 
 int unloadPFS(pfs_t* pfs);
 
