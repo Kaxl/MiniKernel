@@ -48,12 +48,10 @@ typedef struct __attribute__((packed)) pfs_t {
     superblock_t superblock;
     unsigned char* bitmap;
     file_entry_t* fileEntries;
-    char* dataBlocks;
+    //char* dataBlocks;
+    int firstDataBlock;
     int blockSize;
 } pfs_t;
-
-
-
 
 /**
  * @brief File entry structure

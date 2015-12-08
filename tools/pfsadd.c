@@ -33,8 +33,10 @@ int allocBlock(unsigned char* bitmap, int size);
  *
  * @param img       image of destination (binary file)
  * @param filename  file to write into the image
+ *
+ * @return          If result < 0, error
  */
-void pfsadd(char* img, char* filename) {
+int pfsadd(char* img, char* filename) {
 
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
@@ -45,23 +47,52 @@ void pfsadd(char* img, char* filename) {
     FILE* image = fopen(img, "r+b");
     if (image == NULL) {
         printf("Error while opening the file");
-        return;
+        return -1;
     }
 
     // Filename cannot be longer than 31 bytes
     if (strlen(filename) > 31) {
         printf("Error, the filename is too long");
+        return -1;
     }
 
     // Set the pointer at the beginning of the file
     fseek(image, 0, SEEK_SET);
 
+    // PFS structure
+    pfs_t pfs;
+
+    // Load the PFS structure
+    if ((loadPFS(pfs, img)) < 0) {
+        return -1;
+    }
+
+    loadPFS
+
+    createFileEntry(superblock, filename)
+
+    // Check for the space left on device
+    int bitmapSize = superblock->bitmapSize * blockSize / 8;
+    int nbFreeBlocks = getNumberFreeBlocksLeft(pfs.bitmap, bitmapSize);
+    unsigned long fileSize = getFileSize(filename);
+    if (nbFreeBlocks - (int)((fileSize / pfs.blockSize) + 1) < 0) {
+        printf("Not enought space left on device\n");
+        return 1;
+    }
+
+    if (CheckFilenameExist < 0) {
+        printf("Filename already exists\n");
+        return 1;
+    }
+
+
     // Load the superblock
-    superblock_t* superblock = calloc(1, sizeof(superblock_t));
-    fread(superblock, sizeof(superblock_t), 1, image);
+    //superblock_t* superblock = calloc(1, sizeof(superblock_t));
+    //fread(superblock, sizeof(superblock_t), 1, image);
 
     // Calculate the size of a block
-    int blockSize = superblock->nbSectorsB * SECTOR_SIZE;
+    //int blockSize = superblock->nbSectorsB * SECTOR_SIZE;
+
 
 /** TODO :
  *  - Verif if filename already exists
@@ -97,6 +128,7 @@ void pfsadd(char* img, char* filename) {
     // Position to write the file entry
     // Look for the first free position after the bitmap
     int firstFileEntry = blockSize + superblock->bitmapSize * blockSize;
+
 
     // Write the data
     // Run over the file from block size to block size
@@ -151,6 +183,76 @@ void pfsadd(char* img, char* filename) {
 }
 
 
+int checkFile
+
+/**
+ * @brief Get the number of free blocks left on the device
+ *
+ * Run over the bitmap and increment a counter each time a bit is at 0.
+ *
+ * @param bitmap        Bitmap of the file
+ * @param bitmapSize    Size of bitmap
+ *
+ * @return              The number of free blocks
+ */
+int getNumberFreeBlocksLeft(unsigned char* bitmap, int bitmapSize) {
+    int cnt = 0;
+    // For the first char, we don't test the first bit, because we can't use it.
+    for (int i = 0; i < bitmapSize; i++) {
+        for (int j = 6; j >= 0; j--) {
+            if (!(bitmap[i] & (0x1 << j))) {
+                cnt++;
+            }
+        }
+    }
+    // Start at the second char
+    for (int i = 1; i < bitmapSize; i++) {
+        // If all bits are taken
+        if (bitmap[i] == 0xf) {
+            continue;
+        }
+        for (int j = 7; j >= 0; j--) {
+            if (!(bitmap[i] & (0x1 << j))) {
+                cnt++;
+            }
+        }
+    }
+    return cnt;
+}
+
+/**
+ * @brief Get the size of a file
+ *
+ * @param filename File to get the size from
+ *
+ * @return The size of the file
+ */
+unsigned long getFileSize(const char* filename)
+{
+  unsigned long size;
+  FILE* f = fopen(filename, "rb");
+  fseek(f, 0, SEEK_END);
+  size  = ftell(f);
+  fclose(fh);
+  return size;
+}
+
+/**
+ * @brief Check if a filename already exists on the image
+ *
+ * @param pfs       Filesystem loaded
+ * @param filename  Filename
+ *
+ * @return          0 if doesn't exist, else 1
+ */
+int checkFilenameExist(pfs_t* pfs, const char* filename) {
+    for (int i = 0; i < pfs->nbFileEntries; i++) {
+        if ((strcmp(pfs->fileEntries[i]->filename, filename)) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 /**
  * @brief Allocate a block by setting it at 1 in the bitmap and return the block number
@@ -191,7 +293,8 @@ void main(int argc, char *argv[]) {
         return;
     }
 
-    pfsadd(argv[1], argv[2]);
+    if ((pfsadd(argv[1], argv[2]) < 0))
+        printf("Error when adding the file, abort\n");
 }
 
 
