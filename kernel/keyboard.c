@@ -50,7 +50,7 @@ void keyboard_handler() {
         switch (c) {
             case SHIFT_LEFT:
             case SHIFT_RIGHT:
-                shift = 1;
+                shift++;
                 break;
             case CAPSLOCK:
                 capslock = ~capslock;
@@ -85,7 +85,7 @@ void keyboard_handler() {
     else  {     // Else, the key is released
         c &= ~(0x1 << 7);   // Set the bit 8 to 0x0 to get the caracter value
         if (c  == SHIFT_LEFT || c == SHIFT_RIGHT) {  // Shift key
-            shift = 0;
+            shift--;
         }
     }
 }
