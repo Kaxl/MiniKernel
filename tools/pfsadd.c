@@ -42,12 +42,20 @@ unsigned long getFileSize(const char* filename);
 int pfsadd(char* img, char* filename) {
 
     // PFS structure
-    pfs_t pfs;
+    pfs_t* pfs = calloc(1, sizeof(pfs_t));
 
     // Load the PFS structure
-    if ((loadPFS(&pfs, img)) < 0) {
+    if ((loadPFS(pfs, img)) < 0) {
         return -1;
     }
+    printf("---Superblock\n");
+    printf("signature : %s\n", pfs->superblock.signature);
+    printf("nbSectorsB : %d\n", pfs->superblock.nbSectorsB);
+    printf("bitmapSize : %d\n", pfs->superblock.bitmapSize);
+    printf("nbFileEntries : %d\n", pfs->superblock.nbFileEntries);
+    printf("fileEntrySize : %d\n", pfs->superblock.fileEntrySize);
+    printf("nbDataBlocks : %d\n", pfs->superblock.nbDataBlocks);
+
 
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
@@ -71,17 +79,17 @@ int pfsadd(char* img, char* filename) {
     fseek(image, 0, SEEK_SET);
 
     // Check for the space left on device
-    int bitmapSize = pfs.superblock.bitmapSize * pfs.blockSize / 8;
-    int nbFreeBlocks = getNumberFreeBlocksLeft(pfs.bitmap, bitmapSize);
+    int bitmapSize = pfs->superblock.bitmapSize * pfs->blockSize / 8;
+    int nbFreeBlocks = getNumberFreeBlocksLeft(pfs->bitmap, bitmapSize);
 
     unsigned long fileSize = getFileSize(filename);
-    if (nbFreeBlocks - (int)((fileSize / pfs.blockSize) + 1) < 0) {
+    if (nbFreeBlocks - (int)((fileSize / pfs->blockSize) + 1) < 0) {
         printf("Not enought space left on device\n");
         return -1;
     }
 
     // Check if filename already exists
-    if (filenameExist(&pfs, filename)) {
+    if (filenameExist(pfs, filename)) {
         printf("Filename already exists\n");
         return -1;
     }
@@ -95,8 +103,8 @@ int pfsadd(char* img, char* filename) {
 
     // Look for the first free position after the bitmap
     int posNewFileEntry = -1;
-    for (int i = 0; i < pfs.superblock.nbFileEntries; i++) {
-        if (!pfs.fileEntries[i].filename[0]) {
+    for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
+        if (!pfs->fileEntries[i].filename[0]) {
             // Save the position of the file entry,
             // the file entry is add at the end
             posNewFileEntry = i;
@@ -115,22 +123,22 @@ int pfsadd(char* img, char* filename) {
     // Run over the file from block size to block size
     // For each block, find the first free bitmap, set it has taken.
     // Then go to the corresponding block and fill it
-    char* arrayData = calloc(sizeof(char), pfs.blockSize);
+    char* arrayData = calloc(sizeof(char), pfs->blockSize);
     int index = 0;
 
     int blockNumber;
-    while (fread(arrayData, sizeof(char), pfs.blockSize, file) > 0) {
+    while (fread(arrayData, sizeof(char), pfs->blockSize, file) > 0) {
 
         // Get the first free block number
-        blockNumber = allocBlock(pfs.bitmap, bitmapSize);
+        blockNumber = allocBlock(pfs->bitmap, bitmapSize);
         if (blockNumber < 0) {
             printf("Error while writing the file\n");
             return -1;
         }
 
         // Go in the right position in the file and write in it
-        fseek(image, blockNumber * pfs.blockSize + pfs.firstDataBlocks, SEEK_SET);
-        fwrite(arrayData, pfs.blockSize, 1, image);
+        fseek(image, blockNumber * pfs->blockSize + pfs->firstDataBlocks, SEEK_SET);
+        fwrite(arrayData, pfs->blockSize, 1, image);
 
         // Write the block number into the index of the file entry
         newFileEntry.index[index] = blockNumber;
@@ -138,23 +146,23 @@ int pfsadd(char* img, char* filename) {
     }
 
     // Position to write the file entry
-    int firstFileEntry = pfs.blockSize + pfs.superblock.bitmapSize * pfs.blockSize;
-    pfs.fileEntries[posNewFileEntry] = newFileEntry;
+    int firstFileEntry = pfs->blockSize + pfs->superblock.bitmapSize * pfs->blockSize;
+    pfs->fileEntries[posNewFileEntry] = newFileEntry;
 
     // Write the array of file entry in the image
     fseek(image, firstFileEntry, SEEK_SET);
-    fwrite(pfs.fileEntries, pfs.superblock.fileEntrySize, pfs.superblock.nbFileEntries, image);
+    fwrite(pfs->fileEntries, pfs->superblock.fileEntrySize, pfs->superblock.nbFileEntries, image);
 
     // Write the bitmap
-    fseek(image, pfs.blockSize, SEEK_SET);
-    fwrite(pfs.bitmap, sizeof(char), pfs.superblock.bitmapSize, image);
+    fseek(image, pfs->blockSize, SEEK_SET);
+    fwrite(pfs->bitmap, sizeof(char), pfs->superblock.bitmapSize, image);
 
     // Close the files
     fclose(image);
     fclose(file);
 
     // Free the memory
-    unloadPFS(&pfs);
+    unloadPFS(pfs);
 }
 
 /**
@@ -166,26 +174,14 @@ int pfsadd(char* img, char* filename) {
  * The bitmap is an array of unsigned char,
  * so we need to check each bit of the char separately
  *
+ * The first bit of the bitmap is already set at 1.
+ *
  * @param bitmap    Bitmap of image
  * @param size      Size of bitmap (number of char)
  *
  * @return          The block number
  */
 int allocBlock(unsigned char* bitmap, int size) {
-    // For the first char, we don't test the first bit, because we can't use it.
-    for (int i = 0; i < size; i++) {
-        // If all bits are taken
-        if (bitmap[i] == 0xf) {
-            continue;
-        }
-        for (int j = 6; j >= 0; j--) {
-            if (!(bitmap[i] & (0x1 << j))) {
-                bitmap[i] |= (0x1 << j);
-                return (i * 0x8 + (0x8 - j));
-            }
-        }
-    }
-    // Start at the second char
     for (int i = 0; i < size; i++) {
         // If all bits are taken
         if (bitmap[i] == 0xf) {
@@ -205,6 +201,7 @@ int allocBlock(unsigned char* bitmap, int size) {
  * @brief Get the number of free blocks left on the device
  *
  * Run over the bitmap and increment a counter each time a bit is at 0.
+ * The first bit of the bitmap is already set at 1.
  *
  * @param bitmap        Bitmap of the file
  * @param bitmapSize    Size of bitmap
@@ -213,16 +210,7 @@ int allocBlock(unsigned char* bitmap, int size) {
  */
 int getNumberFreeBlocksLeft(unsigned char* bitmap, int bitmapSize) {
     int cnt = 0;
-    // For the first char, we don't test the first bit, because we can't use it.
     for (int i = 0; i < bitmapSize; i++) {
-        for (int j = 6; j >= 0; j--) {
-            if (!(bitmap[i] & (0x1 << j))) {
-                cnt++;
-            }
-        }
-    }
-    // Start at the second char
-    for (int i = 1; i < bitmapSize; i++) {
         // If all bits are taken
         if (bitmap[i] == 0xf) {
             continue;
