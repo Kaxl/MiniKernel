@@ -2,14 +2,17 @@ CMD=pfscreate pfsadd pfslist pfsdel
 
 all: $(CMD)
 
-pfscreate: pfscreate.c
-	gcc $< -o $@
+pfscreate: pfscreate.c pfs.o
+	gcc $^ -o $@
 
-pfsadd: pfsadd.c
-	gcc $< -o $@
+pfsadd: pfsadd.c pfs.o
+	gcc $^ -o $@
 
-pfslist: pfslist.c
-	gcc $< -o $@
+pfslist: pfslist.c pfs.o
+	gcc $^ -o $@
+
+pfs.o: pfs.c pfs.h
+	gcc -c $< -o $@
 
 clean:
 	rm -f *.o
