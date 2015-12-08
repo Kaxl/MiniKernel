@@ -35,9 +35,6 @@ void pfslist(char* img) {
     // Load the PFS
     loadPFS(pfs, img);
 
-    printf("[pfslist.c] nbFileEntries : %d\n", pfs->superblock.nbFileEntries);
-    
-
     // Look for files in file entry
     for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
 
@@ -51,7 +48,8 @@ void pfslist(char* img) {
         printf("%s\n", pfs->fileEntries[i].filename);
     }
 
-    //unloadPFS(pfs);
+    // Free the pfs structure
+    unloadPFS(pfs);
 }
 
 void main(int argc, char *argv[]) {

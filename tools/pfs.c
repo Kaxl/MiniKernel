@@ -26,15 +26,15 @@
 // Local functions to load all PFS data
 int loadSuperblock(superblock_t* superblock, FILE* image);
 
-int loadBitmap(unsigned char* bitmap, FILE* image, superblock_t* superblock);
+int loadBitmap(unsigned char** bitmap, FILE* image, superblock_t* superblock, int blockSize);
 
 int loadFileEntries(file_entry_t** fileEntries, FILE* image, superblock_t* superblock, int blockSize);
 
 int unloadSuperblock(superblock_t* superblock);
 
-int unloadBitmap(unsigned char* bitmap);
+int unloadBitmap(unsigned char** bitmap);
 
-int unloadFileEntries(file_entry_t* fileEntries);
+int unloadFileEntries(file_entry_t** fileEntries);
 //========================================================
 
 
@@ -48,8 +48,11 @@ int loadSuperblock(superblock_t* superblock, FILE* image) {
     }
 }
 
-int loadBitmap(unsigned char* bitmap, FILE* image, superblock_t* superblock) {
-
+int loadBitmap(unsigned char** bitmap, FILE* image, superblock_t* superblock, int blockSize) {
+    fseek(image, blockSize, SEEK_SET);
+    *bitmap = calloc(superblock->bitmapSize * blockSize / 8, sizeof(char));
+    int bitmapSize = superblock->bitmapSize * blockSize / 8;
+    fread(*bitmap, sizeof(char), bitmapSize, image); 
 }
 
 int loadFileEntries(file_entry_t** fileEntries, FILE* image, superblock_t* superblock, int blockSize) {
@@ -82,23 +85,44 @@ int loadPFS(pfs_t* pfs, char* img) {
     
     // Load the file entries
     loadFileEntries(&pfs->fileEntries, image, &pfs->superblock, pfs->blockSize);
+
+    // Load the bitmap
+    loadBitmap(&pfs->bitmap, image, &pfs->superblock, pfs->blockSize);
 }
 
 int unloadSuperblock(superblock_t* superblock) {
     
     // Free the superblock structure
     free(superblock);
+ 
     return 0;
 }
 
-int unloadBitmap(unsigned char* bitmap) {
+int unloadBitmap(unsigned char** bitmap) {
 
+    // Free the bitmap
+    free(*bitmap);
+
+    return 0;
 }
 
-int unloadFileEntries(file_entry_t* fileEntries) {
+int unloadFileEntries(file_entry_t** fileEntries) {
 
+    // Free the file entries
+    free(*fileEntries);
+    
+    return 0;
 }
 
 int unloadPFS(pfs_t* pfs) {
+    
+    // Unload all the memory allocated for the structure
+    //unloadSuperblock(&pfs->superblock);
+    //unloadFileEntries(&pfs->fileEntries);
+    //unloadBitmap(&pfs->bitmap);
+
+    // Free the structure
     free(pfs);
+
+    return 0;
 }
