@@ -90,12 +90,18 @@ void pfsadd(char* img, char* filename) {
     char* arrayData = calloc(sizeof(char), blockSize);
     int index = 0;
 
+    int blockNumber;
     while (fread(arrayData, sizeof(char), blockSize, file) > 0) {
+
         // Get the first free block number
-        int blockNumber = allocBlock(bitmap, bitmapSize);
+        if ((blockNumber = allocBlock(bitmap, bitmapSize) < 0)) {
+            // No blocks available
+        }
+
         // Go in the right position in the file and write in it
         fseek(image, blockNumber * blockSize + firstDataBlock, SEEK_SET);
-        fwrite(arrayData, blockSize, 1, image);
+        fwrite(arrayData, blockSize, 1, image); // ==> move it extern of loop ?
+        
         // Write the block number into the index of the file entry
         newFileEntry.index[index] = blockNumber;
         index++;
@@ -128,6 +134,15 @@ void pfsadd(char* img, char* filename) {
     fclose(file);
 }
 
+
+/** TODO : 
+ *  - Verif if filename already exists
+ *  - Verif if all file entries are already used
+ *  - Verif if all datablocks are used
+ *  - Si le fichier est trop grand (index fileentry ou blocks disponible) 
+ */
+
+
 /**
  * @brief Allocate a block by setting it at 1 in the bitmap and return the block number
  *
@@ -155,6 +170,7 @@ int allocBlock(unsigned char* bitmap, int size) {
             }
         }
     }
+    return -1;
 }
 
 void main(int argc, char *argv[]) {
