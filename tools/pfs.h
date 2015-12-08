@@ -52,4 +52,8 @@ typedef struct file_entry_t {
     unsigned short int index[110];      // Index of block (2 bytes)
 } file_entry_t;
 
+
+void loadSuperblock(superblock_t superblock, char* img);
+
+
 #endif
