@@ -36,35 +36,33 @@ unsigned long getFileSize(const char* filename);
  *
  * @param img       image of destination (binary file)
  * @param filename  file to write into the image
- *
- * @return          If result < 0, error
  */
-int pfsadd(char* img, char* filename) {
+void pfsadd(char* img, char* filename) {
 
     // PFS structure
     pfs_t* pfs = calloc(1, sizeof(pfs_t));
 
     // Load the PFS structure
     if ((loadPFS(pfs, img)) < 0) {
-        return -1;
+        return;
     }
 
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
         printf("Error while opening the file");
-        return -1;
+        return;
     }
 
     FILE* image = fopen(img, "r+b");
     if (image == NULL) {
         printf("Error while opening the file");
-        return -1;
+        return;
     }
 
     // Filename cannot be longer than 31 bytes
     if (strlen(filename) > 31) {
         printf("Error, the filename is too long");
-        return -1;
+        return;
     }
 
     // Set the pointer at the beginning of the file
@@ -77,13 +75,13 @@ int pfsadd(char* img, char* filename) {
     unsigned long fileSize = getFileSize(filename);
     if (nbFreeBlocks - (int)((fileSize / pfs->blockSize) + 1) < 0) {
         printf("Not enought space left on device\n");
-        return -1;
+        return;
     }
 
     // Check if filename already exists
-    if (filenameExist(pfs, filename)) {
+    if (getFileEntry(pfs, filename)) {
         printf("Filename already exists\n");
-        return -1;
+        return;
     }
 
     // Creation of file entry
@@ -106,7 +104,7 @@ int pfsadd(char* img, char* filename) {
     // If the fileEntries array is full, exit
     if (posNewFileEntry == -1) {
         printf("File entries are full\n");
-        return -1;
+        return;
     }
 
     // Write the data
@@ -125,7 +123,7 @@ int pfsadd(char* img, char* filename) {
         printf("FirstData : %d\n", pfs->firstDataBlock);
         if (blockNumber < 0) {
             printf("Error while writing the file\n");
-            return -1;
+            return;
         }
 
         // Go in the right position in the file and write in it
@@ -216,17 +214,19 @@ int getNumberFreeBlocksLeft(unsigned char* bitmap, int bitmapSize) {
 }
 
 /**
- * @brief Check if a filename already exists on the image
+ * @brief Get the index of a filename in the file entry
+ *
+ * If 0 is return, file doesn't exist.
  *
  * @param pfs       Filesystem loaded
  * @param filename  Filename
  *
- * @return          0 if doesn't exist, else 1
+ * @return          0 if doesn't exist, else index of file
  */
-int filenameExist(pfs_t* pfs, const char* filename) {
+int getFileEntry(pfs_t* pfs, const char* filename) {
     for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
         if ((strcmp(pfs->fileEntries[i].filename, filename)) == 0) {
-            return 1;
+            return i;
         }
     }
     return 0;
@@ -258,7 +258,6 @@ void main(int argc, char *argv[]) {
         return;
     }
 
-    if ((pfsadd(argv[1], argv[2]) < 0))
-        printf("Error when adding the file\n");
+    pfsadd(argv[1], argv[2]);
 }
 
