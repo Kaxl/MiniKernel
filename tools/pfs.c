@@ -92,7 +92,8 @@ int loadPFS(pfs_t* pfs, char* img) {
     pfs->firstFileEntry = pfs->blockSize + pfs->superblock.bitmapSize * pfs->blockSize;
 
     // Calculate the first data block
-    pfs->firstDataBlock = pfs->firstFileEntry + FILE_ENTRY_SIZE * (pfs->superblock.nbFileEntries + pfs->superblock.nbFileEntries % (2 * pfs->blockSize / SECTOR_SIZE));
+    int actualSizeFE = pfs->superblock.nbFileEntries * FILE_ENTRY_SIZE;
+    pfs->firstDataBlock = pfs->firstFileEntry + FILE_ENTRY_SIZE * (pfs->superblock.nbFileEntries + (pfs->blockSize - actualSizeFE) / FILE_ENTRY_SIZE);
 
     // Load the bitmap
     loadBitmap(&pfs->bitmap, image, &pfs->superblock, pfs->blockSize);
