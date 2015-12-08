@@ -10,7 +10,7 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Rudolf Hohn (), rudolf.hohn@etu.hesge.ch
+ *         Author:  Rudolf Hohn, Axel Fahy
  *   Organization:  HES-SO hepia section ITI
  *
  * =====================================================================================
@@ -41,25 +41,32 @@ int unloadFileEntries(file_entry_t** fileEntries);
 int loadSuperblock(superblock_t* superblock, FILE* image) {
 
     // Get the superblock
-    //superblock = calloc(1, sizeof(superblock_t));
     if (fread(superblock, sizeof(superblock_t), 1, image) < 0) {
         printf("Error while reading file\n");
         return -1;
     }
+
+    return 0;
 }
 
 int loadBitmap(unsigned char** bitmap, FILE* image, superblock_t* superblock, int blockSize) {
+
+    // Position the cursor at the beginning of the bitmap
     fseek(image, blockSize, SEEK_SET);
-    *bitmap = calloc(superblock->bitmapSize * blockSize / 8, sizeof(char));
+
+    // Get the bitmap
     int bitmapSize = superblock->bitmapSize * blockSize / 8;
+    *bitmap = calloc(bitmapSize, sizeof(char));
     fread(*bitmap, sizeof(char), bitmapSize, image);
 }
 
 int loadFileEntries(file_entry_t** fileEntries, FILE* image, superblock_t* superblock, int blockSize) {
 
-    // Load the file entries
-    *fileEntries = calloc(superblock->fileEntrySize, superblock->nbFileEntries);
+    // Position the cursor at the beginning of the file entries
     fseek(image, blockSize + superblock->bitmapSize * blockSize, SEEK_SET);
+
+    // Get the file entries
+    *fileEntries = calloc(superblock->fileEntrySize, superblock->nbFileEntries);
     fread(*fileEntries, sizeof(file_entry_t), superblock->nbFileEntries, image);
 }
 
