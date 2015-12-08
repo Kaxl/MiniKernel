@@ -22,7 +22,7 @@
 #include "const.h"
 #include "pfs.h"
 
-//========================================================
+////////////////////////////////////////////////////////////////////////////////////////
 // Local functions to load all PFS data
 int loadSuperblock(superblock_t* superblock, FILE* image);
 
@@ -35,9 +35,17 @@ int unloadSuperblock(superblock_t* superblock);
 int unloadBitmap(unsigned char** bitmap);
 
 int unloadFileEntries(file_entry_t** fileEntries);
-//========================================================
+////////////////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * @brief 
+ *
+ * @param superblock
+ * @param image
+ *
+ * @return 
+ */
 int loadSuperblock(superblock_t* superblock, FILE* image) {
 
     // Get the superblock
@@ -49,6 +57,16 @@ int loadSuperblock(superblock_t* superblock, FILE* image) {
     return 0;
 }
 
+/**
+ * @brief 
+ *
+ * @param bitmap
+ * @param image
+ * @param superblock
+ * @param blockSize
+ *
+ * @return 
+ */
 int loadBitmap(unsigned char** bitmap, FILE* image, superblock_t* superblock, int blockSize) {
 
     // Position the cursor at the beginning of the bitmap
@@ -60,6 +78,16 @@ int loadBitmap(unsigned char** bitmap, FILE* image, superblock_t* superblock, in
     fread(*bitmap, sizeof(char), bitmapSize, image);
 }
 
+/**
+ * @brief 
+ *
+ * @param fileEntries
+ * @param image
+ * @param superblock
+ * @param blockSize
+ *
+ * @return 
+ */
 int loadFileEntries(file_entry_t** fileEntries, FILE* image, superblock_t* superblock, int blockSize) {
 
     // Position the cursor at the beginning of the file entries
@@ -70,6 +98,14 @@ int loadFileEntries(file_entry_t** fileEntries, FILE* image, superblock_t* super
     fread(*fileEntries, sizeof(file_entry_t), superblock->nbFileEntries, image);
 }
 
+/**
+ * @brief 
+ *
+ * @param pfs
+ * @param img
+ *
+ * @return 
+ */
 int loadPFS(pfs_t* pfs, char* img) {
 
     // Load the image
@@ -101,6 +137,13 @@ int loadPFS(pfs_t* pfs, char* img) {
     loadFileEntries(&pfs->fileEntries, image, &pfs->superblock, pfs->blockSize);
 }
 
+/**
+ * @brief 
+ *
+ * @param superblock
+ *
+ * @return 
+ */
 int unloadSuperblock(superblock_t* superblock) {
 
     // Free the superblock structure
@@ -109,6 +152,13 @@ int unloadSuperblock(superblock_t* superblock) {
     return 0;
 }
 
+/**
+ * @brief 
+ *
+ * @param bitmap
+ *
+ * @return 
+ */
 int unloadBitmap(unsigned char** bitmap) {
 
     // Free the bitmap
@@ -117,6 +167,13 @@ int unloadBitmap(unsigned char** bitmap) {
     return 0;
 }
 
+/**
+ * @brief 
+ *
+ * @param fileEntries
+ *
+ * @return 
+ */
 int unloadFileEntries(file_entry_t** fileEntries) {
 
     // Free the file entries
@@ -125,6 +182,7 @@ int unloadFileEntries(file_entry_t** fileEntries) {
     return 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 int unloadPFS(pfs_t* pfs) {
 
     // Unload all the memory allocated for the structure
@@ -137,3 +195,14 @@ int unloadPFS(pfs_t* pfs) {
 
     return 0;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////
+int getFileEntry(pfs_t* pfs, const char* filename) {
+    for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
+        if ((strcmp(pfs->fileEntries[i].filename, filename)) == 0) {
+            return i;
+        }
+    }
+    return 0;
+}
+

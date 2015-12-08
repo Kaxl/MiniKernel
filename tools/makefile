@@ -8,6 +8,9 @@ pfscreate: pfscreate.c pfs.o
 pfsadd: pfsadd.c pfs.o
 	gcc $^ -o $@
 
+pfsdel: pfsdel.c pfs.o
+	gcc $^ -o $@
+
 pfslist: pfslist.c pfs.o
 	gcc $^ -o $@
 

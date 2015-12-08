@@ -22,10 +22,12 @@
 #include "pfs.h"
 #include "const.h"
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Local functions
 int allocBlock(unsigned char* bitmap, int size);
 int getNumberFreeBlocksLeft(unsigned char* bitmap, int bitmapSize);
-int filenameExist(pfs_t* pfs, const char* filename);
 unsigned long getFileSize(const char* filename);
+////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief Add a file in the image
@@ -211,25 +213,6 @@ int getNumberFreeBlocksLeft(unsigned char* bitmap, int bitmapSize) {
         }
     }
     return cnt;
-}
-
-/**
- * @brief Get the index of a filename in the file entry
- *
- * If 0 is return, file doesn't exist.
- *
- * @param pfs       Filesystem loaded
- * @param filename  Filename
- *
- * @return          0 if doesn't exist, else index of file
- */
-int getFileEntry(pfs_t* pfs, const char* filename) {
-    for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
-        if ((strcmp(pfs->fileEntries[i].filename, filename)) == 0) {
-            return i;
-        }
-    }
-    return 0;
 }
 
 /**

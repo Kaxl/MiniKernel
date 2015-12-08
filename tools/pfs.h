@@ -54,8 +54,35 @@ typedef struct __attribute__((packed)) pfs_t {
     int blockSize;
 } pfs_t;
 
+/**
+ * @brief 
+ *
+ * @param pfs
+ * @param img
+ *
+ * @return 
+ */
 int loadPFS(pfs_t* pfs, char* img);
 
+/**
+ * @brief 
+ *
+ * @param pfs
+ *
+ * @return 
+ */
 int unloadPFS(pfs_t* pfs);
+
+/**
+ * @brief Get the index of a filename in the file entry
+ *
+ * If 0 is return, file doesn't exist.
+ *
+ * @param pfs       Filesystem loaded
+ * @param filename  Filename
+ *
+ * @return          0 if doesn't exist, else index of file
+ */
+int getFileEntry(pfs_t* pfs, const char* filename);
 
 #endif

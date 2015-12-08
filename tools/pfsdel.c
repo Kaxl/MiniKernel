@@ -6,7 +6,7 @@
  *    Description:  Remove a file from the image
  *
  *        Version:  1.0
- *        Created:  12/08/2015 08:53:30 PM
+ *        Created:  12/08/2015 06:53:30 PM
  *       Revision:  none
  *       Compiler:  gcc
  *
