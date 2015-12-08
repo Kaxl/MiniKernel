@@ -33,7 +33,6 @@ typedef struct __attribute__((packed)) superblock_t {
     unsigned int nbDataBlocks;      // Number of data blocs
 } superblock_t;
 
-
 /**
  * @brief
  */
@@ -44,17 +43,6 @@ typedef struct __attribute__((packed)) pfsconf_t {
     int z;
 } pfsconst_t;
 
-typedef struct __attribute__((packed)) pfs_t {
-    superblock_t superblock;
-    unsigned char* bitmap;
-    file_entry_t* fileEntries;
-    char* dataBlocks;
-    int blockSize;
-} pfs_t;
-
-
-
-
 /**
  * @brief File entry structure
  */
@@ -64,8 +52,28 @@ typedef struct __attribute__((packed)) file_entry_t {
     unsigned short int index[110];      // Index of block (2 bytes)
 } file_entry_t;
 
+typedef struct __attribute__((packed)) pfs_t {
+    superblock_t superblock;
+    unsigned char* bitmap;
+    file_entry_t* fileEntries;
+    char* dataBlocks;
+    int blockSize;
+} pfs_t;
 
-void loadSuperblock(superblock_t superblock, char* img);
+int loadSuperblock(superblock_t* superblock, char* img);
 
+int loadBitmap(unsigned char* bitmap, char* img);
+
+int loadFileEntries(file_entry_t* fileEntries, char* img);
+
+int loadPFS(pfs_t* pfs, char* img);
+
+int unloadSuperblock(superblock_t* superblock);
+
+int unloadBitmap(unsigned char* bitmap);
+
+int unloadFileEntries(file_entry_t* fileEntries);
+
+int unloadPFS(pfs_t* pfs);
 
 #endif

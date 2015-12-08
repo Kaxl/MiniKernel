@@ -19,17 +19,45 @@
 #include "pfs.h"
 
 int loadSuperblock(superblock_t* superblock, char* img) {
-    // Load the image
-    FILE* image = fopen(img, "r+b");
-    if (image == NULL) {
-        printf("Error while opening the file");
-        return -1;
-    }
+    //// Load the image
+    //FILE* image = fopen(img, "r+b");
+    //if (image == NULL) {
+    //    printf("Error while opening the file");
+    //    return -1;
+    //}
 
-    // Set the pointer at the beginning of the file
-    fseek(image, 0, SEEK_SET);
-    
-    // Get the superblock
-    superblock = calloc(1, sizeof(superblock_t));
-    fread(superblock, sizeof(superblock_t), 1, image);
+    //// Set the pointer at the beginning of the file
+    //fseek(image, 0, SEEK_SET);
+    //
+    //// Get the superblock
+    //superblock = calloc(1, sizeof(superblock_t));
+    //fread(superblock, sizeof(superblock_t), 1, image);
+}
+
+int loadBitmap(unsigned char* bitmap, char* img) {
+
+}
+
+int loadFileEntries(file_entry_t* fileEntries, char* img) {
+
+}
+
+int loadPFS(pfs_t* pfs, char* img) {
+
+}
+
+int unloadSuperblock(superblock_t* superblock) {
+
+}
+
+int unloadBitmap(unsigned char* bitmap) {
+
+}
+
+int unloadFileEntries(file_entry_t* fileEntries) {
+
+}
+
+int unloadPFS(pfs_t* pfs) {
+
 }
