@@ -48,14 +48,6 @@ int pfsadd(char* img, char* filename) {
     if ((loadPFS(pfs, img)) < 0) {
         return -1;
     }
-    printf("---Superblock\n");
-    printf("signature : %s\n", pfs->superblock.signature);
-    printf("nbSectorsB : %d\n", pfs->superblock.nbSectorsB);
-    printf("bitmapSize : %d\n", pfs->superblock.bitmapSize);
-    printf("nbFileEntries : %d\n", pfs->superblock.nbFileEntries);
-    printf("fileEntrySize : %d\n", pfs->superblock.fileEntrySize);
-    printf("nbDataBlocks : %d\n", pfs->superblock.nbDataBlocks);
-
 
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
@@ -108,8 +100,6 @@ int pfsadd(char* img, char* filename) {
             // Save the position of the file entry,
             // the file entry is add at the end
             posNewFileEntry = i;
-            // Add the file entry in the array
-            //pfs->fileEntries[i] = newFileEntry;
             break;
         }
     }
@@ -131,13 +121,15 @@ int pfsadd(char* img, char* filename) {
 
         // Get the first free block number
         blockNumber = allocBlock(pfs->bitmap, bitmapSize);
+        printf("Block : %d\n", blockNumber);
+        printf("FirstData : %d\n", pfs->firstDataBlock);
         if (blockNumber < 0) {
             printf("Error while writing the file\n");
             return -1;
         }
 
         // Go in the right position in the file and write in it
-        fseek(image, blockNumber * pfs->blockSize + pfs->firstDataBlocks, SEEK_SET);
+        fseek(image, blockNumber * pfs->blockSize + pfs->firstDataBlock, SEEK_SET);
         fwrite(arrayData, pfs->blockSize, 1, image);
 
         // Write the block number into the index of the file entry
@@ -146,11 +138,10 @@ int pfsadd(char* img, char* filename) {
     }
 
     // Position to write the file entry
-    int firstFileEntry = pfs->blockSize + pfs->superblock.bitmapSize * pfs->blockSize;
     pfs->fileEntries[posNewFileEntry] = newFileEntry;
 
     // Write the array of file entry in the image
-    fseek(image, firstFileEntry, SEEK_SET);
+    fseek(image, pfs->firstFileEntry, SEEK_SET);
     fwrite(pfs->fileEntries, pfs->superblock.fileEntrySize, pfs->superblock.nbFileEntries, image);
 
     // Write the bitmap

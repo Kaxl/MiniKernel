@@ -22,7 +22,7 @@
  */
 
 /**
- * @brief
+ * @brief Superblock structure
  */
 typedef struct __attribute__((packed)) superblock_t {
     char signature[8];              // Signature of the file system
@@ -34,16 +34,6 @@ typedef struct __attribute__((packed)) superblock_t {
 } superblock_t;
 
 /**
- * @brief
- */
-typedef struct __attribute__((packed)) pfsconf_t {
-    char* filename;
-    int x;
-    int y;
-    int z;
-} pfsconst_t;
-
-/**
  * @brief File entry structure
  */
 typedef struct __attribute__((packed)) file_entry_t {
@@ -52,11 +42,15 @@ typedef struct __attribute__((packed)) file_entry_t {
     unsigned short int index[110];      // Index of block (2 bytes)
 } file_entry_t;
 
+/**
+ * @brief PFS Structure
+ */
 typedef struct __attribute__((packed)) pfs_t {
     superblock_t superblock;
     unsigned char* bitmap;
     file_entry_t* fileEntries;
-    int firstDataBlocks;
+    int firstFileEntry;
+    int firstDataBlock;
     int blockSize;
 } pfs_t;
 

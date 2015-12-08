@@ -22,7 +22,7 @@
 #include "pfs.h"
 #include "const.h"
 
-// 
+//
 /**
  * @brief Create an empty file with blocks of x size (must be a 512 multiple), with y file entries and with z data blocks available
  *
@@ -55,6 +55,7 @@ void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksA
     // Create and fill the bitmap
     int bitmapSize = superblock.bitmapSize * blockSize;
     char* bitmap = calloc(bitmapSize, sizeof(char));
+    bitmap[0] |= 0x1 << 7;
 
     // Initialize all of the file entries
     int fileEntriesSize = FILE_ENTRY_SIZE*(nbFileEntries + nbFileEntries % 2);
@@ -73,7 +74,7 @@ void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksA
     fwrite(bitmap, sizeof(char), bitmapSize, fp);
     fwrite(fileEntries, sizeof(char), fileEntriesSize, fp);
     fwrite(dataBlocks, sizeof(char), dataBlocksSize, fp);
-    
+
     // close the file
     fclose(fp);
     return;
