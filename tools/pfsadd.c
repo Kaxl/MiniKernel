@@ -23,6 +23,9 @@
 #include "const.h"
 
 int allocBlock(unsigned char* bitmap, int size);
+int getNumberFreeBlocksLeft(unsigned char* bitmap, int bitmapSize);
+int filenameExist(pfs_t* pfs, const char* filename);
+unsigned long getFileSize(const char* filename);
 
 /**
  * @brief Add a file in the image
@@ -41,7 +44,7 @@ int pfsadd(char* img, char* filename) {
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
         printf("Error while opening the file");
-        return;
+        return -1;
     }
 
     FILE* image = fopen(img, "r+b");
@@ -63,60 +66,25 @@ int pfsadd(char* img, char* filename) {
     pfs_t pfs;
 
     // Load the PFS structure
-    if ((loadPFS(pfs, img)) < 0) {
+    if ((loadPFS(&pfs, img)) < 0) {
         return -1;
     }
 
-    loadPFS
-
-    createFileEntry(superblock, filename)
-
     // Check for the space left on device
-    int bitmapSize = superblock->bitmapSize * blockSize / 8;
+    int bitmapSize = pfs.superblock.bitmapSize * pfs.blockSize / 8;
     int nbFreeBlocks = getNumberFreeBlocksLeft(pfs.bitmap, bitmapSize);
+
     unsigned long fileSize = getFileSize(filename);
     if (nbFreeBlocks - (int)((fileSize / pfs.blockSize) + 1) < 0) {
         printf("Not enought space left on device\n");
-        return 1;
+        return -1;
     }
-
-    if (CheckFilenameExist < 0) {
-        printf("Filename already exists\n");
-        return 1;
-    }
-
-
-    // Load the superblock
-    //superblock_t* superblock = calloc(1, sizeof(superblock_t));
-    //fread(superblock, sizeof(superblock_t), 1, image);
-
-    // Calculate the size of a block
-    //int blockSize = superblock->nbSectorsB * SECTOR_SIZE;
-
-
-/** TODO :
- *  - Verif if filename already exists
- *  - Verif if all file entries are already used
- *  - Verif if all datablocks are used
- *  - Si le fichier est trop grand (index fileentry ou blocks disponible)
- */
-
 
     // Check if filename already exists
-
-    // Check if all file entries are already used
-
-    // Check if file is too big to be stored in the filesystem
-    int maxFileSize =
-
-
-    // Load the bitmap
-    fseek(image, blockSize, SEEK_SET);
-    unsigned char* bitmap = calloc(superblock->bitmapSize * blockSize / 8, sizeof(char));
-    int bitmapSize = superblock->bitmapSize * blockSize / 8;
-    fread(bitmap, sizeof(char), bitmapSize, image);
-    // Set the first bitmap at 1, because we don't want to user it.
-    bitmap[0] |= (0x1 << 7);
+    if (filenameExist(&pfs, filename)) {
+        printf("Filename already exists\n");
+        return -1;
+    }
 
     // Creation of file entry
     file_entry_t newFileEntry;
@@ -125,65 +93,110 @@ int pfsadd(char* img, char* filename) {
     // Last character is 0 (end of string)
     newFileEntry.filename[31] = 0;
 
-    // Position to write the file entry
     // Look for the first free position after the bitmap
-    int firstFileEntry = blockSize + superblock->bitmapSize * blockSize;
-
+    int posNewFileEntry = -1;
+    for (int i = 0; i < pfs.superblock.nbFileEntries; i++) {
+        if (!pfs.fileEntries[i].filename[0]) {
+            // Save the position of the file entry,
+            // the file entry is add at the end
+            posNewFileEntry = i;
+            // Add the file entry in the array
+            //pfs->fileEntries[i] = newFileEntry;
+            break;
+        }
+    }
+    // If the fileEntries array is full, exit
+    if (posNewFileEntry == -1) {
+        printf("File entries are full\n");
+        return -1;
+    }
 
     // Write the data
     // Run over the file from block size to block size
     // For each block, find the first free bitmap, set it has taken.
     // Then go to the corresponding block and fill it
-    int firstDataBlock = firstFileEntry + superblock->nbFileEntries * superblock->fileEntrySize;
-    char* arrayData = calloc(sizeof(char), blockSize);
+    char* arrayData = calloc(sizeof(char), pfs.blockSize);
     int index = 0;
 
     int blockNumber;
-    while (fread(arrayData, sizeof(char), blockSize, file) > 0) {
+    while (fread(arrayData, sizeof(char), pfs.blockSize, file) > 0) {
 
         // Get the first free block number
-        if ((blockNumber = allocBlock(bitmap, bitmapSize) < 0)) {
-            // No blocks available
+        blockNumber = allocBlock(pfs.bitmap, bitmapSize);
+        if (blockNumber < 0) {
+            printf("Error while writing the file\n");
+            return -1;
         }
 
         // Go in the right position in the file and write in it
-        fseek(image, blockNumber * blockSize + firstDataBlock, SEEK_SET);
-        fwrite(arrayData, blockSize, 1, image); // ==> move it extern of loop ?
+        fseek(image, blockNumber * pfs.blockSize + pfs.firstDataBlock, SEEK_SET);
+        fwrite(arrayData, pfs.blockSize, 1, image);
 
         // Write the block number into the index of the file entry
         newFileEntry.index[index] = blockNumber;
         index++;
     }
 
-    // Load the file entries
-    file_entry_t* arrayFileEntries = calloc(superblock->fileEntrySize, superblock->nbFileEntries);
-    fseek(image, firstFileEntry, SEEK_SET);
-    fread(arrayFileEntries, sizeof(file_entry_t), superblock->nbFileEntries, image);
-
-    // Look for the first free position
-    for (int i = 0; i < superblock->nbFileEntries; i++) {
-        if (!arrayFileEntries[i].filename[0]) {
-            // Add the file entry in the array
-            arrayFileEntries[i] = newFileEntry;
-            break;
-        }
-    }
+    // Position to write the file entry
+    int firstFileEntry = pfs.blockSize + pfs.superblock.bitmapSize * pfs.blockSize;
+    pfs.fileEntries[posNewFileEntry] = newFileEntry;
 
     // Write the array of file entry in the image
     fseek(image, firstFileEntry, SEEK_SET);
-    fwrite(arrayFileEntries, superblock->fileEntrySize, superblock->nbFileEntries, image);
+    fwrite(pfs.fileEntries, pfs.superblock.fileEntrySize, pfs.superblock.nbFileEntries, image);
 
     // Write the bitmap
-    fseek(image, blockSize, SEEK_SET);
-    fwrite(bitmap, sizeof(char), bitmapSize, image);
+    fseek(image, pfs.blockSize, SEEK_SET);
+    fwrite(pfs.bitmap, sizeof(char), pfs.superblock.bitmapSize, image);
 
     // Close the files
     fclose(image);
     fclose(file);
 }
 
-
-int checkFile
+/**
+ * @brief Allocate a block by setting it at 1 in the bitmap and return the block number
+ *
+ * Run over the bitmap to find the first free entry
+ * and return the corresponding block number
+ *
+ * The bitmap is an array of unsigned char,
+ * so we need to check each bit of the char separately
+ *
+ * @param bitmap    Bitmap of image
+ * @param size      Size of bitmap (number of char)
+ *
+ * @return          The block number
+ */
+int allocBlock(unsigned char* bitmap, int size) {
+    // For the first char, we don't test the first bit, because we can't use it.
+    for (int i = 0; i < size; i++) {
+        // If all bits are taken
+        if (bitmap[i] == 0xf) {
+            continue;
+        }
+        for (int j = 6; j >= 0; j--) {
+            if (!(bitmap[i] & (0x1 << j))) {
+                bitmap[i] |= (0x1 << j);
+                return (i * 0x8 + (0x8 - j));
+            }
+        }
+    }
+    // Start at the second char
+    for (int i = 0; i < size; i++) {
+        // If all bits are taken
+        if (bitmap[i] == 0xf) {
+            continue;
+        }
+        for (int j = 7; j >= 0; j--) {
+            if (!(bitmap[i] & (0x1 << j))) {
+                bitmap[i] |= (0x1 << j);
+                return (i * 0x8 + (0x8 - j));
+            }
+        }
+    }
+    return -1;
+}
 
 /**
  * @brief Get the number of free blocks left on the device
@@ -221,23 +234,6 @@ int getNumberFreeBlocksLeft(unsigned char* bitmap, int bitmapSize) {
 }
 
 /**
- * @brief Get the size of a file
- *
- * @param filename File to get the size from
- *
- * @return The size of the file
- */
-unsigned long getFileSize(const char* filename)
-{
-  unsigned long size;
-  FILE* f = fopen(filename, "rb");
-  fseek(f, 0, SEEK_END);
-  size  = ftell(f);
-  fclose(fh);
-  return size;
-}
-
-/**
  * @brief Check if a filename already exists on the image
  *
  * @param pfs       Filesystem loaded
@@ -245,9 +241,9 @@ unsigned long getFileSize(const char* filename)
  *
  * @return          0 if doesn't exist, else 1
  */
-int checkFilenameExist(pfs_t* pfs, const char* filename) {
-    for (int i = 0; i < pfs->nbFileEntries; i++) {
-        if ((strcmp(pfs->fileEntries[i]->filename, filename)) == 0) {
+int filenameExist(pfs_t* pfs, const char* filename) {
+    for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
+        if ((strcmp(pfs->fileEntries[i].filename, filename)) == 0) {
             return 1;
         }
     }
@@ -255,34 +251,21 @@ int checkFilenameExist(pfs_t* pfs, const char* filename) {
 }
 
 /**
- * @brief Allocate a block by setting it at 1 in the bitmap and return the block number
+ * @brief Get the size of a file
  *
- * Run over the bitmap to find the first free entry
- * and return the corresponding block number
+ * @param filename File to get the size from
  *
- * The bitmap is an array of unsigned char,
- * so we need to check each bit of the char separately
- *
- * @param bitmap    Bitmap of image
- * @param size      Size of bitmap (number of char)
- *
- * @return          The block number
+ * @return The size of the file
  */
-int allocBlock(unsigned char* bitmap, int size) {
-    for (int i = 0; i < size; i++) {
-        // If all bits are taken
-        if (bitmap[i] == 0xf) {
-            continue;
-        }
-        for (int j = 7; j >= 0; j--) {
-            if (!(bitmap[i] & (0x1 << j))) {
-                bitmap[i] |= (0x1 << j);
-                return (i * 0x8 + (0x8 - j));
-            }
-        }
-    }
-    return -1;
+unsigned long getFileSize(const char* filename) {
+  unsigned long size;
+  FILE* f = fopen(filename, "rb");
+  fseek(f, 0, SEEK_END);
+  size  = ftell(f);
+  fclose(f);
+  return size;
 }
+
 
 void main(int argc, char *argv[]) {
     if (argc < 3) {
@@ -294,7 +277,7 @@ void main(int argc, char *argv[]) {
     }
 
     if ((pfsadd(argv[1], argv[2]) < 0))
-        printf("Error when adding the file, abort\n");
+        printf("Error when adding the file\n");
 }
 
 
