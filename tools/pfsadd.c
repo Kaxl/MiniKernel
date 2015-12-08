@@ -129,7 +129,7 @@ int pfsadd(char* img, char* filename) {
         }
 
         // Go in the right position in the file and write in it
-        fseek(image, blockNumber * pfs.blockSize + pfs.firstDataBlock, SEEK_SET);
+        fseek(image, blockNumber * pfs.blockSize + pfs.firstDataBlocks, SEEK_SET);
         fwrite(arrayData, pfs.blockSize, 1, image);
 
         // Write the block number into the index of the file entry

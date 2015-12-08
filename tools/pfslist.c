@@ -22,8 +22,6 @@
 #include "pfs.h"
 #include "const.h"
 
-superblock_t getSuperBlock(char* img);
-
 /**
  * @brief List the files present in the image
  *
@@ -32,24 +30,28 @@ superblock_t getSuperBlock(char* img);
 void pfslist(char* img) {
 
     // Declare the PFS structure in order to load it
-    pfs_t pfs;
+    pfs_t* pfs = calloc(1, sizeof(pfs_t));
 
     // Load the PFS
-    loadPFS(&pfs, img);
+    loadPFS(pfs, img);
+
+    printf("[pfslist.c] nbFileEntries : %d\n", pfs->superblock.nbFileEntries);
+    
 
     // Look for files in file entry
-    for (int i = 0; i < pfs.superblock.nbFileEntries; i++) {
+    for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
 
         // Stop the reading if no more file entries with data
-        if (!pfs.fileEntries[i].filename[0]) {
+        if (!pfs->fileEntries[i].filename[0]) {
+            printf("no files\n");
             break;
         }
 
         // Print the filename
-        printf("%s\n", pfs.fileEntries[i].filename);
+        printf("%s\n", pfs->fileEntries[i].filename);
     }
 
-    unloadPFS(&pfs);
+    //unloadPFS(pfs);
 }
 
 void main(int argc, char *argv[]) {
