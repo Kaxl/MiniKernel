@@ -14,7 +14,7 @@ pfsdel: pfsdel.c pfs.o
 pfslist: pfslist.c pfs.o
 	gcc $^ -o $@
 
-pfs.o: pfs.c pfs.h
+pfs.o: pfs.c pfs.h const.h
 	gcc -c $< -o $@
 
 clean:
