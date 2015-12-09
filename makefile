@@ -8,6 +8,8 @@
 # 'make clean'	removes all .o files
 #
 
+KERNEL=kernel.iso
+FS=fs.img
 
 .PHONY: run, clean
 
@@ -20,8 +22,9 @@ kernel.elf:
 	cp kernel/kernel.elf boot/
 	cp grub/grub.cfg boot/grub/
 
-run: kernel.iso
-	qemu-system-i386 -cdrom $^
+run: $(KERNEL) $(FS)
+	qemu-system-i386 -cdrom $(KERNEL)
+	qemu-system-i386 -hda $(FS)
 
 clean:
 	rm -f *.o
