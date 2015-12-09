@@ -36,7 +36,7 @@ void pfsdel(char* img, char* filename) {
     // Load the PFS
     loadPFS(pfs, img);
 
-    FILE* image = fopen(img, "rb");
+    FILE* image = fopen(img, "r+b");
     if (image == NULL) {
         printf("Error while opening the file");
         return;
@@ -56,12 +56,12 @@ void pfsdel(char* img, char* filename) {
             // Set the bit in the bitmap to 0
             printf("set 0 %d\n", pfs->fileEntries[index].index[i]);
             int indexFile = pfs->fileEntries[index].index[i] - 1;
-            pfs->bitmap[indexFile / 8] &= ~(0x1 << (indexFile % 7)); // TODO : KO
+            pfs->bitmap[indexFile / 8] &= ~(0x80 >> (indexFile % 8)); 
         }
     }
 
     // Remove first byte of file entry (in filename)
-    pfs->fileEntries[index].filename[0] = 0; // TODO : KO
+    pfs->fileEntries[index].filename[0] = '\0';
 
     // Write the array of file entry in the image
     fseek(image, pfs->firstFileEntry, SEEK_SET);
