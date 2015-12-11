@@ -15,8 +15,16 @@
  *
  * =====================================================================================
  */
+#ifndef __PFS__H
+#define __PFS__H
 
 #include "../common/types.h"
+
+#define SIGNATURE_SIZE  8
+#define FILENAME_SIZE   32
+#define SECTOR_SIZE     512         // Bytes
+#define FILE_ENTRY_SIZE 256         // Bytes
+#define INDEX_SIZE      ((FILE_ENTRY_SIZE - FILENAME_SIZE - 4) / 2)   // 4 for INT
 
 /**
  * @brief Statistique structure
@@ -25,11 +33,11 @@ typedef struct stat_t {
     uint32_t size;
 } stat_t;
 
-typedef struct iterator_t {
+typedef struct file_iterator_t {
     uint32_t sectorNumber;
     uint32_t posInSector;
     uint32_t lastSector;
-} iterator_t;
+} file_iterator_t;
 
 /**
  * @brief Superblock structure
@@ -54,14 +62,26 @@ int file_exists(char *filename);
 /**
  * @brief Creation of the file iterator
  *
- * Set the position on the first file 
+ * Set the position on the first file
  *
  * @return the file iterator just created
  */
 file_iterator_t file_iterator();
 
+
+/**
+ * @brief Go to the next file and return the current one pointed by iterator
+ *
+ * Copy memory at the current position of the iterator into the filename
+ * Go set the iterator on the next file with the first byte not equal to 0
+ *
+ * @param filename Filename return
+ * @param it       Iterator
+ *
+ * @return 0 if there is no file left, else 1
+ */
 int file_next(char *filename, file_iterator_t *it);
 
+int pfs_init();
 
-
-
+#endif

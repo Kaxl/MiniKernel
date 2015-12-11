@@ -123,7 +123,7 @@ void exception_handler(regs_t *regs) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Interruption handler 
+ * @brief Interruption handler
  *
  * @param regs  Processor context during the interruption
  */
@@ -136,46 +136,46 @@ void interruption_handler(regs_t *regs) {
             keyboard_handler();
             break;
         case 2:
-            printf("Redirected to slave PIC");
+            //printf("Redirected to slave PIC");
             break;
         case 3:
-            printf("Serial port (COM2/COM4)");
+            //printf("Serial port (COM2/COM4)");
             break;
         case 4:
-            printf("Serial port (COM1/COM3)");
+            //printf("Serial port (COM1/COM3)");
             break;
         case 5:
-            printf("Sound card");
+            //printf("Sound card");
             break;
         case 6:
-            printf("Floppy disk controller");
+            //printf("Floppy disk controller");
             break;
         case 7:
-            printf("Parallel port");
+            //printf("Parallel port");
             break;
         case 8:
-            printf("Real time clock");
+            //printf("Real time clock");
             break;
         case 9:
-            printf("Redirected to IRQ2");
+            //printf("Redirected to IRQ2");
             break;
         case 10:
-            printf("Reserved");
+            //printf("Reserved");
             break;
         case 11:
-            printf("Reserved");
+            //printf("Reserved");
             break;
         case 12:
-            printf("PS/2 mouse");
+            //printf("PS/2 mouse");
             break;
         case 13:
-            printf("Math coprocessor");
+            //printf("Math coprocessor");
             break;
         case 14:
-            printf("Hard disk controller");
+            //printf("Hard disk controller");
             break;
         case 15:
-            printf("Reserved");
+            //printf("Reserved");
             break;
         default:
             break;

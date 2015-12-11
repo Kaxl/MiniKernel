@@ -25,7 +25,7 @@
 #include "keyboard.h"
 #include "timer.h"
 #include "screen.h"
-
+#include "pfs.h"
 
 void runKernel() {
 
@@ -97,34 +97,59 @@ void runKernel() {
     printf("\r\nWelcome to Snapfish OS !\r\n");
     printf("> ");
 
+    pfs_init();
+
+    char filename[FILENAME_SIZE];
+    file_iterator_t it = file_iterator();
+    printf("Iterator\r\n");
+    printf("sectorNumber=%d\r\n", it.sectorNumber);
+    printf("posInSector=%d\r\n", it.posInSector);
+    printf("lastSector=%d\r\n", it.lastSector);
+
+    int a = file_next(filename, &it);
+    printf("%d", a);
+    printf("%s\r\n", filename);
+    int b = file_next(filename, &it);
+    printf("%d", b);
+    printf("%s\r\n", filename);
+    //while (file_next(filename, &it)) {
+    //    printf("%s\n", filename);
+    //}
+
+    // Init PFS
+    //if (pfs_init() < 0) {
+    //    printf("Problem during init of PFS\r\n");
+    //    halt();
+    //}
+
 
     // Read a file
-    
+
     // Stat of a file
-    
+
     // Check if file exists
-    
+
     // Remove a file
-    
+
     // Check if file exists
 
     // Print all filename of file system with iterator
-    
 
 
 
-    for (;;) {
-        char c = (char)(getc());
-        if ((int)(c) >= 0) {
-            if (c == 'Q') {
-                printf("\r\nShutdown of the system in 1 second.");
-                sleep(1000);
-                printf("\r\nNOW !");
-                halt();
-            }
-            else {
-                printf("%c", c);
-            }
-        }
-    }
+
+    //for (;;) {
+    //    char c = (char)(getc());
+    //    if ((int)(c) >= 0) {
+    //        if (c == 'Q') {
+    //            printf("\r\nShutdown of the system in 1 second.");
+    //            sleep(1000);
+    //            printf("\r\nNOW !");
+    //            halt();
+    //        }
+    //        else {
+    //            printf("%c", c);
+    //        }
+    //    }
+    //}
 }
