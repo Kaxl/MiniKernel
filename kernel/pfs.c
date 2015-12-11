@@ -106,7 +106,7 @@ int file_next(char* filename, file_iterator_t *it) {
 
 int pfs_init() {
 
-    uchar data[512];
+    uchar data[SECTOR_SIZE];
     // Load superblock
     read_sector(0, &data);
     memcpy(&superblock, &data, sizeof(superblock_t));
