@@ -97,6 +97,22 @@ void runKernel() {
     printf("\r\nWelcome to Snapfish OS !\r\n");
     printf("> ");
 
+
+    // Read a file
+    
+    // Stat of a file
+    
+    // Check if file exists
+    
+    // Remove a file
+    
+    // Check if file exists
+
+    // Print all filename of file system with iterator
+    
+
+
+
     for (;;) {
         char c = (char)(getc());
         if ((int)(c) >= 0) {

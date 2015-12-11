@@ -16,9 +16,15 @@
  * =====================================================================================
  */
 
+#include "../common/types.h"
+#include "pfs.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_stat(char *filename, stat_t *stat) {
+    // Check if file exists
+    // Find the file entry
+    // Calculate the size
+    // Fill in the structure stat_t
 
 }
 
@@ -34,6 +40,8 @@ int file_remove(char *filename) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_exists(char *filename) {
+    // Load pfs structure
+
     for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
         if ((strcmp(pfs->fileEntries[i].filename, filename)) == 0) {
             return 1;
@@ -44,11 +52,14 @@ int file_exists(char *filename) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 file_iterator_t file_iterator() {
-
+    // Charge le tableau de files entries
+    // Mets la position a la premier fileentry non vide
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_next(char *filename, file_iterator_t *it) {
-
+    // Chercher le prochain fichier par rapport a la position courante de l'iterateur
+    // copy le nom du fichier dans filename.
+    // Si on arrive a la fin du tableau de file entries, arrete
 }
 

@@ -27,7 +27,7 @@
  * @brief Superblock structure
  */
 typedef struct __attribute__((packed)) superblock_t {
-    char signature[SIGNATURE_SIZE];              // Signature of the file system
+    char signature[SIGNATURE_SIZE]; // Signature of the file system
     unsigned int nbSectorsB;        // Number of sectors by bloc
     unsigned int bitmapSize;        // Size of the bitmap in bloc
     unsigned int nbFileEntries;     // Number of file entries
@@ -39,9 +39,9 @@ typedef struct __attribute__((packed)) superblock_t {
  * @brief File entry structure
  */
 typedef struct __attribute__((packed)) file_entry_t {
-    char filename[FILENAME_SIZE];                  // Name of the file
-    unsigned int size;                  // Size of the file (4 bytes)
-    unsigned short int index[INDEX_SIZE];      // Index of block (2 bytes)
+    char filename[FILENAME_SIZE];           // Name of the file
+    unsigned int size;                      // Size of the file (4 bytes)
+    unsigned short int index[INDEX_SIZE];   // Index of block (2 bytes)
 } file_entry_t;
 
 /**
