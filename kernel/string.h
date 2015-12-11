@@ -17,6 +17,18 @@
  */
 
 /**
+ * @brief Compares two string
+ *
+ * @param str1  String 1
+ * @param str2  String 2
+ *
+ * @return i    0 if string are equals
+ *              < 0 if str1 < str2
+ *              > 0 if str2 < str1
+ */
+extern int strcmp(char* str1, char* str2);
+
+/**
  * @brief Convert an integer into a string
  *
  * @return

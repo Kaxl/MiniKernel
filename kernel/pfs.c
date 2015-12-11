@@ -22,6 +22,7 @@
 #include "ide.h"
 #include "base.h"
 #include "screen.h"
+#include "string.h"
 
 static superblock_t superblock;
 
@@ -51,6 +52,16 @@ int file_remove(char* filename) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_exists(char* filename) {
+    file_iterator_t it = file_iterator();
+
+    char file[FILENAME_SIZE];
+
+    while (file_next(file, &it)) {
+        if (strcmp(file, filename) == 0)
+            return 1;
+        else
+            return 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -74,6 +85,11 @@ int file_next(char* filename, file_iterator_t *it) {
     // Copy the filename
     memcpy(filename, &sector[it->posInSector], FILENAME_SIZE);
 
+    // If there is no filename (first byte), return 0
+    if (!filename[0]) {
+        return 0;
+    }
+
     // Look for the next file
     do {
         it->posInSector += superblock.fileEntrySize;
@@ -85,11 +101,7 @@ int file_next(char* filename, file_iterator_t *it) {
     }
     while (!(sector[it->posInSector]) && it->sectorNumber <= it->lastSector);
 
-    // Calculate return value
-    if (filename)
-        return 1;
-    else
-        return 0;
+    return 1;
 }
 
 int pfs_init() {

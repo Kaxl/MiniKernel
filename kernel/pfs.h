@@ -34,9 +34,9 @@ typedef struct stat_t {
 } stat_t;
 
 typedef struct file_iterator_t {
-    uint32_t sectorNumber;
-    uint32_t posInSector;
-    uint32_t lastSector;
+    uint32_t sectorNumber;      // Sector number (starting at 0)
+    uint32_t posInSector;       // Position into the sector
+    uint32_t lastSector;        // Last sector of the file entries table
 } file_iterator_t;
 
 /**

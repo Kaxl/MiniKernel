@@ -106,15 +106,14 @@ void runKernel() {
     printf("posInSector=%d\r\n", it.posInSector);
     printf("lastSector=%d\r\n", it.lastSector);
 
-    int a = file_next(filename, &it);
-    printf("%d", a);
-    printf("%s\r\n", filename);
-    int b = file_next(filename, &it);
-    printf("%d", b);
-    printf("%s\r\n", filename);
-    //while (file_next(filename, &it)) {
-    //    printf("%s\n", filename);
-    //}
+    printf("Files in filesytem : \r\n");
+    while (file_next(filename, &it)) {
+        printf("%s\r\n", filename);
+    }
+
+    printf("Check if exists : \r\n");
+    printf("fileTest : %d\r\n", file_exists("fileTest"));
+    printf("NoFile : %d\r\n", file_exists("NoFile"));
 
     // Init PFS
     //if (pfs_init() < 0) {
