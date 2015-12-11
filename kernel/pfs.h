@@ -15,8 +15,14 @@
  *
  * =====================================================================================
  */
+#ifndef __PFS__H
+#define __PFS__H
 
 #include "../common/types.h"
+
+#define SIGNATURE_SIZE  8
+#define FILENAME_SIZE   32
+#define INDEX_SIZE      110
 
 /**
  * @brief Statistique structure
@@ -25,10 +31,9 @@ typedef struct stat_t {
     uint32_t size;
 } stat_t;
 
-typedef struct iterator_t {
+typedef struct file_iterator_t {
     uint32_t position;  // Adresse du file entry courant (a l'initialisation, premier file entry
-    uint32_
-} iterator_t;
+} file_iterator_t;
 
 /**
  * @brief Superblock structure
@@ -75,6 +80,6 @@ file_iterator_t file_iterator();
 
 int file_next(char *filename, file_iterator_t *it);
 
+int loadPFS(pfs_t* pfs);
 
-
-
+#endif

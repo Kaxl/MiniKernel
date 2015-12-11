@@ -18,6 +18,11 @@
 
 #include "../common/types.h"
 #include "pfs.h"
+#include "ide.h"
+#include "base.h"
+#include "screen.h"
+
+static superblock_t superblock;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_stat(char *filename, stat_t *stat) {
@@ -42,11 +47,11 @@ int file_remove(char *filename) {
 int file_exists(char *filename) {
     // Load pfs structure
 
-    for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
-        if ((strcmp(pfs->fileEntries[i].filename, filename)) == 0) {
-            return 1;
-        }
-    }
+    //for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
+    //    if ((strcmp(pfs->fileEntries[i].filename, filename)) == 0) {
+    //        return 1;
+    //    }
+    //}
     return 0;
 }
 
@@ -63,3 +68,18 @@ int file_next(char *filename, file_iterator_t *it) {
     // Si on arrive a la fin du tableau de file entries, arrete
 }
 
+int pfs_init() {
+
+    uchar data[512];
+    // Load superblock
+    read_sector(0, &data);
+    memcpy(&superblock, &data, sizeof(superblock_t));
+
+    printf("\r\nSuperblock\r\n");
+    printf("%s\r\n", superblock.signature);
+    printf("%d\r\n", superblock.nbSectorsB);
+    printf("%d\r\n", superblock.bitmapSize);
+    printf("%d\r\n", superblock.nbFileEntries);
+    printf("%d\r\n", superblock.fileEntrySize);
+    printf("%d\r\n", superblock.nbDataBlocks);
+}

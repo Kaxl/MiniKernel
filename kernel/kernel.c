@@ -25,7 +25,7 @@
 #include "keyboard.h"
 #include "timer.h"
 #include "screen.h"
-
+#include "pfs.h"
 
 void runKernel() {
 
@@ -97,6 +97,14 @@ void runKernel() {
     printf("\r\nWelcome to Snapfish OS !\r\n");
     printf("> ");
 
+    pfs_init();
+
+    // Init PFS
+    //if (pfs_init() < 0) {
+    //    printf("Problem during init of PFS\r\n");
+    //    halt();
+    //}
+
 
     // Read a file
     
@@ -113,18 +121,18 @@ void runKernel() {
 
 
 
-    for (;;) {
-        char c = (char)(getc());
-        if ((int)(c) >= 0) {
-            if (c == 'Q') {
-                printf("\r\nShutdown of the system in 1 second.");
-                sleep(1000);
-                printf("\r\nNOW !");
-                halt();
-            }
-            else {
-                printf("%c", c);
-            }
-        }
-    }
+    //for (;;) {
+    //    char c = (char)(getc());
+    //    if ((int)(c) >= 0) {
+    //        if (c == 'Q') {
+    //            printf("\r\nShutdown of the system in 1 second.");
+    //            sleep(1000);
+    //            printf("\r\nNOW !");
+    //            halt();
+    //        }
+    //        else {
+    //            printf("%c", c);
+    //        }
+    //    }
+    //}
 }

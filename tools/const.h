@@ -6,7 +6,7 @@
 #define SIGNATURE_SIZE  8
 #define FILE_ENTRY_SIZE 256         // Bytes
 #define FILENAME_SIZE   32
-#define INDEX_SIZE      (FILE_ENTRY_SIZE - FILENAME_SIZE - 4)   // 4 for INT
+#define INDEX_SIZE      ((FILE_ENTRY_SIZE - FILENAME_SIZE - 4)/2)   // 4 for INT
 
 
 #endif
