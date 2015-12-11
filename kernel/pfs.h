@@ -26,8 +26,9 @@ typedef struct stat_t {
 } stat_t;
 
 typedef struct iterator_t {
-    uint32_t position;  // Adresse du file entry courant (a l'initialisation, premier file entry
-    uint32_
+    uint32_t sectorNumber;
+    uint32_t posInSector;
+    uint32_t lastSector;
 } iterator_t;
 
 /**
@@ -42,27 +43,6 @@ typedef struct __attribute__((packed)) superblock_t {
     unsigned int nbDataBlocks;      // Number of data blocs
 } superblock_t;
 
-/**
- * @brief File entry structure
- */
-typedef struct __attribute__((packed)) file_entry_t {
-    char filename[FILENAME_SIZE];           // Name of the file
-    unsigned int size;                      // Size of the file (4 bytes)
-    unsigned short int index[INDEX_SIZE];   // Index of block (2 bytes)
-} file_entry_t;
-
-/**
- * @brief PFS Structure
- */
-typedef struct __attribute__((packed)) pfs_t {
-    superblock_t superblock;
-    unsigned char* bitmap;
-    file_entry_t* fileEntries;
-    int firstFileEntry;
-    int firstDataBlock;
-    int blockSize;
-} pfs_t;
-
 int file_stat(char *filename, stat_t *stat);
 
 int file_read(char *filename, void *buf);
@@ -71,6 +51,13 @@ int file_remove(char *filename);
 
 int file_exists(char *filename);
 
+/**
+ * @brief Creation of the file iterator
+ *
+ * Set the position on the first file 
+ *
+ * @return the file iterator just created
+ */
 file_iterator_t file_iterator();
 
 int file_next(char *filename, file_iterator_t *it);

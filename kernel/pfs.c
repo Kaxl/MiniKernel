@@ -17,49 +17,84 @@
  */
 
 #include "../common/types.h"
+#include "base.h"
 #include "pfs.h"
 
+extern superblock_t superblock;
+
 ////////////////////////////////////////////////////////////////////////////////////////
-int file_stat(char *filename, stat_t *stat) {
+int file_stat(char* filename, stat_t *stat) {
     // Check if file exists
-    // Find the file entry
-    // Calculate the size
-    // Fill in the structure stat_t
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-int file_read(char *filename, void *buf) {
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-int file_remove(char *filename) {
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-int file_exists(char *filename) {
-    // Load pfs structure
-
-    for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
-        if ((strcmp(pfs->fileEntries[i].filename, filename)) == 0) {
-            return 1;
-        }
+    if (file_exists(filename)) {
+        // Find the file entry
+        int fileEntry = getFileEntry(filename);
+        // Calculate the size
+        // Fill in the structure stat_t
     }
-    return 0;
+    else {
+        return -1;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int file_read(char* filename, void *buf) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int file_remove(char* filename) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int file_exists(char* filename) {
+    // Load pfs structure
+    int fileEntry = getFileEntry(filename);
+    if (fileEntry != -1) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 file_iterator_t file_iterator() {
-    // Charge le tableau de files entries
-    // Mets la position a la premier fileentry non vide
+    file_iterator it;
+    // Set the iterator at the first file entry
+    int blockSize = SECTOR_SIZE * superblock.nbSectorsB;
+
+    it.sectorNumber = blockSize * (superblock.bitmapSize + 1) / SECTOR_SIZE;
+    it.posInSector = 0;
+    it.lastSector = it.sectorNumber + (superblock.nbFileEntries * superblock.fileEntrySize / SECTOR_SIZE);
+    it.lastSector = 2 + (pfs.fileEntrySize * pfs.fileEntrySize) / SECTOR_SIZE + superblock.bitmapSize * 2
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-int file_next(char *filename, file_iterator_t *it) {
-    // Chercher le prochain fichier par rapport a la position courante de l'iterateur
-    // copy le nom du fichier dans filename.
-    // Si on arrive a la fin du tableau de file entries, arrete
+int file_next(char* filename, file_iterator_t *it) {
+    // Look for the next file in the file entry
+    char sector[SECTOR_SIZE];
+    read_sector(it.sectorNumber, sector);
+    // Copy the filename
+    memcpy(filename, &sector[read_sector], FILENAME_SIZE);
+
+
+    // Look for the next file
+    do {
+        it.posInSector += pfs.fileEntrySize;
+        if (it.posInSector > SECTOR_SIZE) {
+            it.posInSector = 0;
+            it.sectorNumber += 1;
+            read_sector(it.sectorNumber, sector);
+        }
+    }
+    while (!sector[it.posInSector] && it.sectorNumber <= it.lastSector);
+
+    if (filename) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
 }
 
