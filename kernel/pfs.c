@@ -54,7 +54,41 @@ int file_stat(char* filename, stat_t *stat) {
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_read(char* filename, void *buf) {
 
+    char* buff = (char *)buf;
+
+    // Initiate the file iterator
     file_iterator_t it = file_iterator();
+
+    // Current filename when iterating
+    char file[FILENAME_SIZE];
+    char fileEntry[SECTOR_SIZE];
+    unsigned short int currentBlockFE = 1;      // First init to enter the loop
+
+    // Iterate through the image while there are more files
+    while (file_next(file, &it)) {
+
+        // If this is the file we are looking for
+        if (strcmp(file, filename) == 0) {
+
+            // Read the sector where the file entry is
+            read_sector(it.sectorNumber, fileEntry);
+
+            int index = 36; // 36 is for 32B for the filename and 4B for the size
+            int bufCursor = 0;
+
+            while (currentBlockFE != 0) {
+                currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector];
+                for (unsigned int i = 0; i < superblock.nbSectorsB; i++) {
+                    read_sector(currentBlockFE * superblock.nbSectorsB + i, &buff[bufCursor]);
+                    bufCursor += SECTOR_SIZE;
+                }
+            }
+        }
+    }
+
+    printf("%s\r\n", buff);
+
+    return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
