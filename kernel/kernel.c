@@ -112,11 +112,11 @@ void runKernel() {
         printf("%s\r\n", filename);
     }
 
-    printf("Check if exists : \r\n");
-    printf("fileTest : %d\r\n", file_exists("fileTest"));
-    printf("NoFile : %d\r\n", file_exists("NoFile"));
+    //printf("Check if exists : \r\n");
+    //printf("fileTest : %d\r\n", file_exists("fileTest"));
+    //printf("NoFile : %d\r\n", file_exists("NoFile"));
 
-    char* fileToRemove = "fileTest2";
+    char* fileToRemove = "fileTest";
     printf("Removing %s\r\n", fileToRemove);
     file_remove(fileToRemove);
     printf("Check if %s exists\r\n", fileToRemove);

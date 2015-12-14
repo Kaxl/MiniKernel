@@ -79,19 +79,21 @@ file_iterator_t file_iterator() {
     // Set the iterator at the first file entry
     int blockSize = SECTOR_SIZE * superblock.nbSectorsB;
 
-    it.sectorNumber = (blockSize * (superblock.bitmapSize + 1) / SECTOR_SIZE) - 1;
+    it.sectorNumber = blockSize * (superblock.bitmapSize + 1) / SECTOR_SIZE;
     it.posInSector = SECTOR_SIZE - superblock.fileEntrySize;
     it.lastSector = it.sectorNumber + (superblock.nbFileEntries * superblock.fileEntrySize / SECTOR_SIZE);
+    // Init a previous block so when whe call file_next, we have the first file
+    it.sectorNumber--;
     return it;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_next(char* filename, file_iterator_t *it) {
+    char sector[SECTOR_SIZE];
     // Look for the next file
     findNextIterator(it);
 
     // Look for the next file in the file entry
-    char sector[SECTOR_SIZE];
     read_sector(it->sectorNumber, sector);
 
     // Copy the filename
@@ -108,6 +110,7 @@ int file_next(char* filename, file_iterator_t *it) {
 static void findNextIterator(file_iterator_t *it) {
     // Look for the next file in the file entry
     char sector[SECTOR_SIZE];
+    char filename[FILENAME_SIZE];
     read_sector(it->sectorNumber, sector);
 
     // Look for the next file
@@ -115,11 +118,13 @@ static void findNextIterator(file_iterator_t *it) {
         it->posInSector += superblock.fileEntrySize;
         if (it->posInSector >= SECTOR_SIZE) {
             it->posInSector = 0;
-            it->sectorNumber += 1;
+            it->sectorNumber++;
             read_sector(it->sectorNumber, sector);
         }
+        // Copy the filename
+        memcpy(filename, &sector[it->posInSector], FILENAME_SIZE);
     }
-    while (!(sector[it->posInSector]) && it->sectorNumber <= it->lastSector);
+    while (!(filename[0]) && it->sectorNumber <= it->lastSector);
 }
 
 int pfs_init() {
