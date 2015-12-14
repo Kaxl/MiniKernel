@@ -121,6 +121,12 @@ void runKernel() {
     file_stat(fileSize, &stat);
     printf("Size of %s : %d\r\n", fileSize, stat.size);
 
+    char* fileRead = "fileTest";
+    file_stat(fileRead, &stat);
+    char buff[stat.size];
+    printf("[fileRead] size of fileTest : %d", stat.size);
+    //file_read(fileRead, (void *)&buff);
+
     char* fileToRemove = "fileTest";
     printf("Removing %s\r\n", fileToRemove);
     file_remove(fileToRemove);
