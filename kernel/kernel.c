@@ -112,9 +112,14 @@ void runKernel() {
         printf("%s\r\n", filename);
     }
 
-    //printf("Check if exists : \r\n");
-    //printf("fileTest : %d\r\n", file_exists("fileTest"));
-    //printf("NoFile : %d\r\n", file_exists("NoFile"));
+    printf("Check if exists : \r\n");
+    printf("fileTest : %d\r\n", file_exists("fileTest"));
+    printf("NoFile : %d\r\n", file_exists("NoFile"));
+
+    char* fileSize = "fileTest2";
+    stat_t stat;
+    file_stat(fileSize, &stat);
+    printf("Size of %s : %d\r\n", fileSize, stat.size);
 
     char* fileToRemove = "fileTest";
     printf("Removing %s\r\n", fileToRemove);
