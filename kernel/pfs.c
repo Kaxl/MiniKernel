@@ -73,24 +73,21 @@ int file_remove(char* filename) {
             write_sector(it.sectorNumber, sector);
             // Look for each bitmap
             // First index is at byte 36 (4 is the size of field 'File size')
-            int index = it.posInSector + FILENAME_SIZE + 4;
-            while (index < superblock.fileEntrySize) { // TODO trouver la derniere
-                int indexBitmap;
-                memcpy(indexBitmap, &sector[index], 2);
-                if (indexBitmap != 0) {
-                    // Get the right sector
-                    indexBitmap /= 8;   // Divison by 8 because each entry of the bitmap is a byte
-                    read_sector(((indexBitmap / 8) / SECTOR_SIZE) + superblock.nbSectorsB, bitmap);
-                    // Get the position in the sector
-                    char byteIndex = bitmap[(indexBitmap / 8) % SECTOR_SIZE];
-                    byteIndex &= (0x1 << (byteIndex));
-                    bitmap[(indexBitmap / 8) % SECTOR_SIZE] = byteIndex;
-                    write_sector((indexBitmap / 8) / SECTOR_SIZE, bitmap);
-                }
-                else {
-                    break;
-                }
-                index += 2; // Each index is on 2 bytes
+            int indexFileEntry = it.posInSector + FILENAME_SIZE + 4;
+            int indexData = (uint32_t)sector[indexFileEntry];
+            printf("indexdata = %d  ", indexData);
+            while (indexData != 0) {
+                // Find the sector with the bitmap
+                // We need to divise by 8 because each entry of the bitmap is a byte
+                int sectorNumber = ((indexData / 8) / SECTOR_SIZE) + superblock.nbSectorsB;
+                // Bitmap start at 0
+                indexData--;
+                read_sector(sectorNumber, bitmap);
+                bitmap[indexData / 8] &= ~(0x80 >> (indexData % 8));
+                write_sector(sectorNumber, bitmap);
+                // Go to the next index
+                indexFileEntry += 2;
+                indexData = (uint32_t)sector[indexFileEntry]; // Each index is on 2 bytes
             }
         }
     }
