@@ -62,7 +62,7 @@ int file_read(char* filename, void *buf) {
     // Current filename when iterating
     char file[FILENAME_SIZE];
     char fileEntry[SECTOR_SIZE];
-    unsigned short int currentBlockFE = 1;      // First init to enter the loop
+    unsigned short int currentBlockFE; 
 
     // Iterate through the image while there are more files
     while (file_next(file, &it)) {
@@ -76,17 +76,20 @@ int file_read(char* filename, void *buf) {
             int index = 36; // 36 is for 32B for the filename and 4B for the size
             int bufCursor = 0;
 
+            currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector] + 3;
             while (currentBlockFE != 0) {
-                currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector];
+                printf("[file_read] currentBlockFE : %d", currentBlockFE);
                 for (unsigned int i = 0; i < superblock.nbSectorsB; i++) {
-                    read_sector(currentBlockFE * superblock.nbSectorsB + i, &buff[bufCursor]);
-                    bufCursor += SECTOR_SIZE;
+                    //read_sector(currentBlockFE * superblock.nbSectorsB + i, &buff[bufCursor]);
+                    read_sector(currentBlockFE * superblock.nbSectorsB + i, buff);
+                    buff += SECTOR_SIZE;
                 }
+
+                index += 2;
+                currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector];
             }
         }
     }
-
-    printf("%s\r\n", buff);
 
     return 1;
 }
