@@ -93,6 +93,9 @@ void pfsadd(char* img, char* filename) {
     // Last character is 0 (end of string)
     newFileEntry.filename[31] = 0;
 
+    // Put the size inside the file entry
+    newFileEntry.size = fileSize;
+
     // Look for the first free position after the bitmap
     int posNewFileEntry = -1;
     for (int i = 0; i < pfs->superblock.nbFileEntries; i++) {
