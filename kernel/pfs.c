@@ -39,15 +39,13 @@ int file_stat(char* filename, stat_t *stat) {
     char sector[SECTOR_SIZE];
     char file[FILENAME_SIZE];
 
-    int size = 0;
-
     // Find the file
     while (file_next(file, &it)) {
         if (strcmp(file, filename) == 0) {
             read_sector(it.sectorNumber, sector);
             // Get the size
-            memcpy(size, &sector[it.posInSector + FILENAME_SIZE], 4);
-            return size;
+            stat->size = (uint32_t)sector[it.posInSector + FILENAME_SIZE];
+            return 0;
         }
     }
     return -1;
@@ -110,16 +108,18 @@ int file_remove(char* filename) {
             // Look for each bitmap
             // First index is at byte 36 (4 is the size of field 'File size')
             int index = it.posInSector + FILENAME_SIZE + 4;
-            while (index < superblock.fileEntrySize) {
+            while (index < superblock.fileEntrySize) { // TODO trouver la derniere
                 int indexBitmap;
-                memcpy(filename, &sector[index], 2);
+                memcpy(indexBitmap, &sector[index], 2);
                 if (indexBitmap != 0) {
                     // Get the right sector
                     indexBitmap /= 8;   // Divison by 8 because each entry of the bitmap is a byte
-                    read_sector((indexBitmap / 8) / SECTOR_SIZE, bitmap);
+                    read_sector(((indexBitmap / 8) / SECTOR_SIZE) + superblock.nbSectorsB, bitmap);
                     // Get the position in the sector
                     char byteIndex = bitmap[(indexBitmap / 8) % SECTOR_SIZE];
-
+                    byteIndex &= (0x1 << (byteIndex));
+                    bitmap[(indexBitmap / 8) % SECTOR_SIZE] = byteIndex;
+                    write_sector((indexBitmap / 8) / SECTOR_SIZE, bitmap);
                 }
                 else {
                     break;
