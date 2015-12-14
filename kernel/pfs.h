@@ -62,7 +62,12 @@ int file_exists(char *filename);
 /**
  * @brief Creation of the file iterator
  *
- * Set the position on the first file
+ * Set the position before the first file, 
+ * this way, on the first call to file_next, we will search for
+ * the next file entry and return it.
+ * It allows us to have the iterator still pointing on the filename 
+ * return by file_next after calling it, so the file_next function 
+ * can be used in order functions.
  *
  * @return the file iterator just created
  */
@@ -72,8 +77,8 @@ file_iterator_t file_iterator();
 /**
  * @brief Go to the next file and return the current one pointed by iterator
  *
- * Copy memory at the current position of the iterator into the filename
  * Go set the iterator on the next file with the first byte not equal to 0
+ * Copy memory at the current position of the iterator into the filename
  *
  * @param filename Filename return
  * @param it       Iterator

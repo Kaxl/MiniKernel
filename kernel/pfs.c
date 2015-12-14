@@ -26,6 +26,13 @@
 
 static superblock_t superblock;
 
+/**
+ * @brief Move the iterator on the next file
+ *
+ * @param it Iterator to move
+ */
+static void findNextIterator(file_iterator_t *it);
+
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_stat(char* filename, stat_t *stat) {
     // Check if file exists
@@ -47,7 +54,18 @@ int file_read(char* filename, void *buf) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_remove(char* filename) {
+    file_iterator_t it = file_iterator();
+    char sector[SECTOR_SIZE];
+    char file[FILENAME_SIZE];
 
+    while (file_next(file, &it)) {
+        if (strcmp(file, filename) == 0) {
+            read_sector(it.sectorNumber, sector);
+            // Set the first byte of filename at 0
+            sector[it.posInSector] = 0;
+            write_sector(it.sectorNumber, sector);
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -59,9 +77,8 @@ int file_exists(char* filename) {
     while (file_next(file, &it)) {
         if (strcmp(file, filename) == 0)
             return 1;
-        else
-            return 0;
     }
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -70,14 +87,17 @@ file_iterator_t file_iterator() {
     // Set the iterator at the first file entry
     int blockSize = SECTOR_SIZE * superblock.nbSectorsB;
 
-    it.sectorNumber = blockSize * (superblock.bitmapSize + 1) / SECTOR_SIZE;
-    it.posInSector = 0;
+    it.sectorNumber = (blockSize * (superblock.bitmapSize + 1) / SECTOR_SIZE) - 1;
+    it.posInSector = SECTOR_SIZE - superblock.fileEntrySize;
     it.lastSector = it.sectorNumber + (superblock.nbFileEntries * superblock.fileEntrySize / SECTOR_SIZE);
     return it;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_next(char* filename, file_iterator_t *it) {
+    // Look for the next file
+    findNextIterator(it);
+
     // Look for the next file in the file entry
     char sector[SECTOR_SIZE];
     read_sector(it->sectorNumber, sector);
@@ -90,6 +110,14 @@ int file_next(char* filename, file_iterator_t *it) {
         return 0;
     }
 
+    return 1;
+}
+
+static void findNextIterator(file_iterator_t *it) {
+    // Look for the next file in the file entry
+    char sector[SECTOR_SIZE];
+    read_sector(it->sectorNumber, sector);
+
     // Look for the next file
     do {
         it->posInSector += superblock.fileEntrySize;
@@ -100,8 +128,6 @@ int file_next(char* filename, file_iterator_t *it) {
         }
     }
     while (!(sector[it->posInSector]) && it->sectorNumber <= it->lastSector);
-
-    return 1;
 }
 
 int pfs_init() {
@@ -114,8 +140,8 @@ int pfs_init() {
     printf("\r\nSuperblock\r\n");
     printf("Signature     : %s\r\n", superblock.signature);
     printf("NbSectorsB    : %d\r\n", superblock.nbSectorsB);
-    printf("BitmapSize    :%d\r\n", superblock.bitmapSize);
+    printf("BitmapSize    : %d\r\n", superblock.bitmapSize);
     printf("NbFileEntries : %d\r\n", superblock.nbFileEntries);
-    printf("FileEntrySize :%d\r\n", superblock.fileEntrySize);
-    printf("NbDataBlocks  :%d\r\n", superblock.nbDataBlocks);
+    printf("FileEntrySize : %d\r\n", superblock.fileEntrySize);
+    printf("NbDataBlocks  : %d\r\n", superblock.nbDataBlocks);
 }

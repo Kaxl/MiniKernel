@@ -107,6 +107,7 @@ void runKernel() {
     printf("lastSector=%d\r\n", it.lastSector);
 
     printf("Files in filesytem : \r\n");
+    it = file_iterator();
     while (file_next(filename, &it)) {
         printf("%s\r\n", filename);
     }
@@ -114,6 +115,17 @@ void runKernel() {
     printf("Check if exists : \r\n");
     printf("fileTest : %d\r\n", file_exists("fileTest"));
     printf("NoFile : %d\r\n", file_exists("NoFile"));
+
+    char* fileToRemove = "fileTest2";
+    printf("Removing %s\r\n", fileToRemove);
+    file_remove(fileToRemove);
+    printf("Check if %s exists\r\n", fileToRemove);
+    printf("%s : %d\r\n", fileToRemove, file_exists(fileToRemove));
+    printf("Files in filesytem : \r\n");
+    it = file_iterator();
+    while (file_next(filename, &it)) {
+        printf("%s\r\n", filename);
+    }
 
     // Init PFS
     //if (pfs_init() < 0) {
