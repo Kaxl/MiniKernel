@@ -116,7 +116,7 @@ void runKernel() {
     printf("fileTest : %d\r\n", file_exists("fileTest"));
     printf("NoFile : %d\r\n", file_exists("NoFile"));
 
-    char* fileSize = "fileTest2";
+    char* fileSize = "fileTest";
     stat_t stat;
     file_stat(fileSize, &stat);
     printf("Size of %s : %d\r\n", fileSize, stat.size);
