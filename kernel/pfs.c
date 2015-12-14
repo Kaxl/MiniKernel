@@ -35,16 +35,22 @@ static void findNextIterator(file_iterator_t *it);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_stat(char* filename, stat_t *stat) {
-    // Check if file exists
-    //if (file_exists(filename)) {
-    //    // Find the file entry
-    //    int fileEntry = getFileEntry(filename);
-    //    // Calculate the size
-    //    // Fill in the structure stat_t
-    //}
-    //else {
-    //    return -1;
-    //}
+    file_iterator_t it = file_iterator();
+    char sector[SECTOR_SIZE];
+    char file[FILENAME_SIZE];
+
+    int size = 0;
+
+    // Find the file
+    while (file_next(file, &it)) {
+        if (strcmp(file, filename) == 0) {
+            read_sector(it.sectorNumber, sector);
+            // Get the size
+            memcpy(size, &sector[it.posInSector + FILENAME_SIZE], 4);
+            return size;
+        }
+    }
+    return -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -56,14 +62,35 @@ int file_read(char* filename, void *buf) {
 int file_remove(char* filename) {
     file_iterator_t it = file_iterator();
     char sector[SECTOR_SIZE];
+    char bitmap[SECTOR_SIZE];
     char file[FILENAME_SIZE];
 
+    // Find the file
     while (file_next(file, &it)) {
         if (strcmp(file, filename) == 0) {
             read_sector(it.sectorNumber, sector);
             // Set the first byte of filename at 0
             sector[it.posInSector] = 0;
             write_sector(it.sectorNumber, sector);
+            // Look for each bitmap
+            // First index is at byte 36 (4 is the size of field 'File size')
+            int index = it.posInSector + FILENAME_SIZE + 4;
+            while (index < superblock.fileEntrySize) {
+                int indexBitmap;
+                memcpy(filename, &sector[index], 2);
+                if (indexBitmap != 0) {
+                    // Get the right sector
+                    indexBitmap /= 8;   // Divison by 8 because each entry of the bitmap is a byte
+                    read_sector((indexBitmap / 8) / SECTOR_SIZE, bitmap);
+                    // Get the position in the sector
+                    char byteIndex = bitmap[(indexBitmap / 8) % SECTOR_SIZE];
+
+                }
+                else {
+                    break;
+                }
+                index += 2; // Each index is on 2 bytes
+            }
         }
     }
 }
