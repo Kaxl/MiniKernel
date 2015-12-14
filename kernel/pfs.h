@@ -55,6 +55,17 @@ int file_stat(char *filename, stat_t *stat);
 
 int file_read(char *filename, void *buf);
 
+
+/**
+ * @brief Remove a file
+ *
+ * Go in the file entry to set the first byte of the filename at 0
+ * Go in each bitmap to clear it
+ *
+ * @param filename File to remove
+ *
+ * @return 0 if succeed, else -1
+ */
 int file_remove(char *filename);
 
 int file_exists(char *filename);
