@@ -35,21 +35,13 @@ static void findNextIterator(file_iterator_t *it);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_stat(char* filename, stat_t *stat) {
-    // Check if file exists
-    //if (file_exists(filename)) {
-    //    // Find the file entry
-    //    int fileEntry = getFileEntry(filename);
-    //    // Calculate the size
-    //    // Fill in the structure stat_t
-    //}
-    //else {
-    //    return -1;
-    //}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_read(char* filename, void *buf) {
 
+    file_iterator_t it = file_iterator();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

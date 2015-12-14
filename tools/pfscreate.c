@@ -58,7 +58,12 @@ void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksA
     bitmap[0] |= 0x1 << 7;
 
     // Initialize all of the file entries
-    int fileEntriesSize = FILE_ENTRY_SIZE*(nbFileEntries + nbFileEntries % 2);
+    int fileEntriesSize;
+    if ((FILE_ENTRY_SIZE * nbFileEntries) % blockSize != 0) 
+        fileEntriesSize = ((FILE_ENTRY_SIZE*nbFileEntries)/blockSize + 1) * blockSize;
+    else
+        fileEntriesSize = FILE_ENTRY_SIZE*nbFileEntries;
+
     char* fileEntries = calloc(fileEntriesSize, sizeof(char));
 
     // Initlalize all the data blocks
