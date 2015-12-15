@@ -85,12 +85,12 @@ int file_read(char* filename, void *buf) {
             int paddingBlock = (blockSize + superblock.bitmapSize * blockSize + superblock.nbFileEntries * superblock.fileEntrySize) / blockSize;
 
             // Index of the block read inside the file entry
-            currentIndexBlock = (unsigned short int)fileEntry[index + it.posInSector]; 
+            currentIndexBlock = (unsigned short int)fileEntry[index + it.posInSector];
 
             // While there are blocks to read
             while (currentIndexBlock != 0) {
 
-                // For one block, maybe we have to read multiple sectors 
+                // For one block, maybe we have to read multiple sectors
                 for (unsigned int i = 0; i < superblock.nbSectorsB; i++) {
 
                     // Read the sector and go the next one
@@ -102,9 +102,10 @@ int file_read(char* filename, void *buf) {
                 index += sizeof(ushort);
                 currentIndexBlock = (ushort)fileEntry[index + it.posInSector];
             }
+            return 0;
         }
     }
-    return 1;
+    return -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -164,14 +165,12 @@ file_iterator_t file_iterator() {
     // Set the iterator at the first file entry
     int blockSize = SECTOR_SIZE * superblock.nbSectorsB;
 
-    it.sectorNumber = blockSize * superblock.bitmapSize / SECTOR_SIZE;
+    // +1 for the superblock
+    it.sectorNumber = blockSize * (superblock.bitmapSize + 1) / SECTOR_SIZE;
     it.posInSector = SECTOR_SIZE - superblock.fileEntrySize;
     it.lastSector = it.sectorNumber + (superblock.nbFileEntries * superblock.fileEntrySize / SECTOR_SIZE);
-    //printf("[it] sectorNumber : %d\r\n", it.sectorNumber);
-    //printf("[it] posInSector : %d\r\n", it.posInSector);
-    //printf("[it] lastSector : %d\r\n", it.lastSector);
     // Init a previous block so when whe call file_next, we have the first file
-    //it.sectorNumber--;
+    it.sectorNumber--;
     return it;
 }
 
@@ -180,9 +179,6 @@ int file_next(char* filename, file_iterator_t *it) {
     char sector[SECTOR_SIZE];
     // Look for the next file
     setIteratorOnNextFile(it);
-    //printf("[next] sectorNumber : %d\r\n", it->sectorNumber);
-    //printf("[next] posInSector : %d\r\n", it->posInSector);
-    //printf("[next] lastSector : %d\r\n", it->lastSector);
 
     // Look for the next file in the file entry
     read_sector(it->sectorNumber, sector);

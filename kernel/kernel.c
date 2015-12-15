@@ -121,7 +121,7 @@ void runKernel() {
     file_stat(fileSize, &stat);
     printf("Size of %s : %d\r\n", fileSize, stat.size);
 
-    char* fileRead = "fileTest";
+    char* fileRead = "lorem";
     file_stat(fileRead, &stat);
     char buff[SECTOR_SIZE*2 * 40];
     file_read(fileRead, (void *)&buff);
@@ -138,6 +138,14 @@ void runKernel() {
         printf("%s\r\n", filename);
     }
     printf("End of listing\n");
+
+    file_stat(fileRead, &stat);
+    char buff2[10000];
+    if (file_read(fileRead, (void *)&buff2) == 0) 
+        printf("Success\r\n");
+    else
+        printf("Failed\r\n");
+    printf("buff : =====================\r\n%s\r\n================================\r\n", buff2);
 
     // Init PFS
     //if (pfs_init() < 0) {
