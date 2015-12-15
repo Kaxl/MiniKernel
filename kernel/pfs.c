@@ -111,7 +111,7 @@ int file_remove(char* filename) {
             // Look for each bitmap
             // First index is at byte 36 (4 is the size of field 'File size')
             int indexFileEntry = it.posInSector + FILENAME_SIZE + 4;
-            int indexData = (uint32_t)sector[indexFileEntry];
+            unsigned short int indexData = (unsigned short int)sector[indexFileEntry];
             printf("indexdata = %d  ", indexData);
             while (indexData != 0) {
                 // Find the sector with the bitmap
@@ -124,7 +124,7 @@ int file_remove(char* filename) {
                 write_sector(sectorNumber, bitmap);
                 // Go to the next index
                 indexFileEntry += 2;
-                indexData = (uint32_t)sector[indexFileEntry]; // Each index is on 2 bytes
+                indexData = (unsigned short int)sector[indexFileEntry]; // Each index is on 2 bytes
             }
         }
     }
