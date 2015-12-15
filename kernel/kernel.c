@@ -130,7 +130,7 @@ void runKernel() {
 
     printf("buff : =====================\r\n%s\r\n================================\r\n", buff);
 
-    char* fileToRemove = "fileTest";
+    char* fileToRemove = "lorem";
     printf("Removing %s\r\n", fileToRemove);
     file_remove(fileToRemove);
     printf("Check if %s exists\r\n", fileToRemove);
