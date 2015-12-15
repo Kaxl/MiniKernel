@@ -54,7 +54,7 @@ void runKernelTest() {
     printf("\nREAD FILES\n");
     char* fileToRead = "fileA";
     printf("Content of %s (Should be 'Rudy is the best')\n", fileToRead);
-    char buffA[1024];
+    char buffA[BUFF_SIZE];      // !! BUFF_SIZE has to change if you want to read bigger files
     file_read(fileToRead, (void *)&buffA);
     printf("%s\n", buffA);
 
@@ -63,49 +63,5 @@ void runKernelTest() {
     char* fileToStat = "fileA";
     stat_t stat;
     file_stat(fileToStat, &stat);
-    printf("Size of %s is %d bytes (Should be 17 bytes)\n", fileToStat, stat.size);
-
-
-
-
-    //printf("Check if exists : \n");
-    //printf("%s : %d\n", fileA, file_exists("fileA"));
-    //printf("NoFile : %d\n", file_exists("NoFile"));
-
-    //char* fileSize = "fileTest";
-    //stat_t stat;
-    //file_stat(fileSize, &stat);
-    //printf("Size of %s : %d\n", fileSize, stat.size);
-
-    //char* fileRead = "lorem";
-    //file_stat(fileRead, &stat);
-    ////char buff[(stat.size % SECTOR_SIZE == 0) ? stat.size : (stat.size/SECTOR_SIZE + 1) * SECTOR_SIZE];
-    //char buff[1000000];
-
-    //file_read(fileRead, (void *)&buff);
-    //printf("buff : =====================\n%s\n================================\n", buff);
-
-
-    //file_stat(fileRead, &stat);
-    ////char buff2[(stat.size % SECTOR_SIZE == 0) ? stat.size : (stat.size/SECTOR_SIZE + 1) * SECTOR_SIZE];
-    //char buff2[10000];
-    //if (file_read(fileRead, (void *)&buff2) == 0)
-    //    printf("Success\n");
-    //else
-    //    printf("Failed\n");
-    //printf("buff : =====================\n%s\n================================\n", buff2);
-
-
-    // Read a file
-
-    // Stat of a file
-
-    // Check if file exists
-
-    // Remove a file
-
-    // Check if file exists
-
-    // Print all filename of file system with iterator
-
+    printf("Size of %s is %d bytes (Should be 17 bytes)", fileToStat, stat.size);
 }

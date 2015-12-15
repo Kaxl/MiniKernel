@@ -11,14 +11,13 @@
 
 KERNEL=kernel.iso
 FS=fs.img
-X=10240		# Block size
-Y=1000			# Number of file entries
-Z=1000			# Number of data blocks available
+X=1024		# Block size
+Y=100		# Number of file entries
+Z=512		# Number of data blocks available
 FT1=fileA
 FT2=fileB
 FT3=fileC
 FT4=lorem
-FT5=fileST
 
 .PHONY: run, clean
 
@@ -38,7 +37,6 @@ $(FS):
 	cd tools && ./pfsadd $(FS) $(FT2)
 	cd tools && ./pfsadd $(FS) $(FT3)
 	cd tools && ./pfsadd $(FS) $(FT4)
-	cd tools && ./pfsadd $(FS) $(FT5)
 	cp tools/$(FS) ./
 
 run: $(KERNEL) $(FS)

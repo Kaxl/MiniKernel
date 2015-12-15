@@ -27,6 +27,8 @@
 #include "timer.h"
 #include "../common/pfs.h"
 
+void starwars();
+
 void runKernel() {
 
     // Init of gdt
@@ -108,6 +110,7 @@ void runKernel() {
     }
 
     printf("\r\nWelcome to Snapfish OS !\r\n");
+    starwars();
     printf("> ");
 
 #ifdef TEST
@@ -129,4 +132,13 @@ void runKernel() {
     }
 #endif
 
+}
+
+
+void starwars() {
+    char* file = "fileST";
+    char buff[200000];
+    file_read(file, (void *)&buff);
+
+    printf("%s", buff);
 }

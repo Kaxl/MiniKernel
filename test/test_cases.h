@@ -19,6 +19,8 @@
 #ifndef _TEST_CASES_H_
 #define _TEST_CASES_H_
 
+#define BUFF_SIZE   1024
+
 /**
  * @brief Test of the kernel
  *
