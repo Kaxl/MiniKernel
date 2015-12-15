@@ -62,7 +62,9 @@ int file_read(char* filename, void *buf) {
     // Current filename when iterating
     char file[FILENAME_SIZE];
     char fileEntry[SECTOR_SIZE];
-    unsigned short int currentBlockFE; 
+    unsigned short int currentIndexBlock;
+
+    int blockSize = superblock.nbSectorsB * SECTOR_SIZE;
 
     // Iterate through the image while there are more files
     while (file_next(file, &it)) {
@@ -74,19 +76,24 @@ int file_read(char* filename, void *buf) {
             read_sector(it.sectorNumber, fileEntry);
 
             int index = 36; // 36 is for 32B for the filename and 4B for the size
-            int bufCursor = 0;
+            //int bufCursor = 0;
+            printf("[file_read] posInSector : %d\r\n", it.posInSector);
 
-            currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector];
-            while (currentBlockFE != 0) {
-                printf("[file_read] currentBlockFE : %d", currentBlockFE);
+            int paddingBlock = (blockSize + superblock.bitmapSize * blockSize + superblock.nbFileEntries * superblock.fileEntrySize) / blockSize;
+            currentIndexBlock = (unsigned short int)fileEntry[index + it.posInSector]; 
+            while (currentIndexBlock != 0) {
+                printf("[file_read] currentIndexBlock : %d\r\n", currentIndexBlock + paddingBlock);
+
                 for (unsigned int i = 0; i < superblock.nbSectorsB; i++) {
+                    printf("[file_read] nbSectorsB : %d\r\n", superblock.nbSectorsB);
                     //read_sector(currentBlockFE * superblock.nbSectorsB + i, &buff[bufCursor]);
-                    read_sector(currentBlockFE * superblock.nbSectorsB + i, buff);
+                    read_sector((currentIndexBlock + paddingBlock) * superblock.nbSectorsB + i, buff);
+                    printf("%s\r\n", buff);
                     buff += SECTOR_SIZE;
                 }
 
-                index += 2;
-                currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector];
+                index += sizeof(ushort);
+                currentIndexBlock = (ushort)fileEntry[index + it.posInSector];
             }
         }
     }
