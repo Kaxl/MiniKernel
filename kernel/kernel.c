@@ -107,7 +107,11 @@ void runKernel() {
         printf("  ]\r\n");
     }
 
-    printf("\r\nWelcome to Snapfish OS !\r\n");
+
+    // Print the splash screen from file
+    char buffer[BUFFER_SIZE_SPLASH];
+    file_read(SPLASH_FILE, (void *)&buffer);
+    printf("%s\n", buffer);
     printf("> ");
 
 #ifdef TEST

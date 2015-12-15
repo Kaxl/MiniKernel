@@ -22,6 +22,9 @@
 // Default frequency for timer
 #define DEFAULT_FREQ 100
 
+#define SPLASH_FILE "splash_screen"
+#define BUFFER_SIZE_SPLASH 4096
+
 /**
  * @brief Start the kernel
  *
