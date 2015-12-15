@@ -1,0 +1,1 @@
+i3 is a tiling window manager designed for X11, inspired by wmii, and written in C.[3] It supports tiling, stacking, and tabbing layouts, which it handles dynamically. Configuration is achieved via plain text file and extending i3 is possible using its Unix domain socket and JSON based IPC interface from many programming languages.

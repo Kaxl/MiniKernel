@@ -16,7 +16,8 @@ Y=100		# Number of file entries
 Z=512		# Number of data blocks available
 FT1=fileA
 FT2=fileB
-FT3=lorem
+FT3=fileC
+FT4=lorem
 
 .PHONY: run, clean
 
@@ -35,6 +36,7 @@ $(FS):
 	cd tools && ./pfsadd $(FS) $(FT1)
 	cd tools && ./pfsadd $(FS) $(FT2)
 	cd tools && ./pfsadd $(FS) $(FT3)
+	cd tools && ./pfsadd $(FS) $(FT4)
 	cp tools/$(FS) ./
 
 run: $(KERNEL) $(FS)

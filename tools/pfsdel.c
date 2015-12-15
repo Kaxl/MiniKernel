@@ -53,8 +53,8 @@ void pfsdel(char* img, char* filename) {
         // If the index is used
         else {
             // Set the bit in the bitmap to 0
-            int indexFile = pfs->fileEntries[index].index[i] - 1;
-            pfs->bitmap[indexFile / 8] &= ~(0x80 >> (indexFile % 8)); 
+            int indexFile = pfs->fileEntries[index].index[i];
+            pfs->bitmap[indexFile / 8] &= ~(0x80 >> (indexFile % 8));
         }
     }
 

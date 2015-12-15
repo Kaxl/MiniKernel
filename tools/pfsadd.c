@@ -88,6 +88,8 @@ void pfsadd(char* img, char* filename) {
 
     // Creation of file entry
     file_entry_t newFileEntry;
+    // Init of file entry with 0
+    memset(&newFileEntry, 0, sizeof(file_entry_t));
     strcpy(newFileEntry.filename, filename);
 
     // Last character is 0 (end of string)

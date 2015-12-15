@@ -25,7 +25,7 @@
 void runKernelTest() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
-    printf("LIST FILES\n");
+    printf("\nLIST FILES\n");
     char filename[FILENAME_SIZE];
     file_iterator_t it = file_iterator();
 
@@ -36,8 +36,8 @@ void runKernelTest() {
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-    printf("REMOVE FILES\n");
-    char* fileToRemove = "lorem";
+    printf("\nREMOVE FILES\n");
+    char* fileToRemove = "fileB";
     printf("Check if %s exists\n", fileToRemove);
     printf("%s : %d\n", fileToRemove, file_exists(fileToRemove));
     printf("Removing %s\n", fileToRemove);
@@ -51,7 +51,7 @@ void runKernelTest() {
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-    printf("READ FILES\n");
+    printf("\nREAD FILES\n");
     char* fileToRead = "fileA";
     printf("Content of %s (Should be 'Rudy is the best')\n", fileToRead);
     char buffA[1024];
@@ -60,6 +60,12 @@ void runKernelTest() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
     printf("STAT FILES\n");
+    char* fileToStat = "fileA";
+    stat_t stat;
+    file_stat(fileToStat, &stat);
+    printf("Size of %s is %d bytes (Should be 17 bytes)\n", fileToStat, stat.size);
+
+
 
 
     //printf("Check if exists : \n");

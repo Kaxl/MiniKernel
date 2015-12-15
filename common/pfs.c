@@ -74,6 +74,7 @@ int file_read(char* filename, void *buf) {
 
         // If this is the file we are looking for
         if (strcmp(file, filename) == 0) {
+            printf("File : %s\n", file);
 
             // Read the sector where the file entry is
             read_sector(it.sectorNumber, fileEntry);
@@ -126,18 +127,19 @@ int file_remove(char* filename) {
             // First index is at byte 36 (4 is the size of field 'File size')
             int indexFileEntry = it.posInSector + FILENAME_SIZE + 4;
             unsigned short int indexData = (unsigned short int)sector[indexFileEntry];
+            //int indexData = sector[indexFileEntry];
             while (indexData != 0) {
                 // Find the sector with the bitmap
                 // We need to divise by 8 because each entry of the bitmap is a byte
                 int sectorNumber = ((indexData / 8) / SECTOR_SIZE) + superblock.nbSectorsB;
                 // Bitmap start at 0
-                indexData--;
                 read_sector(sectorNumber, bitmap);
                 bitmap[indexData / 8] &= ~(0x80 >> (indexData % 8));
                 write_sector(sectorNumber, bitmap);
                 // Go to the next index
                 indexFileEntry += 2;
                 indexData = (unsigned short int)sector[indexFileEntry]; // Each index is on 2 bytes
+                //indexData = sector[indexFileEntry]; // Each index is on 2 bytes
             }
             return 0;
         }
