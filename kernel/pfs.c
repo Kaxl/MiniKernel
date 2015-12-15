@@ -62,7 +62,12 @@ int file_read(char* filename, void *buf) {
     // Current filename when iterating
     char file[FILENAME_SIZE];
     char fileEntry[SECTOR_SIZE];
-    unsigned short int currentBlockFE;
+
+    // Index used to navigate through the blocks on disk
+    unsigned short int currentIndexBlock;
+
+    // Semi-constant value used for multiple operations
+    int blockSize = superblock.nbSectorsB * SECTOR_SIZE;
 
     // Iterate through the image while there are more files
     while (file_next(file, &it)) {
@@ -73,23 +78,32 @@ int file_read(char* filename, void *buf) {
             // Read the sector where the file entry is
             read_sector(it.sectorNumber, fileEntry);
 
+            // Index inside the file entry
             int index = 36; // 36 is for 32B for the filename and 4B for the size
 
-            currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector];
-            while (currentBlockFE != 0) {
-                printf("[file_read] currentBlockFE : %d", currentBlockFE);
+            // The padding is done to skip the superblock, bitmap and file entries
+            int paddingBlock = (blockSize + superblock.bitmapSize * blockSize + superblock.nbFileEntries * superblock.fileEntrySize) / blockSize;
+
+            // Index of the block read inside the file entry
+            currentIndexBlock = (unsigned short int)fileEntry[index + it.posInSector]; 
+
+            // While there are blocks to read
+            while (currentIndexBlock != 0) {
+
+                // For one block, maybe we have to read multiple sectors 
                 for (unsigned int i = 0; i < superblock.nbSectorsB; i++) {
-                    //read_sector(currentBlockFE * superblock.nbSectorsB + i, &buff[bufCursor]);
-                    read_sector(currentBlockFE * superblock.nbSectorsB + i, buff);
+
+                    // Read the sector and go the next one
+                    read_sector((currentIndexBlock + paddingBlock) * superblock.nbSectorsB + i, buff);
                     buff += SECTOR_SIZE;
                 }
 
-                index += 2;
-                currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector];
+                // Going at the next index
+                index += sizeof(ushort);
+                currentIndexBlock = (ushort)fileEntry[index + it.posInSector];
             }
         }
     }
-
     return 1;
 }
 
