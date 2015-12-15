@@ -182,7 +182,7 @@ int allocBlock(unsigned char* bitmap, int size) {
         for (int j = 7; j >= 0; j--) {
             if (!(bitmap[i] & (0x1 << j))) {
                 bitmap[i] |= (0x1 << j);
-                return (i * 0x8 + (0x8 - j));
+                return (i * 0x8 + (0x8 - j)) - 1;
             }
         }
     }

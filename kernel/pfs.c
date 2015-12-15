@@ -31,7 +31,7 @@ static superblock_t superblock;
  *
  * @param it Iterator to move
  */
-static void findNextIterator(file_iterator_t *it);
+static void setIteratorOnNextFile(file_iterator_t *it);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_stat(char* filename, stat_t *stat) {
@@ -62,7 +62,7 @@ int file_read(char* filename, void *buf) {
     // Current filename when iterating
     char file[FILENAME_SIZE];
     char fileEntry[SECTOR_SIZE];
-    unsigned short int currentBlockFE; 
+    unsigned short int currentBlockFE;
 
     // Iterate through the image while there are more files
     while (file_next(file, &it)) {
@@ -74,7 +74,6 @@ int file_read(char* filename, void *buf) {
             read_sector(it.sectorNumber, fileEntry);
 
             int index = 36; // 36 is for 32B for the filename and 4B for the size
-            int bufCursor = 0;
 
             currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector] + 3;
             while (currentBlockFE != 0) {
@@ -126,8 +125,10 @@ int file_remove(char* filename) {
                 indexFileEntry += 2;
                 indexData = (unsigned short int)sector[indexFileEntry]; // Each index is on 2 bytes
             }
+            return 0;
         }
     }
+    return -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -161,7 +162,7 @@ file_iterator_t file_iterator() {
 int file_next(char* filename, file_iterator_t *it) {
     char sector[SECTOR_SIZE];
     // Look for the next file
-    findNextIterator(it);
+    setIteratorOnNextFile(it);
 
     // Look for the next file in the file entry
     read_sector(it->sectorNumber, sector);
@@ -177,7 +178,7 @@ int file_next(char* filename, file_iterator_t *it) {
     return 1;
 }
 
-static void findNextIterator(file_iterator_t *it) {
+static void setIteratorOnNextFile(file_iterator_t *it) {
     // Look for the next file in the file entry
     char sector[SECTOR_SIZE];
     char filename[FILENAME_SIZE];
@@ -203,12 +204,5 @@ int pfs_init() {
     // Load superblock
     read_sector(0, &data);
     memcpy(&superblock, &data, sizeof(superblock_t));
-
-    printf("\r\nSuperblock\r\n");
-    printf("Signature     : %s\r\n", superblock.signature);
-    printf("NbSectorsB    : %d\r\n", superblock.nbSectorsB);
-    printf("BitmapSize    : %d\r\n", superblock.bitmapSize);
-    printf("NbFileEntries : %d\r\n", superblock.nbFileEntries);
-    printf("FileEntrySize : %d\r\n", superblock.fileEntrySize);
-    printf("NbDataBlocks  : %d\r\n", superblock.nbDataBlocks);
+    return 0;
 }

@@ -15,10 +15,11 @@ Y=10
 Z=512
 FT1=fileTest
 FT2=fileTest2
+FT3=lorem
 
 .PHONY: run, clean
 
-$(KERNEL): kernel.elf 
+$(KERNEL): kernel.elf
 	grub-mkrescue -d /usr/lib/grub/i386-pc -o $@ .
 
 kernel.elf:
@@ -31,7 +32,8 @@ $(FS):
 	cd tools && $(MAKE)
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
 	cd tools && ./pfsadd $(FS) $(FT1)
-	cd tools && ./pfsadd $(FS) $(FT2) 
+	cd tools && ./pfsadd $(FS) $(FT2)
+	cd tools && ./pfsadd $(FS) $(FT3)
 	cp tools/$(FS) ./
 
 run: $(KERNEL) $(FS)
