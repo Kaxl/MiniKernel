@@ -74,8 +74,6 @@ int file_read(char* filename, void *buf) {
 
         // If this is the file we are looking for
         if (strcmp(file, filename) == 0) {
-            printf("File : %s\n", file);
-
             // Read the sector where the file entry is
             read_sector(it.sectorNumber, fileEntry);
 
