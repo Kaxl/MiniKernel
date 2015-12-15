@@ -123,11 +123,8 @@ void runKernel() {
 
     char* fileRead = "fileTest";
     file_stat(fileRead, &stat);
-    //char buff[stat.size];
-    char buff[SECTOR_SIZE*2];
-    printf("[fileRead] size of fileTest : %d\r\n", stat.size);
+    char buff[SECTOR_SIZE*2 * 40];
     file_read(fileRead, (void *)&buff);
-
     printf("buff : =====================\r\n%s\r\n================================\r\n", buff);
 
     char* fileToRemove = "lorem";
