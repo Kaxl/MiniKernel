@@ -75,7 +75,7 @@ int file_read(char* filename, void *buf) {
 
             int index = 36; // 36 is for 32B for the filename and 4B for the size
 
-            currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector] + 3;
+            currentBlockFE = (unsigned short int)fileEntry[index + it.posInSector];
             while (currentBlockFE != 0) {
                 printf("[file_read] currentBlockFE : %d", currentBlockFE);
                 for (unsigned int i = 0; i < superblock.nbSectorsB; i++) {
