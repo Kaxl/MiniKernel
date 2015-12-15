@@ -10,9 +10,9 @@
 
 KERNEL=kernel.iso
 FS=fs.img
-X=512
-Y=10
-Z=512
+X=1024		# Block size
+Y=100		# Number of file entries
+Z=512		# Number of data blocks available
 FT1=fileTest
 FT2=fileTest2
 FT3=lorem

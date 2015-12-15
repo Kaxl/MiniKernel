@@ -140,6 +140,7 @@ void runKernel() {
     while (file_next(filename, &it)) {
         printf("%s\r\n", filename);
     }
+    printf("End of listing\n");
 
     // Init PFS
     //if (pfs_init() < 0) {

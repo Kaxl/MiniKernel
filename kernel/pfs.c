@@ -150,11 +150,14 @@ file_iterator_t file_iterator() {
     // Set the iterator at the first file entry
     int blockSize = SECTOR_SIZE * superblock.nbSectorsB;
 
-    it.sectorNumber = blockSize * (superblock.bitmapSize + 1) / SECTOR_SIZE;
+    it.sectorNumber = blockSize * superblock.bitmapSize / SECTOR_SIZE;
     it.posInSector = SECTOR_SIZE - superblock.fileEntrySize;
     it.lastSector = it.sectorNumber + (superblock.nbFileEntries * superblock.fileEntrySize / SECTOR_SIZE);
+    //printf("[it] sectorNumber : %d\r\n", it.sectorNumber);
+    //printf("[it] posInSector : %d\r\n", it.posInSector);
+    //printf("[it] lastSector : %d\r\n", it.lastSector);
     // Init a previous block so when whe call file_next, we have the first file
-    it.sectorNumber--;
+    //it.sectorNumber--;
     return it;
 }
 
@@ -163,12 +166,16 @@ int file_next(char* filename, file_iterator_t *it) {
     char sector[SECTOR_SIZE];
     // Look for the next file
     setIteratorOnNextFile(it);
+    //printf("[next] sectorNumber : %d\r\n", it->sectorNumber);
+    //printf("[next] posInSector : %d\r\n", it->posInSector);
+    //printf("[next] lastSector : %d\r\n", it->lastSector);
 
     // Look for the next file in the file entry
     read_sector(it->sectorNumber, sector);
 
     // Copy the filename
     memcpy(filename, &sector[it->posInSector], FILENAME_SIZE);
+    //printf("[file_next] : %s\n", filename);
 
     // If there is no filename (first byte), return 0
     if (!filename[0]) {
