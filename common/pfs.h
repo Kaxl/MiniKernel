@@ -51,10 +51,27 @@ typedef struct __attribute__((packed)) superblock_t {
     unsigned int nbDataBlocks;      // Number of data blocs
 } superblock_t;
 
+/**
+ * @brief Calculate the size of a file
+ *
+ * @param filename  Filename to get the size from
+ * @param stat      Stat structure to store the size
+ *
+ * @return 0 if succeed, else -1
+ */
 int file_stat(char *filename, stat_t *stat);
 
+/**
+ * @brief Read the content of a filename and store it in a buffer 
+ *
+ * We read the file block by block, so the file must be a 
+ *
+ * @param filename  Filename to read
+ * @param buf       Buffer to store the content of the file
+ *
+ * @return 0 if succeed, else -1
+ */
 int file_read(char *filename, void *buf);
-
 
 /**
  * @brief Remove a file
@@ -68,6 +85,13 @@ int file_read(char *filename, void *buf);
  */
 int file_remove(char *filename);
 
+/**
+ * @brief Check if a file exists in the filesystem
+ *
+ * @param filename The filename to check
+ *
+ * @return 0 if succeed, else -1
+ */
 int file_exists(char *filename);
 
 /**
@@ -84,7 +108,6 @@ int file_exists(char *filename);
  */
 file_iterator_t file_iterator();
 
-
 /**
  * @brief Go to the next file and return the current one pointed by iterator
  *
@@ -98,6 +121,11 @@ file_iterator_t file_iterator();
  */
 int file_next(char *filename, file_iterator_t *it);
 
+/**
+ * @brief Initialization of filesystem
+ *
+ * @return 
+ */
 int pfs_init();
 
 #endif

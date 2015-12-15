@@ -111,6 +111,7 @@ uchar getBackgroundColor() {
 void printCharacter(char character) {
     ushort i;
     int offset;
+    ushort pos;
 
     // Check if character is /n, /r, ...
     switch (character) {
@@ -122,13 +123,23 @@ void printCharacter(char character) {
             *s.cursor = (s.bgColor << 12) | (s.textColor << 8);
             break;
         case '\n':
+            // '\r'
+            // Get y position
+            i = (uchar)((((uint)s.cursor - FIRST_ADDR) / 2) / SCREEN_WIDTH);
+            // Calcule the new position
+            pos = i * SCREEN_WIDTH;
+
+            s.cursor = (ushort *)FIRST_ADDR;    // Go to first address
+            s.cursor += (ushort)pos;            // Add the pos
+
+            // '\n'
             s.cursor += SCREEN_WIDTH;
             break;
         case '\r':
             // Get y position
             i = (uchar)((((uint)s.cursor - FIRST_ADDR) / 2) / SCREEN_WIDTH);
             // Calcule the new position
-            ushort pos = i * SCREEN_WIDTH;
+            pos = i * SCREEN_WIDTH;
 
             s.cursor = (ushort *)FIRST_ADDR;    // Go to first address
             s.cursor += (ushort)pos;            // Add the pos

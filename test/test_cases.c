@@ -25,58 +25,69 @@
 void runKernelTest() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-    printf("TEST MODE\r\n");
+    printf("LIST FILES\n");
     char filename[FILENAME_SIZE];
     file_iterator_t it = file_iterator();
-    printf("Iterator\r\n");
-    printf("sectorNumber=%d\r\n", it.sectorNumber);
-    printf("posInSector=%d\r\n", it.posInSector);
-    printf("lastSector=%d\r\n", it.lastSector);
 
-    printf("Files in filesytem : \r\n");
+    printf("Files in filesytem : \n");
     it = file_iterator();
     while (file_next(filename, &it)) {
-        printf("%s\r\n", filename);
+        printf("%s\n", filename);
     }
 
-    printf("Check if exists : \r\n");
-    printf("fileTest : %d\r\n", file_exists("fileTest"));
-    printf("NoFile : %d\r\n", file_exists("NoFile"));
-
-    char* fileSize = "fileTest";
-    stat_t stat;
-    file_stat(fileSize, &stat);
-    printf("Size of %s : %d\r\n", fileSize, stat.size);
-
-    char* fileRead = "lorem";
-    file_stat(fileRead, &stat);
-    //char buff[(stat.size % SECTOR_SIZE == 0) ? stat.size : (stat.size/SECTOR_SIZE + 1) * SECTOR_SIZE];
-    char buff[1000000];
-
-    file_read(fileRead, (void *)&buff);
-    printf("buff : =====================\r\n%s\r\n================================\r\n", buff);
-
+////////////////////////////////////////////////////////////////////////////////////////
+    printf("REMOVE FILES\n");
     char* fileToRemove = "lorem";
-    printf("Removing %s\r\n", fileToRemove);
+    printf("Check if %s exists\n", fileToRemove);
+    printf("%s : %d\n", fileToRemove, file_exists(fileToRemove));
+    printf("Removing %s\n", fileToRemove);
     file_remove(fileToRemove);
-    printf("Check if %s exists\r\n", fileToRemove);
-    printf("%s : %d\r\n", fileToRemove, file_exists(fileToRemove));
-    printf("Files in filesytem : \r\n");
+    printf("Check if %s exists\n", fileToRemove);
+    printf("%s : %d\n", fileToRemove, file_exists(fileToRemove));
+    printf("Files in filesytem : \n");
     it = file_iterator();
     while (file_next(filename, &it)) {
-        printf("%s\r\n", filename);
+        printf("%s\n", filename);
     }
-    printf("End of listing\n");
 
-    file_stat(fileRead, &stat);
-    //char buff2[(stat.size % SECTOR_SIZE == 0) ? stat.size : (stat.size/SECTOR_SIZE + 1) * SECTOR_SIZE];
-    char buff2[10000];
-    if (file_read(fileRead, (void *)&buff2) == 0)
-        printf("Success\r\n");
-    else
-        printf("Failed\r\n");
-    printf("buff : =====================\r\n%s\r\n================================\r\n", buff2);
+////////////////////////////////////////////////////////////////////////////////////////
+    printf("READ FILES\n");
+    char* fileToRead = "fileA";
+    printf("Content of %s (Should be 'Rudy is the best')\n", fileToRead);
+    char buffA[1024];
+    file_read(fileToRead, (void *)&buffA);
+    printf("%s\n", buffA);
+
+////////////////////////////////////////////////////////////////////////////////////////
+    printf("STAT FILES\n");
+
+
+    //printf("Check if exists : \n");
+    //printf("%s : %d\n", fileA, file_exists("fileA"));
+    //printf("NoFile : %d\n", file_exists("NoFile"));
+
+    //char* fileSize = "fileTest";
+    //stat_t stat;
+    //file_stat(fileSize, &stat);
+    //printf("Size of %s : %d\n", fileSize, stat.size);
+
+    //char* fileRead = "lorem";
+    //file_stat(fileRead, &stat);
+    ////char buff[(stat.size % SECTOR_SIZE == 0) ? stat.size : (stat.size/SECTOR_SIZE + 1) * SECTOR_SIZE];
+    //char buff[1000000];
+
+    //file_read(fileRead, (void *)&buff);
+    //printf("buff : =====================\n%s\n================================\n", buff);
+
+
+    //file_stat(fileRead, &stat);
+    ////char buff2[(stat.size % SECTOR_SIZE == 0) ? stat.size : (stat.size/SECTOR_SIZE + 1) * SECTOR_SIZE];
+    //char buff2[10000];
+    //if (file_read(fileRead, (void *)&buff2) == 0)
+    //    printf("Success\n");
+    //else
+    //    printf("Failed\n");
+    //printf("buff : =====================\n%s\n================================\n", buff2);
 
 
     // Read a file

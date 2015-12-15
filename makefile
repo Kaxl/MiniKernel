@@ -14,8 +14,8 @@ FS=fs.img
 X=1024		# Block size
 Y=100		# Number of file entries
 Z=512		# Number of data blocks available
-FT1=fileTest
-FT2=fileTest2
+FT1=fileA
+FT2=fileB
 FT3=lorem
 
 .PHONY: run, clean
