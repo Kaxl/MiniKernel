@@ -18,7 +18,7 @@
 
 #include "screen.h"
 #include "base.h"
-#include "string.h"
+#include "../common/string.h"
 
 // Screen properties
 volatile screen s = {

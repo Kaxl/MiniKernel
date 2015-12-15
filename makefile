@@ -3,9 +3,10 @@
 #
 # Makefile for kernel
 #
-# 'make'		build ELF file of kernel
-# 'make run'	run the operating system on QEMU
-# 'make clean'	removes all .o files
+# 'make'					build ELF file of kernel
+# 'make run'				run the operating system on QEMU
+# 'make clean'				removes all .o files
+# 'make MODE=-DTEST run 	make in DEBUG mode
 #
 
 KERNEL=kernel.iso
@@ -23,7 +24,7 @@ $(KERNEL): kernel.elf
 	grub-mkrescue -d /usr/lib/grub/i386-pc -o $@ .
 
 kernel.elf:
-	cd kernel && $(MAKE)
+	cd kernel && $(MAKE) DEBUG=$(MODE)
 	mkdir -p boot/grub
 	cp kernel/kernel.elf boot/
 	cp grub/grub.cfg boot/grub/

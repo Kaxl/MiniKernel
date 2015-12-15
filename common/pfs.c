@@ -16,12 +16,12 @@
  * =====================================================================================
  */
 
-#include "../common/types.h"
-#include "base.h"
+#include "types.h"
+#include "../kernel/base.h"
 #include "pfs.h"
-#include "ide.h"
-#include "base.h"
-#include "screen.h"
+#include "../kernel/ide.h"
+#include "../kernel/base.h"
+#include "../kernel/screen.h"
 #include "string.h"
 
 static superblock_t superblock;
@@ -126,7 +126,6 @@ int file_remove(char* filename) {
             // First index is at byte 36 (4 is the size of field 'File size')
             int indexFileEntry = it.posInSector + FILENAME_SIZE + 4;
             unsigned short int indexData = (unsigned short int)sector[indexFileEntry];
-            printf("indexdata = %d  ", indexData);
             while (indexData != 0) {
                 // Find the sector with the bitmap
                 // We need to divise by 8 because each entry of the bitmap is a byte
