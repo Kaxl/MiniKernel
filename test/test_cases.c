@@ -63,10 +63,5 @@ void runKernelTest() {
     char* fileToStat = "fileA";
     stat_t stat;
     file_stat(fileToStat, &stat);
-<<<<<<< HEAD
-    printf("Size of %s is %d bytes (Should be 17 bytes)", fileToStat, stat.size);
-=======
     printf("Size of %s is %d bytes (Should be 17 bytes)\n", fileToStat, stat.size);
-
->>>>>>> 1857e7a03cdce2a28005949466cde09e19f61be5
 }

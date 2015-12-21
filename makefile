@@ -11,18 +11,14 @@
 
 KERNEL=kernel.iso
 FS=fs.img
-X=10240		# Block size
-Y=1000			# Number of file entries
+X=1024			# Block size
+Y=100			# Number of file entries
 Z=1000			# Number of data blocks available
 FT1=fileA
 FT2=fileB
 FT3=fileC
 FT4=lorem
-<<<<<<< HEAD
-FT5=fileST
-=======
 FT_SPLASH=splash_screen
->>>>>>> 1857e7a03cdce2a28005949466cde09e19f61be5
 
 .PHONY: run, clean
 
@@ -42,11 +38,7 @@ $(FS):
 	cd tools && ./pfsadd $(FS) $(FT2)
 	cd tools && ./pfsadd $(FS) $(FT3)
 	cd tools && ./pfsadd $(FS) $(FT4)
-<<<<<<< HEAD
-	cd tools && ./pfsadd $(FS) $(FT5)
-=======
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
->>>>>>> 1857e7a03cdce2a28005949466cde09e19f61be5
 	cp tools/$(FS) ./
 
 run: $(KERNEL) $(FS)
@@ -55,8 +47,9 @@ run: $(KERNEL) $(FS)
 clean:
 	rm -f *.o
 	rm -rf boot/
+	rm -f common/*.o
 	rm -f $(KERNEL)
 	rm -f $(FS)
 	$(MAKE) -C kernel clean
-	$(MAKE) -C kernel clean
+	$(MAKE) -C tools clean
 
