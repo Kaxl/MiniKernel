@@ -1,21 +1,24 @@
 CMD=pfscreate pfsadd pfslist pfsdel
 
+CC=gcc
+CFLAGS=-std=c99
+
 all: $(CMD)
 
 pfscreate: pfscreate.c pfs.o
-	gcc $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
 pfsadd: pfsadd.c pfs.o
-	gcc $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
 pfsdel: pfsdel.c pfs.o
-	gcc $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
 pfslist: pfslist.c pfs.o
-	gcc $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
 pfs.o: pfs.c pfs.h const.h
-	gcc -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f *.o
