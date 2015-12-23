@@ -138,6 +138,7 @@ void pfsadd(char* img, char* filename) {
         // Write the block number into the index of the file entry
         newFileEntry.index[index] = blockNumber;
         index++;
+        arrayData = calloc(sizeof(char), pfs->blockSize);
     }
 
     // Position to write the file entry
@@ -149,7 +150,7 @@ void pfsadd(char* img, char* filename) {
 
     // Write the bitmap
     fseek(image, pfs->blockSize, SEEK_SET);
-    fwrite(pfs->bitmap, sizeof(char), pfs->superblock.bitmapSize, image);
+    fwrite(pfs->bitmap, sizeof(char), bitmapSize, image);
 
     // Close the files
     fclose(image);
@@ -184,7 +185,7 @@ int allocBlock(unsigned char* bitmap, int size) {
         for (int j = 7; j >= 0; j--) {
             if (!(bitmap[i] & (0x1 << j))) {
                 bitmap[i] |= (0x1 << j);
-                return (i * 0x8 + (0x8 - j)) - 1;
+                return (i * 0x8 + (0x8 - j));
             }
         }
     }

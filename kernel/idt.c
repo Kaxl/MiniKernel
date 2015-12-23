@@ -186,7 +186,7 @@ void interruption_handler(regs_t *regs) {
 ////////////////////////////////////////////////////////////////////////////////////////
 void idt_init() {
     // Fill the IDT with 0x0
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < IDT_SIZE; i++)
         idt[i] = idt_build_entry(0, 0, 0, 0);
 
     // Set limit of idt_ptr and point it on the IDT

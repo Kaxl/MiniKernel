@@ -3,6 +3,8 @@
 
 #include "../common/types.h"
 
+#define IDT_SIZE 256
+
 // Structure of an IDT descriptor. There are 3 types of descriptors:
 // a task-gate, an interrupt-gate, and a trap-gate.
 // See 5.11 of Intel 64 & IA32 architectures software developer's manual for more details.

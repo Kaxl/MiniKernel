@@ -81,10 +81,13 @@ int file_read(char* filename, void *buf) {
             int index = 36; // 36 is for 32B for the filename and 4B for the size
 
             // The padding is done to skip the superblock, bitmap and file entries
-            int paddingBlock = (blockSize + superblock.bitmapSize * blockSize + superblock.nbFileEntries * superblock.fileEntrySize) / blockSize;
+            int paddingByte = (blockSize + superblock.bitmapSize * blockSize + superblock.nbFileEntries * superblock.fileEntrySize);
+            int paddingBlock = paddingByte / blockSize;
+            if (paddingByte % blockSize != 0)
+                paddingBlock++;
 
             // Index of the block read inside the file entry
-            currentIndexBlock = (unsigned short int)fileEntry[index + it.posInSector];
+            currentIndexBlock = (ushort)fileEntry[index + it.posInSector];
 
             // While there are blocks to read
             while (currentIndexBlock != 0) {
@@ -137,7 +140,6 @@ int file_remove(char* filename) {
                 // Go to the next index
                 indexFileEntry += 2;
                 indexData = (unsigned short int)sector[indexFileEntry]; // Each index is on 2 bytes
-                //indexData = sector[indexFileEntry]; // Each index is on 2 bytes
             }
             return 0;
         }
@@ -167,8 +169,8 @@ file_iterator_t file_iterator() {
     // +1 for the superblock
     it.sectorNumber = blockSize * (superblock.bitmapSize + 1) / SECTOR_SIZE;
     it.posInSector = SECTOR_SIZE - superblock.fileEntrySize;
-    it.lastSector = it.sectorNumber + (superblock.nbFileEntries * superblock.fileEntrySize / SECTOR_SIZE);
-    // Init a previous block so when whe call file_next, we have the first file
+    it.lastSector = it.sectorNumber + (superblock.nbFileEntries * superblock.fileEntrySize / SECTOR_SIZE) - 1;
+    // Init a previous block so when we call file_next, we have the first file
     it.sectorNumber--;
     return it;
 }

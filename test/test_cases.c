@@ -25,11 +25,10 @@
 void runKernelTest() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
-    printf("\nLIST FILES\n");
+    printf("LIST FILES\n");
     char filename[FILENAME_SIZE];
     file_iterator_t it = file_iterator();
 
-    printf("Files in filesytem : \n");
     it = file_iterator();
     while (file_next(filename, &it)) {
         printf("%s\n", filename);
@@ -63,5 +62,5 @@ void runKernelTest() {
     char* fileToStat = "fileA";
     stat_t stat;
     file_stat(fileToStat, &stat);
-    printf("Size of %s is %d bytes (Should be 17 bytes)\n", fileToStat, stat.size);
+    printf("Size of %s is %d bytes (Should be 17 bytes)", fileToStat, stat.size);
 }
