@@ -38,6 +38,12 @@ void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksA
         return;
     }
 
+    // BLOCK_SIZE can not be above 4096, like in 'ext4'. Above 4K, the lost of memory is too important.
+    if (blockSize > MAX_BLOCK_SIZE) {
+        printf("\n[WARNING] The block size is too big and not efficient, please choose a smaller one\n");
+        return;
+    }
+
     // Creation of the the superblock
     // Each data bloc is one bit
     superblock_t superblock = {

@@ -23,6 +23,8 @@
 
 #include "const.h"
 
+#define MAX_BLOCK_SIZE      4096
+
 /**
  * @brief Superblock structure
  */
