@@ -22,7 +22,6 @@
 #include "pfs.h"
 #include "const.h"
 
-//
 /**
  * @brief Create an empty file with blocks of x size (must be a 512 multiple), with y file entries and with z data blocks available
  *
@@ -65,7 +64,7 @@ void pfscreate(char* filename, int blockSize, int nbFileEntries, int dataBlocksA
 
     // Initialize all of the file entries
     int fileEntriesSize;
-    if ((FILE_ENTRY_SIZE * nbFileEntries) % blockSize != 0) 
+    if ((FILE_ENTRY_SIZE * nbFileEntries) % blockSize != 0)
         fileEntriesSize = ((FILE_ENTRY_SIZE*nbFileEntries)/blockSize + 1) * blockSize;
     else
         fileEntriesSize = FILE_ENTRY_SIZE*nbFileEntries;
