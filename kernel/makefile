@@ -9,17 +9,19 @@
 
 CC=gcc
 CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra $(DEBUG)
+ASM=nasm
+AFLAGS=-f elf32
 
 .PHONY: clean
 
-kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o controller_asm.o ../common/string.o ../common/pfs.o ../test/test_cases.o
+kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o controller_asm.o ../common/string.o ../common/pfs.o ../test/test_cases.o
 	ld -melf_i386 -T kernel.ld $^ -o $@
 
 kernel.o: kernel.c kernel.h
 	$(CC) $(CFLAGS) -c $<
 
 bootloader.o: bootloader.s
-	nasm -f elf32 $^
+	$(ASM) $(AFLAGS) $^
 
 gdt.o: gdt.c gdt.h
 	$(CC) $(CFLAGS) -c $<
@@ -34,7 +36,7 @@ timer.o: timer.c timer.h
 	$(CC) $(CFLAGS) -c $<
 
 gdt_asm.o: gdt_asm.s
-	nasm -f elf32 $^
+	$(ASM) $(AFLAGS) $^
 
 idt.o: idt.c idt.h
 	$(CC) $(CFLAGS) -c $<
@@ -43,7 +45,7 @@ ide.o: ide.c ide.h
 	$(CC) $(CFLAGS) -c $<
 
 idt_asm.o: idt_asm.s
-	nasm -f elf32 $^
+	$(ASM) $(AFLAGS) $^
 
 base.o: base.c base.h
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -52,7 +54,13 @@ screen.o: screen.c screen.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 controller_asm.o: controller_asm.s controller.h
-	nasm -f elf32 $<
+	$(ASM) $(AFLAGS) $<
+
+task_asm.o: task_asm.s task.h
+	$(ASM) $(AFLAGS) $<
+
+syscall.o: syscall.c ../common/syscall_nb.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 ../common/string.o: ../common/string.c ../common/string.h
 	$(CC) $(CFLAGS) -c $< -o $@

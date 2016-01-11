@@ -23,7 +23,7 @@ FT_SPLASH=splash_screen
 .PHONY: run, clean
 
 $(KERNEL): kernel.elf
-	grub-mkrescue -o $@ .
+	grub-mkrescue -d /usr/lib/grub/i386-pc -o $@ .
 
 kernel.elf:
 	$(MAKE) -C kernel DEBUG=$(MODE)
