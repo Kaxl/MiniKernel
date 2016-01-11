@@ -1,0 +1,18 @@
+Chaque tache aura par exemple 1M alloue, c'est fixe, pas dynamique
+
+Dans ce 1M : Code, ensuite donnee
+
+Pile kernel pas accessible directement pas les taches (raisons securites)
+
+
+
+Pour la tache, c'est l'adresse 0
+
+Etre sur que les zones memoires de chaque tache sont separees
+
+
+
+
+
+
+memcpy vers la ram depuis kernel.c pour tester si la commutation fonctionne
