@@ -9,6 +9,23 @@
 #include "../common/syscall_nb.h"
 #include "../common/types.h"
 
+#include "../common/pfs.h"
+#include "screen.h"
+#include "keyboard.h"
+
+
+void syscall_putc(char c);
+void syscall_puts(char* s);
+void syscall_exec();
+char syscall_getc();
+stat_t syscall_file_stat(char* filename);
+int syscall_file_read(char* filename, void* buf);
+int syscall_file_remove(char* filename);
+file_iterator_t syscall_file_iterator();
+int syscall_file_next(char* filename, file_iterator_t *it);
+unsigned int syscall_get_ticks();
+
+
 // System call handler: call the appropriate system call according to the nb argument.
 // Called by the assembly code _syscall_handler
 int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4, uint32_t caller_tss_selector) {
@@ -67,23 +84,24 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
 }
 
 void syscall_putc(char c) {
-
+    printCharacter(c);
 }
 
 void syscall_puts(char* s) {
-
+    printString(s);
 }
 
 void syscall_exec() {
-// 
+//
 }
 
 char syscall_getc() {
-
+    return getc();
 }
 
-stat_t syscall_file_stat(char* filename) {
-
+int syscall_file_stat(char* filename, stat_t stat) {
+    stat_t stat;
+    if (int
 }
 
 int syscall_file_read(char* filename, void* buf) {
