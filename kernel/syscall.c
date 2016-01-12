@@ -19,10 +19,10 @@ void syscall_putc(char c);
 void syscall_puts(char* s);
 void syscall_exec();
 char syscall_getc();
-stat_t syscall_file_stat(char* filename);
+int syscall_file_stat(char* filename, stat_t* stat);
 int syscall_file_read(char* filename, void* buf);
 int syscall_file_remove(char* filename);
-file_iterator_t syscall_file_iterator();
+int syscall_file_iterator(file_iterator_t* it);
 int syscall_file_next(char* filename, file_iterator_t *it);
 unsigned int syscall_get_ticks();
 
@@ -37,7 +37,7 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             UNUSED(arg2);
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_put((char)arg1);
+            syscall_putc((char)arg1);
             break;
 
         case SYSCALL_PUTS:
@@ -101,7 +101,7 @@ char syscall_getc() {
 }
 
 int syscall_file_stat(char* filename, stat_t* stat) {
-    return file_stat(filename, stat)
+    return file_stat(filename, stat);
 }
 
 int syscall_file_read(char* filename, void* buf) {
@@ -121,6 +121,6 @@ int syscall_file_next(char* filename, file_iterator_t* it) {
     return file_next(filename, it);
 }
 
-int syscall_get_ticks() {
+unsigned int syscall_get_ticks() {
     return get_ticks();
 }

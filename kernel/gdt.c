@@ -2,6 +2,7 @@
 #include "base.h"
 #include "gdt.h"
 #include "x86.h"
+#include "task.h"
 
 #define GDT_INDEX_TO_SELECTOR(idx) ((idx) << 3)
 
@@ -33,19 +34,19 @@ static gdt_entry_t build_entry(uint32_t base, uint32_t limit, uint8_t type, uint
 }
 
 // Return a NULL entry.
-static gdt_entry_t null_segment() {
+static gdt_entry_t gdt_make_null_segment() {
 	gdt_entry_t entry;
     memset(&entry, 0, sizeof(gdt_entry_t));
 	return entry;
 }
 
 // Return a code segment specified by the base, limit and privilege level passed in arguments.
-static gdt_entry_t code_segment(uint32_t base, uint32_t limit, uint8_t dpl) {
+static gdt_entry_t gdt_make_code_segment(uint32_t base, uint32_t limit, uint8_t dpl) {
     return build_entry(base, limit, TYPE_CODE_EXECREAD, S_CODE_OR_DATA, DB_SEG, 1, dpl);
 }
 
 // Return a data segment specified by the base, limit and privilege level passed in arguments.
-static gdt_entry_t data_segment(uint32_t base, uint32_t limit, uint8_t dpl) {
+static gdt_entry_t gdt_make_data_segment(uint32_t base, uint32_t limit, uint8_t dpl) {
     return build_entry(base, limit, TYPE_DATA_READWRITE, S_CODE_OR_DATA, DB_SEG, 1, dpl);
 }
 
@@ -112,9 +113,9 @@ void gdt_init() {
 
     // Creation of segments (code and data segments) in a "FLAT" mode
     // Code and data segments have access to the same memory (DPL = 0)
-    gdt[0] = null_segment();
-    gdt[1] = code_segment(0, 0xFFFFF, 0);
-    gdt[2] = data_segment(0, 0xFFFFF, 0);
+    gdt[0] = gdt_make_null_segment();
+    gdt[1] = gdt_make_code_segment(0, 0xFFFFF, 0);
+    gdt[2] = gdt_make_data_segment(0, 0xFFFFF, 0);
 
     gdt_ptr.base = (uint32_t)gdt; // Base of gdt is the first segment
 
