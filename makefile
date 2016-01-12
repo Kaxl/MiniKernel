@@ -22,7 +22,7 @@ FT_SPLASH=splash_screen
 
 .PHONY: run, clean
 
-$(KERNEL): kernel.elf
+$(KERNEL): kernel.elf $(FS)
 	grub-mkrescue -d /usr/lib/grub/i386-pc -o $@ .
 
 kernel.elf:
@@ -41,7 +41,7 @@ $(FS):
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
 	cp tools/$(FS) ./
 
-run: $(KERNEL) $(FS)
+run: $(KERNEL) 
 	qemu-system-i386 -cdrom $(KERNEL) -hda $(FS)
 
 clean:
