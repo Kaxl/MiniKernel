@@ -87,7 +87,7 @@ exception_wrapper :
     pop     ecx
     pop     ebx
     pop     eax
-    
+
 	; Fix the stack pointer due to the 2 push done before the call to exception_wrapper
     add     esp,8
     iret
@@ -134,7 +134,7 @@ interruptions_wrapper:
     pop     ecx
     pop     ebx
     pop     eax
-    
+
 	; Fix the stack pointer due to the 2 push done before the call to exception_wrapper
     add     esp,8
     iret
