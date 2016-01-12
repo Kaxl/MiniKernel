@@ -80,6 +80,6 @@ void gdt_init() {
 	load_task_register(gdt_entry_to_selector(&gdt[3]));
 
 	// Setup a task
-	task_setup();	
+	task_setup();
 }
 
