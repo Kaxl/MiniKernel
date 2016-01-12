@@ -19,9 +19,11 @@
 #include "shell.h"
 
 void emptyBuffer(char* buffer, int size) {
-   for (int i = 0; i < size; i++) {
-       buffer[i] = '\0';
-   }
+
+    // Fill the buffer with zero
+    for (int i = 0; i < size; i++) {
+        buffer[i] = '\0';
+    }
 }
 
 void split(char* buffer, char* args, int size) {
@@ -46,16 +48,17 @@ void readBuffer(char* buffer, int size) {
     emptyBuffer(&args, size);
 
     // Split the command and its args
-    split(&buffer, &args, size);
+    split(buffer, args, size);
 
-
+    // Launch the command with it's args
+    exec(buffer, args);
 }
 
 void shell() {
     
     // Init the buffer of CLI and empty it
     char buffer[BUF_SIZE];
-    emptyBuffer(&buffer, BUF_SIZE);
+    emptyBuffer(buffer, BUF_SIZE);
     int cursor = 0;
 
     // Init current character
@@ -68,12 +71,6 @@ void shell() {
         if (c = getc() < 0)
             continue;
 
-        // TODO: buffer full
-
-        // Print the character
-        if (putc(c) < 0)
-            printf("Error while printing character");
-
         // Manage the character locally
         // ... as a backspace
         if (c == '\b')
@@ -83,16 +80,29 @@ void shell() {
         else if (c == '\n') {
 
             // Read buffer and launch the command if it is found
-            readBuffer(&buffer, BUF_SIZE);
+            readBuffer(buffer, BUF_SIZE);
 
             // Empty the buffer and reset cursor
-            emptyBuffer(&buffer, BUF_SIZE);
+            emptyBuffer(buffer, BUF_SIZE);
             cursor = 0;
         }
 
         // ... as anything else
-        else 
-            buffer[cursor++] = c;           // Insert the character in buffer
+        else {
+
+            // Buffer full
+            if (cursor == BUF_SIZE) {
+                printf("Buffer char is full, please press [ENTER].\n");
+                continue;
+            }
+            
+            // Insert the character in buffer
+            buffer[cursor++] = c;
+        }
+
+        // Print the character
+        if (putc(c) < 0)
+            printf("Error while printing character");
     }
 }
 
