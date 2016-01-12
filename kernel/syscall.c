@@ -12,6 +12,7 @@
 #include "../common/pfs.h"
 #include "screen.h"
 #include "keyboard.h"
+#include "timer.h"
 
 
 void syscall_putc(char c);
@@ -99,27 +100,27 @@ char syscall_getc() {
     return getc();
 }
 
-int syscall_file_stat(char* filename, stat_t stat) {
-    stat_t stat;
-    if (int
+int syscall_file_stat(char* filename, stat_t* stat) {
+    return file_stat(filename, stat)
 }
 
 int syscall_file_read(char* filename, void* buf) {
-
+    return file_read(filename, buf);
 }
 
 int syscall_file_remove(char* filename) {
-
+    return file_remove(filename);
 }
 
-file_iterator_t syscall_file_iterator() {
-
+int syscall_file_iterator(file_iterator_t* it) {
+    *it = file_iterator();
+    return 0;
 }
 
-int syscall_file_next(char* filename, file_iterator_t *it) {
-
+int syscall_file_next(char* filename, file_iterator_t* it) {
+    return file_next(filename, it);
 }
 
-unsigned int syscall_get_ticks() {
-
+int syscall_get_ticks() {
+    return get_ticks();
 }
