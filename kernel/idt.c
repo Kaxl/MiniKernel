@@ -233,6 +233,9 @@ void idt_init() {
     idt[45] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, (uint32_t)&_irq_13, TYPE_INTERRUPT_GATE, DPL_KERNEL);
     idt[46] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, (uint32_t)&_irq_14, TYPE_INTERRUPT_GATE, DPL_KERNEL);
     idt[47] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, (uint32_t)&_irq_15, TYPE_INTERRUPT_GATE, DPL_KERNEL);
+	// IDT entry 48 used for system calls
+	extern void _syscall_handler();  // Implemented in syscall_asm.s
+	idt[48] = idt_build_entry(code_sel, (uint32_t)&_syscall_handler, TYPE_TRAP_GATE, DPL_USER);
 
     idt_ptr.base = (uint32_t)idt; // Base of idt is the first element of idt
 
