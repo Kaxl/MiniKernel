@@ -10,7 +10,7 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Axel Fahy, Rudolf Hohn 
+ *         Author:  Axel Fahy, Rudolf Hohn
  *   Organization:  HES-SO hepia section ITI
  *
  * =====================================================================================
@@ -20,22 +20,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 // Files access
 ////////////////////////////////////////////////////////////////////////////////////////
-int read_file(char *filename, uchar *buf);
+extern int read_file(char *filename, uchar *buf);
 
-int get_stat(char *filename, stat_t *stat);
+extern int get_stat(char *filename, stat_t *stat);
 
-int remove_file(char *filename);
+extern int remove_file(char *filename);
 
-file_iterator_t get_file_iterator();
+extern file_iterator_t get_file_iterator();
 
-int get_next_file(char *filename, file_iterator_t *it);
+extern int get_next_file(char *filename, file_iterator_t *it);
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// Processus 
+// Processus
 ////////////////////////////////////////////////////////////////////////////////////////
-int exec(char *filename);
+extern int exec(char *filename);
 
-void exit();
+extern void exit();
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // String operations
@@ -47,7 +47,7 @@ void exit();
  *
  * @return The length of the string
  */
-uint strlen(char *s);
+extern uint strlen(char *s);
 
 /**
  * @brief Conversion of a string to an integer
@@ -56,7 +56,7 @@ uint strlen(char *s);
  *
  * @return The integer value of the strint
  */
-int atoi(char *s);
+extern int atoi(char *s);
 
 /**
  * @brief Check if character is a digit
@@ -65,52 +65,25 @@ int atoi(char *s);
  *
  * @return Value different from 0 if a digit, else 0
  */
-int isDigit(char c);
-
-/**
- * @brief Compares two string
- *
- * @param str1  String 1
- * @param str2  String 2
- *
- * @return i    0 if string are equals
- *              < 0 if str1 < str2
- *              > 0 if str2 < str1
- */
-extern int strcmp(char* str1, char* str2);
-
-/**
- * @brief Convert an integer into a string
- *
- * @return
- **/
-extern void itoa(int n, char* s);
-
-/**
- * @brief Convert an integer into a string of hexa
- *
- * @return
- **/
-extern void xtoa(int n, char* s);
-
+extern int isDigit(char c);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // I/O functions
 ////////////////////////////////////////////////////////////////////////////////////////
-int getc();
+extern int getc();
 
-void putc(char c);
+extern void putc(char c);
 
-void puts(char *str);
+extern void puts(char *str);
 
-void printf(char *fmt, ...);
+extern void printf(char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Time functions
 ////////////////////////////////////////////////////////////////////////////////////////
-void sleep(uint ms);
+extern void sleep(uint ms);
 
-uint get_ticks();
+extern uint get_ticks();
 
 
 
