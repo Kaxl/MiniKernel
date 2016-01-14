@@ -51,3 +51,6 @@ pfsadd
 pfslist
 pfsdel
 *.img
+
+# User executables
+shell
