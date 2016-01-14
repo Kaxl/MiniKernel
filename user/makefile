@@ -17,14 +17,17 @@ CMD=shell
 
 .PHONY: clean
 
-shell: shell.o ulib.o syscall.o app_stub.o
+shell: shell.o ulib.o syscall.o app_stub.o ../common/string.o
 	$(LINK) $^ -o $@
 
-ulib.o: ulib.c ulib.h
+ulib.o: ulib.c ulib.h ../common/string.c ../common/string.h syscall.h
 	$(CC) $(CFLAGS) -c $<
 
+../common/string.o: ../common/string.c ../common/string.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
 syscall.o: syscall.s syscall.h
-	$(ASM) $(AFLAGS) $^
+	$(ASM) $(AFLAGS) $<
 
 app_stub.o: app_stub.s
 	$(ASM) $(AFLAGS) $^

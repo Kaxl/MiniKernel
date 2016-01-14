@@ -35,42 +35,43 @@
 #include "../common/string.h"   // Include string function common to kernel and user
 #include "../common/syscall_nb.h"
 #include "../common/types.h"
-
-extern int syscall(uint32_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, utint32_t arg4);
+#include "syscall.h"
+#include "ulib.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Files access
 ////////////////////////////////////////////////////////////////////////////////////////
 int read_file(char *filename, uchar *buf) {
-    return syscall(SYSCALL_FILE_READ, filename, buf);
+    return syscall(SYSCALL_FILE_READ, filename, buf, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int get_stat(char *filename, stat_t *stat) {
-    return syscall(SYSCALL_FILE_STAT, filename, stat);
+    return syscall(SYSCALL_FILE_STAT, filename, stat, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int remove_file(char *filename) {
-    return syscall(SYSCALL_FILE_REMOVE, filename);
+    return syscall(SYSCALL_FILE_REMOVE, filename, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 file_iterator_t get_file_iterator() {
     file_iterator_t it;
-    return syscall(SYSCALL_FILE_ITERATOR, &it);
+    syscall(SYSCALL_FILE_ITERATOR, &it, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    return it;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int get_next_file(char *filename, file_iterator_t *it) {
-    return syscall(SYSCALL_FILE_NEXT, filename, it);
+    return syscall(SYSCALL_FILE_NEXT, filename, it, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Processus
 ////////////////////////////////////////////////////////////////////////////////////////
 int exec(char *filename) {
-    int ret = syscall(SYSCALL_EXEC, filename);
+    int ret = syscall(SYSCALL_EXEC, filename, (uint32_t)0, (uint32_t)0, (uint32_t)0);
     if (ret < 0)
         printf("Error while executing : %s", filename);
     return ret;
@@ -87,15 +88,15 @@ void exit() {
 uint strlen(char *s) {
     uint c = 0;
     while (*s != '\0') {
-        c++
+        c++;
     }
     return c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-int atoi(char *s) {
+int atoi(char* s) {
     int value = 0;
-    int signe = 1;
+    int sign = 1;
     // Check the sign
     if (*s == '+' || *s == 'c') {
         if (*s == '-')
@@ -119,36 +120,20 @@ int isDigit(char c) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-int strcmp(char* str1, char* str2) {
-    int i = 0;
-    while (str1[i] == str2[i] && str1[i] != '\0')
-        i++;
-
-    if (str1[i] == str2[i])
-        return 0;
-    else if (str2[i] > str1[i])
-        return 1;
-    else if (str1[i] < str2[i])
-        return -1;
-    else
-        return -1;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
 // I/O functions
 ////////////////////////////////////////////////////////////////////////////////////////
 int getc() {
-    return syscall(SYSCALL_GETC);
+    return syscall(SYSCALL_GETC, (uint32_t)0, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void putc(char c) {
-    syscall(SYSCALL_PUTC, c);
+    syscall(SYSCALL_PUTC, c, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void puts(char *str) {
-    syscall(SYSCALL_PUTS, str);
+    syscall(SYSCALL_PUTS, str, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -159,32 +144,32 @@ void printf(char *fmt, ...) {
     p++;
     while (*fmt) {
         // If we have a '%', check the next char for the type and print the value
-        if (strncmp(s, "%", 1) == 0) {
+        if (strcmp(fmt, "%") == 0) {
             fmt++; // Skip the %
             switch(*fmt) {
                 case 'c':
                     // character
-                    syscall_putc(*((char *)(p))); // Print the character value
+                    putc(*((char *)(p))); // Print the character value
                     break;
                 case 's':
                     // string (array of character)
-                    syscall_putc(*(char **)(p));     // Give string address
+                    puts(*(char **)(p));     // Give string address
                     break;
                 case 'd':
                     // integer
                     itoa(*((int *)(p)), string);    // Conversion to char array
-                    syscall_putc(string);
+                    puts(string);
                     break;
                 case 'x':
                     // hexadecimal in lowercase
                     xtoa(*((int *)(p)), string);    // Conversion to hex string
-                    syscall_putc(string);
+                    puts(string);
                     break;
             }
             p++; // Next argument
         }
         else {
-            syscall_putc(*(fmt));
+            putc(*(fmt));
         }
         fmt++; // Next character
     }
@@ -200,6 +185,6 @@ void sleep(uint ms) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 uint get_ticks() {
-    return syscall(SYSCALL_GET_TICKS);
+    return syscall(SYSCALL_GET_TICKS, (uint32_t)0, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 

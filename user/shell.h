@@ -21,6 +21,6 @@
 
 #define BUF_SIZE 100
 
-void shell();
+void main();
 
 #endif

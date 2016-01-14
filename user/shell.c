@@ -30,11 +30,11 @@ void emptyBuffer(char* buffer, int size) {
 }
 
 void split(char* buffer, char* args, int size) {
-    
+
     // Parse the buffer
     int i = 0;
-    while (buffer[i] != ' ') if (++i >= size) break;   
-    
+    while (buffer[i] != ' ') if (++i >= size) break;
+
     // Remove the spaces
     if (i < size) while (buffer[i] == ' ') buffer[i++] = '\0';
 
@@ -55,11 +55,11 @@ void readBuffer(char* buffer, int size) {
 
     // Launch the command with it's args
     // exec(buffer, args);
-    syscall(8, (uint32_t)buffer, (uint32_t)args, (uint32_t)0, (uint32_t)0);
+    syscall(SYSCALL_EXEC, (uint32_t)buffer, (uint32_t)args, (uint32_t)0, (uint32_t)0);
 }
 
-void shell() {
-    
+void main() {
+
     // Init the buffer of CLI and empty it
     char buffer[BUF_SIZE];
     emptyBuffer(buffer, BUF_SIZE);
@@ -78,7 +78,7 @@ void shell() {
         // Manage the character locally
         // ... as a backspace
         if (c == '\b')
-            buffer[cursor--] = '\0';        // Remove the last character 
+            buffer[cursor--] = '\0';        // Remove the last character
 
         // ... as a return line
         else if (c == '\n') {
@@ -99,7 +99,7 @@ void shell() {
                 printf("Buffer char is full, please press [ENTER].\n");
                 continue;
             }
-            
+
             // Insert the character in buffer
             buffer[cursor++] = c;
         }
@@ -111,11 +111,11 @@ void shell() {
     }
 }
 
-/* 
+/*
  *
  * NE PAS IMPLEMENTER ls ICI !!!!!!
  *
- * Il doit etre implementer dans un fichier C 
+ * Il doit etre implementer dans un fichier C
  * a part et le fichier binaire devra etre inclus dans notre PFS.
  *
  *
