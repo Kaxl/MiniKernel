@@ -33,7 +33,8 @@
  */
 
 #include "../common/string.h"   // Include string function common to kernel and user
-#include "syscall_nb.h"
+#include "../common/syscall_nb.h"
+#include "../common/types.h"
 
 extern int syscall(uint32_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, utint32_t arg4);
 

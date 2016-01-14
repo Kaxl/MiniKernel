@@ -17,6 +17,9 @@
  */
 
 #include "shell.h"
+#include "../common/syscall_nb.h"
+#include "ulib.h"
+#include "syscall.h"
 
 void emptyBuffer(char* buffer, int size) {
 
@@ -45,13 +48,14 @@ void readBuffer(char* buffer, int size) {
 
     // Args buffer
     char args[size];
-    emptyBuffer(&args, size);
+    emptyBuffer(args, size);
 
     // Split the command and its args
     split(buffer, args, size);
 
     // Launch the command with it's args
-    exec(buffer, args);
+    // exec(buffer, args);
+    syscall(8, (uint32_t)buffer, (uint32_t)args, (uint32_t)0, (uint32_t)0);
 }
 
 void shell() {
@@ -68,7 +72,7 @@ void shell() {
     for (;;) {
 
         // Get the current character
-        if (c = getc() < 0)
+        if ((c = getc()) < 0)
             continue;
 
         // Manage the character locally
@@ -101,8 +105,9 @@ void shell() {
         }
 
         // Print the character
-        if (putc(c) < 0)
-            printf("Error while printing character");
+        //if (putc(c) < 0)
+        //    printf("Error while printing character");
+        putc(c);
     }
 }
 
