@@ -14,7 +14,7 @@ AFLAGS=-f elf32
 
 .PHONY: clean
 
-kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o controller_asm.o ../common/string.o ../common/pfs.o ../test/test_cases.o
+kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o syscall_asm.o controller_asm.o ../common/string.o ../common/pfs.o ../test/test_cases.o
 	ld -melf_i386 -T kernel.ld $^ -o $@
 
 kernel.o: kernel.c kernel.h
@@ -23,7 +23,7 @@ kernel.o: kernel.c kernel.h
 bootloader.o: bootloader.s
 	$(ASM) $(AFLAGS) $^
 
-gdt.o: gdt.c gdt.h
+gdt.o: gdt.c gdt.h 
 	$(CC) $(CFLAGS) -c $<
 
 pic.o: pic.c pic.h
@@ -54,6 +54,9 @@ screen.o: screen.c screen.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 controller_asm.o: controller_asm.s controller.h
+	$(ASM) $(AFLAGS) $<
+
+syscall_asm.o: syscall_asm.s
 	$(ASM) $(AFLAGS) $<
 
 task_asm.o: task_asm.s task.h

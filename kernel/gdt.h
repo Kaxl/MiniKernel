@@ -2,6 +2,12 @@
 #define _GDT_H_
 
 #include "../common/types.h"
+#include "task.h"
+
+#define LDT_SIZE            2
+#define KERNEL_STACK_SIZE   65536
+#define NB_TASKS_MAX        8
+#define FIRST_TASK_ENTRY    4   // Same index as the example
 
 // Structure of a GDT descriptor. There are 2 types of descriptors: segments and TSS.
 // Section 3.4.5 of Intel 64 & IA32 architectures software developer's manual describes
@@ -24,6 +30,19 @@ typedef struct gdt_entry_st {
 
     uint8_t base31_24;
 } __attribute__((packed)) gdt_entry_t;
+
+/**
+ * @brief Task structure
+ *
+ * Store tss and ldt used by a task
+ */
+typedef struct task_t {
+	tss_t tss;
+	gdt_entry_t ldt[LDT_SIZE];
+	uchar kernel_stack[KERNEL_STACK_SIZE];
+    uint32_t addr;                          // Global address of task
+    bool free;                              // Boolean to indicate if the task is free
+} __attribute__((packed)) task_t;
 
 // Structure describing a pointer to the GDT descriptor table.
 // This format is required by the lgdt instruction.

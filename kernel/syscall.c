@@ -85,6 +85,7 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
 }
 
 void syscall_putc(char c) {
+    // TODO : Faire la translation d'adresse, adresse de base + addresse de la variable dans la tache ?
     printCharacter(c);
 }
 
