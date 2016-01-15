@@ -116,20 +116,23 @@ void runKernel() {
 #ifdef TEST
     runKernelTest();
 #else
-    for (;;) {
-        char c = (char)(getc());
-        if ((int)(c) >= 0) {
-            if (c == 'Q') {
-                printf("\r\nShutdown of the system in 1 second.");
-                sleep(1000);
-                printf("\r\nNOW !");
-                halt();
-            }
-            else {
-                printf("%c", c);
-            }
-        }
-    }
+    printf("Before\n");
+    exec_task("shell");
+    printf("After\n");
+    //for (;;) {
+    //    char c = (char)(getc());
+    //    if ((int)(c) >= 0) {
+    //        if (c == 'Q') {
+    //            printf("\r\nShutdown of the system in 1 second.");
+    //            sleep(1000);
+    //            printf("\r\nNOW !");
+    //            halt();
+    //        }
+    //        else {
+    //            printf("%c", c);
+    //        }
+    //    }
+    //}
 #endif
 
 }

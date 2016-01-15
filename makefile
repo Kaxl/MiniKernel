@@ -9,15 +9,12 @@
 # 'make MODE=-DTEST run 	make in DEBUG mode
 #
 
+MAKE=make
 KERNEL=kernel.iso
 FS=fs.img
 X=1024			# Block size
 Y=100			# Number of file entries
 Z=1000			# Number of data blocks available
-FT1=fileA
-FT2=fileB
-FT3=fileC
-FT4=lorem
 FT_SPLASH=splash_screen
 
 .PHONY: run, clean
@@ -33,15 +30,13 @@ kernel.elf:
 
 $(FS):
 	$(MAKE) -C tools
+	$(MAKE) -C user
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
-	cd tools && ./pfsadd $(FS) $(FT1)
-	cd tools && ./pfsadd $(FS) $(FT2)
-	cd tools && ./pfsadd $(FS) $(FT3)
-	cd tools && ./pfsadd $(FS) $(FT4)
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
+	cd tools && ./pfsadd $(FS) ../user/shell
 	cp tools/$(FS) ./
 
-run: $(KERNEL) 
+run: $(KERNEL)
 	qemu-system-i386 -cdrom $(KERNEL) -hda $(FS)
 
 clean:

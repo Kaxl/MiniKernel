@@ -7,7 +7,8 @@
 #define LDT_SIZE            2
 #define KERNEL_STACK_SIZE   65536
 #define NB_TASKS_MAX        8
-#define FIRST_TASK_ENTRY    4   // Same index as the example
+#define FIRST_TASK_ENTRY    4           // Same index as the example
+#define LIMIT_SIZE          0x100000    // Limit size of 1M
 
 // Structure of a GDT descriptor. There are 2 types of descriptors: segments and TSS.
 // Section 3.4.5 of Intel 64 & IA32 architectures software developer's manual describes
@@ -41,6 +42,7 @@ typedef struct task_t {
 	gdt_entry_t ldt[LDT_SIZE];
 	uchar kernel_stack[KERNEL_STACK_SIZE];
     uint32_t addr;                          // Global address of task
+    uint limit;                             // Limit of the task
     bool free;                              // Boolean to indicate if the task is free
 } __attribute__((packed)) task_t;
 
@@ -53,5 +55,6 @@ typedef struct gdt_ptr_st {
 
 extern void gdt_init();
 extern void gdt_flush(gdt_ptr_t *gdt_ptr);
+extern int exec_task(char* filename);
 
 #endif

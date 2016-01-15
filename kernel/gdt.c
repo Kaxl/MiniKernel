@@ -3,8 +3,11 @@
 #include "gdt.h"
 #include "x86.h"
 #include "task.h"
+#include "../common/pfs.h"
 
 #define GDT_INDEX_TO_SELECTOR(idx) ((idx) << 3)
+
+extern void call_task(uint16_t tss_selector);
 
 // Declaration of GDT
 // There are two entries by task
@@ -114,8 +117,11 @@ uint gdt_entry_to_selector(gdt_entry_t *entry) {
  *
  * @param id Init of the task
  */
-void change_context_task(int id) {
-    tasks[id].addr = 0x0;
+void setup_task(int id) {
+    tasks[id].free = false;
+	// Setup code and stack pointers
+	tasks[id].tss.eip = 0;
+	tasks[id].tss.esp = tasks[id].tss.ebp = tasks[id].limit;  // stack pointers
 }
 
 /**
@@ -123,27 +129,23 @@ void change_context_task(int id) {
  *
  * @param id ID of the task
  */
-void setup_task(int id) {
+void init_task(int id) {
 	// Add the task's TSS and LDT to the GDT
 	gdt[FIRST_TASK_ENTRY + id * 2] = gdt_make_tss(&tasks[id].tss, DPL_KERNEL);
 	gdt[FIRST_TASK_ENTRY + id * 2 + 1] = gdt_make_ldt((uint32_t)tasks[id].ldt, sizeof(tasks[id].ldt)-1, DPL_KERNEL);
 	int gdt_ldt_sel = gdt_entry_to_selector(&gdt[FIRST_TASK_ENTRY + id * 2 + 1]);
 
 	// Define code and data segments in the LDT; both segments are overlapping
-    tasks[id].addr = 0x800000;  // @8MB
+	tasks[id].limit = LIMIT_SIZE;  // limit of 1M
+    tasks[id].addr = 0x800000 + id * tasks[id].limit;  // @8MB
 	int ldt_code_idx = 0;
 	int ldt_data_idx = 1;
-	uint limit = 0x10000;  // limit of 64KB
-	tasks[id].ldt[ldt_code_idx] = gdt_make_code_segment(tasks[id].addr, limit / 4096, DPL_USER);  // code
-	tasks[id].ldt[ldt_data_idx] = gdt_make_data_segment(tasks[id].addr, limit / 4096, DPL_USER);  // data + stack
+	tasks[id].ldt[ldt_code_idx] = gdt_make_code_segment(tasks[id].addr, tasks[id].limit / 4096, DPL_USER);  // code
+	tasks[id].ldt[ldt_data_idx] = gdt_make_data_segment(tasks[id].addr, tasks[id].limit / 4096, DPL_USER);  // data + stack
 
 	// Initialize the TSS fields
 	// The LDT selector must point to the task's LDT
 	tasks[id].tss.ldt_selector = gdt_ldt_sel;
-
-	// Setup code and stack pointers
-	tasks[id].tss.eip = 0;
-	tasks[id].tss.esp = tasks[id].tss.ebp = limit;  // stack pointers
 
 	// Code and data segment selectors are in the LDT
 	tasks[id].tss.cs = GDT_INDEX_TO_SELECTOR(ldt_code_idx) | DPL_USER | LDT_SELECTOR;
@@ -155,7 +157,7 @@ void setup_task(int id) {
 	tasks[id].tss.esp0 = (uint32_t)(tasks[id].kernel_stack) + sizeof(tasks[id].kernel_stack);
 }
 
-int exec(char* filename) {
+int exec_task(char* filename) {
     // Find a free task
     int idTask = 0;
     while (idTask <= NB_TASKS_MAX && !tasks[idTask].free)
@@ -165,17 +167,15 @@ int exec(char* filename) {
     if (idTask >= NB_TASKS_MAX)
         return -1;
 
-    // Verification of tss limit
+    // Copy of program memory into the task address
+    if (file_read(filename, &tasks[idTask].addr) < 0)
+        return -1;
 
-    // Save context
+    call_task(tasks[idTask].tss.ldt_selector);
 
-    // Load ldt table with ldt selector
-
-    // Find the file in the filesystem
-
-    // Copy of program memory into the task
-
-
+    // After the task, set it as free
+    tasks[idTask].free = true;
+    return 1;
 }
 
 // Initialize the GDT
@@ -210,7 +210,7 @@ void gdt_init() {
 
 	// Setup all tasks
     for (int i = 0; i < NB_TASKS_MAX; i++) {
-	    setup_task(i);
+	    init_task(i);
     }
 }
 

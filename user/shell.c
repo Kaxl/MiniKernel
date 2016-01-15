@@ -60,6 +60,8 @@ static void readBuffer(char* buffer, int size) {
 
 void main() {
 
+    printf("In the shell ! Like a boss !\n");
+
     // Init the buffer of CLI and empty it
     char buffer[BUF_SIZE];
     emptyBuffer(buffer, BUF_SIZE);

@@ -10,6 +10,7 @@
 #include "../common/types.h"
 
 #include "../common/pfs.h"
+#include "gdt.h"
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
@@ -37,7 +38,7 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             UNUSED(arg2);
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_putc((char)arg1);
+            syscall_putc(*(char*)(LIMIT_SIZE * caller_tss_selector + &arg1));
             break;
 
         case SYSCALL_PUTS:
@@ -48,6 +49,10 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             break;
 
         case SYSCALL_EXEC:
+            UNUSED(arg2);
+            UNUSED(arg3);
+            UNUSED(arg4);
+            syscall_exec((char*)arg1);
             break;
 
         case SYSCALL_GETC:
@@ -59,6 +64,9 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             break;
 
         case SYSCALL_FILE_STAT:
+            UNUSED(arg3);
+            UNUSED(arg4);
+            syscall_file_stat((char*)arg1, (stat_t*)arg2);
             break;
 
         case SYSCALL_FILE_READ:
@@ -93,8 +101,8 @@ void syscall_puts(char* s) {
     printString(s);
 }
 
-void syscall_exec() {
-//
+void syscall_exec(char* filename) {
+    exec_task(filename);
 }
 
 char syscall_getc() {
