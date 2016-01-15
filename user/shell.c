@@ -21,7 +21,7 @@
 #include "ulib.h"
 #include "syscall.h"
 
-void emptyBuffer(char* buffer, int size) {
+static void emptyBuffer(char* buffer, int size) {
 
     // Fill the buffer with zero
     for (int i = 0; i < size; i++) {
@@ -29,7 +29,7 @@ void emptyBuffer(char* buffer, int size) {
     }
 }
 
-void split(char* buffer, char* args, int size) {
+static void split(char* buffer, int size) {
 
     // Parse the buffer
     int i = 0;
@@ -44,14 +44,14 @@ void split(char* buffer, char* args, int size) {
     }
 }
 
-void readBuffer(char* buffer, int size) {
+static void readBuffer(char* buffer, int size) {
 
     // Args buffer
     char args[size];
     emptyBuffer(args, size);
 
     // Split the command and its args
-    split(buffer, args, size);
+    split(buffer, size);
 
     // Launch the command with it's args
     // exec(buffer, args);

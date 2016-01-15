@@ -42,36 +42,36 @@
 // Files access
 ////////////////////////////////////////////////////////////////////////////////////////
 int read_file(char *filename, uchar *buf) {
-    return syscall(SYSCALL_FILE_READ, filename, buf, (uint32_t)0, (uint32_t)0);
+    return syscall(SYSCALL_FILE_READ, (uint32_t)filename, (uint32_t)buf, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int get_stat(char *filename, stat_t *stat) {
-    return syscall(SYSCALL_FILE_STAT, filename, stat, (uint32_t)0, (uint32_t)0);
+    return syscall(SYSCALL_FILE_STAT, (uint32_t)filename, (uint32_t)stat, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int remove_file(char *filename) {
-    return syscall(SYSCALL_FILE_REMOVE, filename, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    return syscall(SYSCALL_FILE_REMOVE, (uint32_t)filename, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 file_iterator_t get_file_iterator() {
     file_iterator_t it;
-    syscall(SYSCALL_FILE_ITERATOR, &it, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    syscall(SYSCALL_FILE_ITERATOR, (uint32_t)&it, (uint32_t)0, (uint32_t)0, (uint32_t)0);
     return it;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int get_next_file(char *filename, file_iterator_t *it) {
-    return syscall(SYSCALL_FILE_NEXT, filename, it, (uint32_t)0, (uint32_t)0);
+    return syscall(SYSCALL_FILE_NEXT, (uint32_t)filename, (uint32_t)it, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Processus
 ////////////////////////////////////////////////////////////////////////////////////////
 int exec(char *filename) {
-    int ret = syscall(SYSCALL_EXEC, filename, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    int ret = syscall(SYSCALL_EXEC, (uint32_t)filename, (uint32_t)0, (uint32_t)0, (uint32_t)0);
     if (ret < 0)
         printf("Error while executing : %s", filename);
     return ret;
@@ -128,12 +128,12 @@ int getc() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void putc(char c) {
-    syscall(SYSCALL_PUTC, c, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    syscall(SYSCALL_PUTC, (uint32_t)c, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void puts(char *str) {
-    syscall(SYSCALL_PUTS, str, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    syscall(SYSCALL_PUTS, (uint32_t)str, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
