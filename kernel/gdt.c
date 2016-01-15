@@ -4,6 +4,7 @@
 #include "x86.h"
 #include "task.h"
 #include "../common/pfs.h"
+#include "screen.h"
 
 #define GDT_INDEX_TO_SELECTOR(idx) ((idx) << 3)
 
@@ -155,6 +156,8 @@ void init_task(int id) {
 	// Task's kernel stack
 	tasks[id].tss.ss0 = GDT_KERNEL_DATA_SELECTOR;
 	tasks[id].tss.esp0 = (uint32_t)(tasks[id].kernel_stack) + sizeof(tasks[id].kernel_stack);
+
+    tasks[id].free = true;
 }
 
 int exec_task(char* filename) {
@@ -166,11 +169,15 @@ int exec_task(char* filename) {
     // If there is no task free available, return an error
     if (idTask >= NB_TASKS_MAX)
         return -1;
+    printf("[gdt] task : %d\n", idTask);
 
     // Copy of program memory into the task address
     if (file_read(filename, &tasks[idTask].addr) < 0)
         return -1;
+    printf("[gdt] ead filename : %s\n", filename);
 
+    setup_task(idTask);
+    printf("[gdt] After setup : %d\n", idTask);
     call_task(tasks[idTask].tss.ldt_selector);
 
     // After the task, set it as free

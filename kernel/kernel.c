@@ -117,8 +117,11 @@ void runKernel() {
     runKernelTest();
 #else
     printf("Before\n");
-    exec_task("shell");
-    printf("After\n");
+    if (exec_task("shell") < 0)
+        printf("[kernel] exec failed\n");
+    else
+        printf("[kernel] exec succeed\n");
+    //printf("After\n");
     //for (;;) {
     //    char c = (char)(getc());
     //    if ((int)(c) >= 0) {

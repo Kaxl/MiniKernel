@@ -72,6 +72,7 @@ void main() {
 
     // Infinite loop to manage the CLI
     for (;;) {
+        printf("in");
 
         // Get the current character
         if ((c = getc()) < 0)

@@ -31,9 +31,10 @@ kernel.elf:
 $(FS):
 	$(MAKE) -C tools
 	$(MAKE) -C user
+	cp user/shell tools/shell
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
-	cd tools && ./pfsadd $(FS) ../user/shell
+	cd tools && ./pfsadd $(FS) shell
 	cp tools/$(FS) ./
 
 run: $(KERNEL)

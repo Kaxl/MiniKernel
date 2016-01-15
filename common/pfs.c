@@ -71,7 +71,6 @@ int file_read(char* filename, void *buf) {
 
     // Iterate through the image while there are more files
     while (file_next(file, &it)) {
-
         // If this is the file we are looking for
         if (strcmp(file, filename) == 0) {
             // Read the sector where the file entry is
