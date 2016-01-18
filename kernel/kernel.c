@@ -26,6 +26,18 @@
 #include "keyboard.h"
 #include "timer.h"
 #include "../common/pfs.h"
+#include "task.h"
+#include "base.h"
+
+extern void call_task(uint16_t tss_selector);
+
+void mytask() {
+    //asm volatile("int $0x3");
+    int a = 2 / 0;
+    int* p = (int *)0x10000;
+    *p = 0x1234;
+    while(1);
+}
 
 void runKernel() {
 
@@ -108,19 +120,31 @@ void runKernel() {
     }
 
     // Print the splash screen from file
-    char buffer[BUFFER_SIZE_SPLASH];
-    file_read(SPLASH_FILE, (void *)&buffer);
-    printf("\n%s\n", buffer);
-    printf("> ");
+    //char buffer[BUFFER_SIZE_SPLASH];
+    //file_read(SPLASH_FILE, (void *)&buffer);
+    //printf("\n%s\n", buffer);
+    //printf("> ");
 
 #ifdef TEST
     runKernelTest();
 #else
     printf("Before\n");
-    if (exec_task("shell") < 0)
-        printf("[kernel] exec failed\n");
-    else
-        printf("[kernel] exec succeed\n");
+    //char buffer_kernel[9000]; // 9 KB
+    //file_read("shell", (void *)&buffer_kernel);
+
+    //printf("\n%x\n", buffer_kernel);
+
+    memcpy(mytask, (void *)0x800000, 256);
+    setup_task(0);
+    call_task((uint16_t)32);
+    
+    while(1);
+
+    //if (exec_task("shell") < 0)
+    //    printf("[kernel] exec failed\n");
+    //else
+    //    printf("[kernel] exec succeed\n");
+
     //printf("After\n");
     //for (;;) {
     //    char c = (char)(getc());

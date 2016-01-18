@@ -11,7 +11,7 @@ CC=gcc
 CFLAGS=-std=gnu99 -m32 -fno-builtin -ffreestanding -Wall -Wextra $(DEBUG)
 ASM=nasm
 AFLAGS=-f elf32
-LINK=ld -melf_i386 -T app.ld
+LINK=ld -melf_i386 -Tapp.ld
 
 CMD=shell
 
@@ -21,7 +21,10 @@ shell: shell.o ulib.o syscall.o app_stub.o ../common/string.o
 	$(LINK) $^ -o $@
 
 ulib.o: ulib.c ulib.h ../common/string.c ../common/string.h syscall.h
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $< -o $@
+
+shell.o: shell.c ulib.h 
+	$(CC) $(CFLAGS) -c $< -o $@
 
 ../common/string.o: ../common/string.c ../common/string.h
 	$(CC) $(CFLAGS) -c $< -o $@

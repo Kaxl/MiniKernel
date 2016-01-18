@@ -38,7 +38,7 @@ $(FS):
 	cp tools/$(FS) ./
 
 run: $(KERNEL)
-	qemu-system-i386 -cdrom $(KERNEL) -hda $(FS)
+	qemu-system-i386 -monitor stdio -cdrom $(KERNEL) -hda $(FS)
 
 clean:
 	rm -f *.o

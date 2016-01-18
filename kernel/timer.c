@@ -1,5 +1,6 @@
 #include "timer.h"
 #include "controller.h"
+#include "screen.h"
 
 // Timer properties
 volatile timer t = {
@@ -31,6 +32,10 @@ void timer_init(uint32_t freq_hz) {
 void timer_handler() {
     // wait for tick
     t.tick++;
+    int* p = (int *)0x810000;
+    if (*p == 0x1234)
+        printf("Victory\n");
+    printf("%d\n", *p);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

@@ -15,7 +15,7 @@ AFLAGS=-f elf32
 .PHONY: clean
 
 kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o syscall_asm.o controller_asm.o ../common/string.o ../common/pfs.o ../test/test_cases.o
-	ld -melf_i386 -T kernel.ld $^ -o $@
+	ld -melf_i386 -Tkernel.ld $^ -o $@
 
 kernel.o: kernel.c kernel.h
 	$(CC) $(CFLAGS) -c $<

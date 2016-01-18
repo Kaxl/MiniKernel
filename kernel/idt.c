@@ -5,6 +5,7 @@
 #include "pic.h"
 #include "keyboard.h"
 #include "timer.h"
+#include "base.h"
 
 extern void _syscall_handler();  // Implemented in syscall_asm.s
 
@@ -187,6 +188,10 @@ void interruption_handler(regs_t *regs) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void idt_init() {
+
+    // Fill with 0
+    memset(&idt, 0, sizeof(idt));
+
     // Fill the IDT with 0x0
     for (int i = 0; i < IDT_SIZE; i++)
         idt[i] = idt_build_entry(0, 0, 0, 0);
@@ -238,7 +243,7 @@ void idt_init() {
 	// IDT entry 48 used for system calls
 	idt[48] = idt_build_entry(GDT_KERNEL_CODE_SELECTOR, (uint32_t)&_syscall_handler, TYPE_TRAP_GATE, DPL_USER);
 
-    idt_ptr.base = (uint32_t)idt; // Base of idt is the first element of idt
+    idt_ptr.base = (uint32_t)&idt; // Base of idt is the first element of idt
 
     // Load the idt
     idt_load(&idt_ptr);

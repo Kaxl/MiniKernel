@@ -39,6 +39,8 @@ typedef struct gdt_entry_st {
  */
 typedef struct task_t {
 	tss_t tss;
+    int ldt_sel;
+    int tss_sel;
 	gdt_entry_t ldt[LDT_SIZE];
 	uchar kernel_stack[KERNEL_STACK_SIZE];
     uint32_t addr;                          // Global address of task
@@ -55,6 +57,9 @@ typedef struct gdt_ptr_st {
 
 extern void gdt_init();
 extern void gdt_flush(gdt_ptr_t *gdt_ptr);
+
 extern int exec_task(char* filename);
+extern void setup_task(int id);
+
 
 #endif
