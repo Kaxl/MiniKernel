@@ -150,9 +150,9 @@ int exec_task(char* filename) {
     printf("[gdt] task : %d\n", idTask);
 
     // Copy of program memory into the task address
-    memcpy((void *)tasks[idTask].addr, &mytask, 256);
-    //if (file_read(filename, (uint32_t*)tasks[idTask].addr) < 0)
-    //    return -1;
+    //memcpy((void *)tasks[idTask].addr, &mytask, 256);
+    if (file_read(filename, (uint32_t*)&tasks[idTask].addr) < 0)
+        return -1;
     printf("[gdt] ead filename : %s\n", filename);
 
     setup_task(idTask);

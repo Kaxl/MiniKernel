@@ -121,10 +121,11 @@ void runKernel() {
     runKernelTest();
 #else
     printf("Before\n");
-    //char buffer_kernel[9000]; // 9 KB
-    //file_read("shell", (void *)&buffer_kernel);
+    char buffer_kernel[9000]; // 9 KB
+    file_read("shell", (void *)&buffer_kernel);
 
-    //printf("\n%x\n", buffer_kernel);
+    printf("\n%x\n", buffer_kernel);
+    //halt();
 
     if (exec_task("shell") < 0)
         printf("[kernel] exec failed\n");
