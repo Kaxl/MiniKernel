@@ -17,31 +17,31 @@ AFLAGS=-f elf32
 kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o syscall_asm.o controller_asm.o ../common/string.o ../common/pfs.o ../test/test_cases.o
 	ld -melf_i386 -Tkernel.ld $^ -o $@
 
-kernel.o: kernel.c kernel.h
+kernel.o: kernel.c kernel.h x86.h gdt.h idt.h pic.h screen.h keyboard.h timer.h ../common/pfs.h task.h base.h
 	$(CC) $(CFLAGS) -c $<
 
 bootloader.o: bootloader.s
 	$(ASM) $(AFLAGS) $^
 
-gdt.o: gdt.c gdt.h 
+gdt.o: gdt.c gdt.h ../common/types.h base.h x86.h task.h ../common/pfs.h screen.h
 	$(CC) $(CFLAGS) -c $<
 
-pic.o: pic.c pic.h
+pic.o: pic.c pic.h controller.h
 	$(CC) $(CFLAGS) -c $<
 
-keyboard.o: keyboard.c keyboard.h
+keyboard.o: keyboard.c keyboard.h screen.h ../common/types.h controller.h
 	$(CC) $(CFLAGS) -c $<
 
-timer.o: timer.c timer.h
+timer.o: timer.c timer.h controller.h screen.h
 	$(CC) $(CFLAGS) -c $<
 
 gdt_asm.o: gdt_asm.s
 	$(ASM) $(AFLAGS) $^
 
-idt.o: idt.c idt.h
+idt.o: idt.c idt.h x86.h screen.h colors.h pic.h timer.h base.h
 	$(CC) $(CFLAGS) -c $<
 
-ide.o: ide.c ide.h
+ide.o: ide.c ide.h controller.h
 	$(CC) $(CFLAGS) -c $<
 
 idt_asm.o: idt_asm.s
@@ -68,11 +68,11 @@ syscall.o: syscall.c ../common/syscall_nb.h
 ../common/string.o: ../common/string.c ../common/string.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-../common/pfs.o: ../common/pfs.c ../common/pfs.h
+../common/pfs.o: ../common/pfs.c ../common/pfs.h ../common/types.h base.h ide.h screen.h ../common/string.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-../test/test_cases.o: ../test/test_cases.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+../test/test_cases.o: ../test/test_cases.c ../test/test_cases.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f *.o
