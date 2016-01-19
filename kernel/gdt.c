@@ -73,45 +73,47 @@ uint gdt_entry_to_selector(gdt_entry_t *entry) {
 	return GDT_INDEX_TO_SELECTOR(entry - gdt);
 }
 
-//void setup_task_original() {
-//	// gdt[4] : Task1 TSS descriptor
-//	// gdt[5] : Task1 LDT descriptor
-//
-//	static tss_t task_tss;
-//	static gdt_entry_t task_ldt[2];
-//
-//	// Add the task's TSS and LDT to the GDT
-//	gdt[4] = gdt_make_tss(&task_tss, DPL_KERNEL);
-//	gdt[5] = gdt_make_ldt((uint32_t)task_ldt, sizeof(task_ldt)-1, DPL_KERNEL);
-//	int gdt_tss_sel = gdt_entry_to_selector(&gdt[4]);
-//	int gdt_ldt_sel = gdt_entry_to_selector(&gdt[5]);
-//
-//	// Define code and data segments in the LDT; both segments are overlapping
-//	uint32_t task_addr = 0x800000;  // @8MB
-//	int ldt_code_idx = 0;
-//	int ldt_data_idx = 1;
-//	uint limit = 0x10000;  // limit of 64KB
-//	task_ldt[ldt_code_idx] = gdt_make_code_segment(task_addr, limit / 4096, DPL_USER);  // code
-//	task_ldt[ldt_data_idx] = gdt_make_data_segment(task_addr, limit / 4096, DPL_USER);  // data + stack
-//
-//	// Initialize the TSS fields
-//	// The LDT selector must point to the task's LDT
-//	task_tss.ldt_selector = gdt_ldt_sel;
-//
-//	// Setup code and stack pointers
-//	task_tss.eip = 0;
-//	task_tss.esp = task_tss.ebp = limit;  // stack pointers
-//
-//	// Code and data segment selectors are in the LDT
-//	task_tss.cs = GDT_INDEX_TO_SELECTOR(ldt_code_idx) | DPL_USER | LDT_SELECTOR;
-//	task_tss.ds = task_tss.es = task_tss.fs = task_tss.gs = task_tss.ss = GDT_INDEX_TO_SELECTOR(ldt_data_idx) | DPL_USER | LDT_SELECTOR;
-//	task_tss.eflags = 512;  // Activate hardware interrupts (bit 9)
-//
-//	// Task's kernel stack
-//	static uchar task_kernel_stack[8192];
-//	task_tss.ss0 = GDT_KERNEL_DATA_SELECTOR;
-//	task_tss.esp0 = (uint32_t)(task_kernel_stack) + sizeof(task_kernel_stack);
-//}
+void setup_task_original() {
+	// gdt[4] : Task1 TSS descriptor
+	// gdt[5] : Task1 LDT descriptor
+
+	static tss_t task_tss;
+	static gdt_entry_t task_ldt[2];
+
+	// Add the task's TSS and LDT to the GDT
+	gdt[4] = gdt_make_tss(&task_tss, DPL_KERNEL);
+	gdt[5] = gdt_make_ldt((uint32_t)task_ldt, sizeof(task_ldt)-1, DPL_KERNEL);
+	int gdt_tss_sel = gdt_entry_to_selector(&gdt[4]);
+	int gdt_ldt_sel = gdt_entry_to_selector(&gdt[5]);
+
+	// Define code and data segments in the LDT; both segments are overlapping
+	uint32_t task_addr = 0x800000;  // @8MB
+	int ldt_code_idx = 0;
+	int ldt_data_idx = 1;
+	uint limit = 0x100000;  // limit of 64KB
+	task_ldt[ldt_code_idx] = gdt_make_code_segment(task_addr, limit / 4096, DPL_USER);  // code
+	task_ldt[ldt_data_idx] = gdt_make_data_segment(task_addr, limit / 4096, DPL_USER);  // data + stack
+
+    printf("%d", gdt_tss_sel);
+
+	// Initialize the TSS fields
+	// The LDT selector must point to the task's LDT
+	task_tss.ldt_selector = gdt_ldt_sel;
+
+	// Setup code and stack pointers
+	task_tss.eip = 0;
+	task_tss.esp = task_tss.ebp = limit;  // stack pointers
+
+	// Code and data segment selectors are in the LDT
+	task_tss.cs = GDT_INDEX_TO_SELECTOR(ldt_code_idx) | DPL_USER | LDT_SELECTOR;
+	task_tss.ds = task_tss.es = task_tss.fs = task_tss.gs = task_tss.ss = GDT_INDEX_TO_SELECTOR(ldt_data_idx) | DPL_USER | LDT_SELECTOR;
+	task_tss.eflags = 512;  // Activate hardware interrupts (bit 9)
+
+	// Task's kernel stack
+	static uchar task_kernel_stack[8192];
+	task_tss.ss0 = GDT_KERNEL_DATA_SELECTOR;
+	task_tss.esp0 = (uint32_t)(task_kernel_stack) + sizeof(task_kernel_stack);
+}
 
 /**
  * @brief Change the context of a task
@@ -234,11 +236,12 @@ void gdt_init() {
 	extern void load_task_register(uint16_t tss_selector);  // Implemented in task_asm.s
 	load_task_register(gdt_entry_to_selector(&gdt[3]));
 
+    setup_task_original();
 	// Setup all tasks
-    for (int i = 0; i < NB_TASKS_MAX; i++) {
-	    init_task(i);
-        printf("[gdt_init] %d\n", i);
-    }
+    //for (int i = 0; i < NB_TASKS_MAX; i++) {
+	//    init_task(i);
+    //    printf("[gdt_init] %d\n", i);
+    //}
     //halt();
 }
 

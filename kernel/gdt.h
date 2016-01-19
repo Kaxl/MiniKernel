@@ -61,5 +61,6 @@ extern void gdt_flush(gdt_ptr_t *gdt_ptr);
 extern int exec_task(char* filename);
 extern void setup_task(int id);
 
+extern void setup_task_original();
 
 #endif

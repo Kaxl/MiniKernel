@@ -33,7 +33,7 @@ extern void call_task(uint16_t tss_selector);
 
 void mytask() {
     //asm volatile("int $0x3");
-    int a = 2 / 0;
+    //int a = 2 / 0;
     int* p = (int *)0x10000;
     *p = 0x1234;
     while(1);
@@ -134,10 +134,12 @@ void runKernel() {
 
     //printf("\n%x\n", buffer_kernel);
 
-    memcpy(mytask, (void *)0x800000, 256);
-    setup_task(0);
+    memcpy((void *)0x800000, &mytask, 256);
+    //setup_task(0);
+    //setup_task_original();
+
     call_task((uint16_t)32);
-    
+
     while(1);
 
     //if (exec_task("shell") < 0)
