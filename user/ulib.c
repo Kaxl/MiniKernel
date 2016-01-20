@@ -38,6 +38,8 @@
 #include "syscall.h"
 #include "ulib.h"
 
+extern void exitpoint();
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // Files access
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -70,9 +72,9 @@ int get_next_file(char *filename, file_iterator_t *it) {
 ////////////////////////////////////////////////////////////////////////////////////////
 // Processus
 ////////////////////////////////////////////////////////////////////////////////////////
-int exec(char *filename) {
+int exec(char *filename, char* args) {
     printf("[ulib] exec %s\n", filename);
-    int ret = syscall(SYSCALL_EXEC, (uint32_t)filename, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    int ret = syscall(SYSCALL_EXEC, (uint32_t)filename, (uint32_t)args, (uint32_t)0, (uint32_t)0);
     if (ret < 0)
         printf("Error while executing : %s", filename);
     return ret;
@@ -80,7 +82,7 @@ int exec(char *filename) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void exit() {
-    // TODO
+    exitpoint();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +148,8 @@ void printf(char *fmt, ...) {
     while (*fmt) {
         // If we have a '%', check the next char for the type and print the value
         if (strcmp(fmt, "%") == 0) {
+            putc(fmt);
+
             fmt++; // Skip the %
             switch(*fmt) {
                 case 'c':
@@ -188,4 +192,3 @@ void sleep(uint ms) {
 uint get_ticks() {
     return syscall(SYSCALL_GET_TICKS, (uint32_t)0, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
-

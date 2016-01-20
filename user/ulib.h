@@ -35,7 +35,7 @@ extern int get_next_file(char *filename, file_iterator_t *it);
 ////////////////////////////////////////////////////////////////////////////////////////
 // Processus
 ////////////////////////////////////////////////////////////////////////////////////////
-extern int exec(char *filename);
+extern int exec(char *filename, char* args);
 
 extern void exit();
 
@@ -86,6 +86,3 @@ extern void printf(char *fmt, ...);
 extern void sleep(uint ms);
 
 extern uint get_ticks();
-
-
-

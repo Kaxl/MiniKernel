@@ -102,7 +102,7 @@ void init_task(int id) {
 
 	// Define code and data segments in the LDT; both segments are overlapping
 	tasks[id].limit = LIMIT_SIZE;  // limit of 1M
-    tasks[id].addr = (uint32_t)(0x800000 + id * tasks[id].limit);  // @8MB
+    tasks[id].addr = (uint32_t)(FIRST_TASK_ADDR + id * tasks[id].limit);  // @8MB
     printf("[init task] %x\n", tasks[id].addr);
     printf("[init task] %d", id * tasks[id].limit);
 	int ldt_code_idx = 0;
@@ -213,4 +213,3 @@ void gdt_init() {
         printf("[gdt_init] %d\n", i);
     }
 }
-

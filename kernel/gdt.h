@@ -9,6 +9,7 @@
 #define NB_TASKS_MAX        8
 #define FIRST_TASK_ENTRY    4           // Same index as the example
 #define LIMIT_SIZE          0x100000    // Limit size of 1M
+#define FIRST_TASK_ADDR     0x800000    
 
 #define GDT_INDEX_TO_SELECTOR(idx) ((idx) << 3)
 #define SELECTOR_TO_GDT_INDEX(idx) ((idx) >> 3)

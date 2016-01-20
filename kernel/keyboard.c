@@ -57,14 +57,9 @@ void keyboard_handler() {
                 break;
             case RETURN:
                 printf("\r\n");
-<<<<<<< HEAD
                 // Writes the character in the buffer
                 b.i_write &= (BUFFER_SIZE - 1);
                 b.data[b.i_write] = '\n';
-=======
-                b.i_write &= (BUFFER_SIZE - 1);
-                b.data[b.i_write] = '\r\n';
->>>>>>> f0170182cc2ab2a7731d5920cacaf3e6348aa28a
                 b.i_write++;
                 b.counter++;
                 break;

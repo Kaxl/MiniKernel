@@ -17,10 +17,10 @@
 #include "x86.h"
 
 
-void syscall_putc(char c);
-void syscall_puts(char* s);
-void syscall_exec();
-char syscall_getc();
+int syscall_putc(char c);
+int syscall_puts(char* s);
+int syscall_exec();
+int syscall_getc();
 int syscall_file_stat(char* filename, stat_t* stat);
 int syscall_file_read(char* filename, void* buf);
 int syscall_file_remove(char* filename);
@@ -33,32 +33,30 @@ unsigned int syscall_get_ticks();
 // Called by the assembly code _syscall_handler
 int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4, uint32_t caller_tss_selector) {
 
+    // First address of the task which called the syscall
+    char* addr = (char*)(LIMIT_SIZE * (SELECTOR_TO_GDT_INDEX(caller_tss_selector) - FIRST_TASK_ENTRY ) + FIRST_TASK_ADDR);
+
     switch (nb) {
 
         case SYSCALL_PUTC:
             UNUSED(arg2);
             UNUSED(arg3);
             UNUSED(arg4);
-            //printf("[syscall] tss_selecter: %x", caller_tss_selector);
-            // printf("Addr : %x\n", LIMIT_SIZE * (SELECTOR_TO_GDT_INDEX(caller_tss_selector) - FIRST_TASK_ENTRY ) + 0x800000);
-            // printf("arg1 : %x\n", arg1);
-            // printf("&arg1 : %x\n", &arg1);
-            syscall_putc((char*)(LIMIT_SIZE * (SELECTOR_TO_GDT_INDEX(caller_tss_selector) - FIRST_TASK_ENTRY ) + 0x800000 + arg1));
-            // halt();
+            return syscall_putc((char*)(addr + arg1));
             break;
 
         case SYSCALL_PUTS:
             UNUSED(arg2);
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_puts((char*)arg1);
+            return syscall_puts((char*)(addr + arg1));
+            //syscall_puts((char*)arg1);
             break;
 
         case SYSCALL_EXEC:
-            UNUSED(arg2);
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_exec((char*)arg1);
+            syscall_exec((char*)(addr + arg1), (char*)(addr + arg2));
             break;
 
         case SYSCALL_GETC:
@@ -66,13 +64,13 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             UNUSED(arg2);
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_getc();
+            return syscall_getc();
             break;
 
         case SYSCALL_FILE_STAT:
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_file_stat((char*)arg1, (stat_t*)arg2);
+            syscall_file_stat((char*)(addr + arg1), (stat_t*)arg2);
             break;
 
         case SYSCALL_FILE_READ:
@@ -98,22 +96,22 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
     return -1;
 }
 
-void syscall_putc(char c) {
-    // TODO : Faire la translation d'adresse, adresse de base + addresse de la variable dans la tache ?
-    //printf("Syscall called\n");
-    // printCharacter((char)(*(&c + (char*)0x800000)));
+int syscall_putc(char c) {
     printCharacter(c);
+    return 0;
 }
 
-void syscall_puts(char* s) {
+int syscall_puts(char* s) {
     printString(s);
+    return 0;
 }
 
-void syscall_exec(char* filename) {
+int syscall_exec(char* filename) {
     exec_task(filename);
+    return 0;
 }
 
-char syscall_getc() {
+int syscall_getc() {
     return getc();
 }
 

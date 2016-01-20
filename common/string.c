@@ -20,19 +20,19 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int strcmp(const char* str1, const char* str2) {
-    for ( ; *s1 == *s2; s1++, s2++)
-	if (*s1 == '\0')
+    for ( ; *str1 == *str2; str1++, str2++)
+	if (*str1 == '\0')
 	    return 0;
-    return ((*(unsigned char *)s1 < *(unsigned char *)s2) ? -1 : +1);
+    return ((*(unsigned char *)str1 < *(unsigned char *)str2) ? -1 : +1);
     //int i = 0;
-    //while (str1[i] == str2[i] && str1[i] != '\0') 
+    //while (str1[i] == str2[i] && str1[i] != '\0')
     //    i++;
 
     //if (str1[i] == str2[i])
     //    return 0;
     //else if (str2[i] > str1[i])
     //    return 1;
-    //else if (str1[i] < str2[i]) 
+    //else if (str1[i] < str2[i])
     //    return -1;
     //else
     //    return -1;
@@ -108,4 +108,3 @@ void xtoa(int n, char* s) {
         tmp_n = tmp_n / 16;
     }
 }
-

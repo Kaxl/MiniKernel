@@ -23,7 +23,7 @@ shell: shell.o ulib.o syscall.o app_stub.o ../common/string.o
 ulib.o: ulib.c ulib.h ../common/string.c ../common/string.h syscall.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-shell.o: shell.c ulib.h 
+shell.o: shell.c ulib.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 ../common/string.o: ../common/string.c ../common/string.h
