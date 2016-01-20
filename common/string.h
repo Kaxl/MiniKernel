@@ -26,7 +26,7 @@
  *              < 0 if str1 < str2
  *              > 0 if str2 < str1
  */
-extern int strcmp(char* str1, char* str2);
+extern int strcmp(const char* str1, const char* str2);
 
 /**
  * @brief Convert an integer into a string
@@ -41,4 +41,3 @@ extern void itoa(int n, char* s);
  * @return
  **/
 extern void xtoa(int n, char* s);
-

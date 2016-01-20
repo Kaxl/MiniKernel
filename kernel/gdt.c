@@ -97,14 +97,14 @@ void init_task(int id) {
 
     tasks[id].tss_sel = gdt_entry_to_selector(&gdt[FIRST_TASK_ENTRY + id * 2]);
     tasks[id].ldt_sel = gdt_entry_to_selector(&gdt[FIRST_TASK_ENTRY + id * 2 + 1]);
-    printf("[init_task] gdt_ldt_sel : %d\n", tasks[id].ldt_sel);
-    printf("[init_task] gdt_tss_sel : %d\n", tasks[id].tss_sel);
+    // printf("[init_task] gdt_ldt_sel : %d\n", tasks[id].ldt_sel);
+    // printf("[init_task] gdt_tss_sel : %d\n", tasks[id].tss_sel);
 
 	// Define code and data segments in the LDT; both segments are overlapping
 	tasks[id].limit = LIMIT_SIZE;  // limit of 1M
     tasks[id].addr = (uint32_t)(FIRST_TASK_ADDR + id * tasks[id].limit);  // @8MB
-    printf("[init task] %x\n", tasks[id].addr);
-    printf("[init task] %d", id * tasks[id].limit);
+    // printf("[init task] %x\n", tasks[id].addr);
+    // printf("[init task] %d", id * tasks[id].limit);
 	int ldt_code_idx = 0;
 	int ldt_data_idx = 1;
 	tasks[id].ldt[ldt_code_idx] = gdt_make_code_segment(tasks[id].addr, tasks[id].limit / 4096, DPL_USER);  // code
@@ -160,16 +160,16 @@ int exec_task(char* filename) {
     printf("[gdt] ead filename : %s\n", filename);
 
     setup_task(idTask);
-    printf("[gdt] After setup : %d\n", idTask);
-    printf("[gdt] call task with : %d\n", tasks[idTask].tss_sel);
-    printf("[gdt] task addr : %x\n", tasks[idTask].addr);
-    printf("[gdt] task addr addr : %x\n", &tasks[idTask].addr);
-
-    printf("[gdt] Before call_task\n");
+    // printf("[gdt] After setup : %d\n", idTask);
+    // printf("[gdt] call task with : %d\n", tasks[idTask].tss_sel);
+    // printf("[gdt] task addr : %x\n", tasks[idTask].addr);
+    // printf("[gdt] task addr addr : %x\n", &tasks[idTask].addr);
+	//
+    // printf("[gdt] Before call_task\n");
     //halt();
     call_task((uint16_t)tasks[idTask].tss_sel);
 
-    printf("[gdt] After call_task\n");
+    // printf("[gdt] After call_task\n");
     // After the task, set it as free
     tasks[idTask].free = true;
     return 1;
@@ -210,6 +210,6 @@ void gdt_init() {
 	// Init all tasks
     for (int i = 0; i < NB_TASKS_MAX; i++) {
 	    init_task(i);
-        printf("[gdt_init] %d\n", i);
+        // printf("[gdt_init] %d\n", i);
     }
 }

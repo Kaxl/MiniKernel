@@ -147,7 +147,8 @@ void printf(char *fmt, ...) {
     p++;
     while (*fmt) {
         // If we have a '%', check the next char for the type and print the value
-        if (strcmp(fmt, "%") == 0) {
+        // if (strcmp(fmt, "%") == 0) {
+        if (*fmt == '%') {
             putc(fmt);
 
             fmt++; // Skip the %
