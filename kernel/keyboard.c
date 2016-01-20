@@ -57,16 +57,29 @@ void keyboard_handler() {
                 break;
             case RETURN:
                 printf("\r\n");
+                // Writes the character in the buffer
+                b.i_write &= (BUFFER_SIZE - 1);
+                b.data[b.i_write] = '\n';
+                b.i_write++;
+                b.counter++;
                 break;
             case BACKSPACE:
                 // In screen.c, \b is process to remove the character and set the cursor
                 printf("\b");
+                b.i_write &= (BUFFER_SIZE - 1);
+                b.data[b.i_write] = '\b';
+                b.i_write++;
+                b.counter++;
                 break;
             case ESC:
                 // Exit insert mode
                 break;
             case TAB:
                 printf("\t");
+                b.i_write &= (BUFFER_SIZE - 1);
+                b.data[b.i_write] = '\t';
+                b.i_write++;
+                b.counter++;
                 break;
             default:    // Any other key
                 // Writes the character in the buffer
