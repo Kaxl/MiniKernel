@@ -77,9 +77,10 @@ void main() {
 
         // Manage the character locally
         // ... as a backspace
-        if (c == '\b')
+        if (c == '\b') {
             if (cursor > 0)
                 buffer[cursor--] = '\0';        // Remove the last character
+        }
 
         // ... as a return line
         else if (c == '\n') {
