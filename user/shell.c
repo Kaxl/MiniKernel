@@ -21,6 +21,18 @@
 #include "ulib.h"
 #include "syscall.h"
 
+static void help() {
+
+    // print the help for users
+    printf("ls :\t List all file on the disk.\n");
+    printf("cat FILE :\t Print the content of a file.\n");
+    printf("rm FILE :\t Delete a file from the disk.\n");
+    printf("run FILE :\t Run a program.\n");
+    printf("ticks :\t Display the current ticks count.\n");
+    printf("sleep N :\t Wait for N millisecond.\n");
+    printf("help :\t Display this help.\n");
+}
+
 static void emptyBuffer(char* buffer, int size) {
 
     // Fill the buffer with zero
@@ -45,6 +57,7 @@ static void split(char* buffer, int size) {
 }
 
 static void readBuffer(char* buffer, int size) {
+
     // Args buffer
     char args[size];
     emptyBuffer(args, size);
@@ -52,9 +65,18 @@ static void readBuffer(char* buffer, int size) {
     // Split the command and its args
     split(buffer, size);
 
-    // Launch the command with it's args
-    if (exec(buffer, args) < 0)
-        printf("Error when executing : %s\n", buffer);
+    if (strcmp(buffer, "help") == 0) {
+        help();
+        return;
+    }
+    else if (strcmp(buffer, "exit") == 0) {
+        exit();
+        return;
+    } else {
+        if (exec(buffer, args) < 0) {
+            printf("\nError when executing : %s\n", buffer);
+        }
+    }
 }
 
 void main() {
@@ -85,11 +107,13 @@ void main() {
         // ... as a return line
         else if (c == '\n') {
             // Read buffer and launch the command if it is found
-            readBuffer(buffer, BUF_SIZE);
+            if (cursor > 0) {
+                readBuffer(buffer, BUF_SIZE);
 
-            // Empty the buffer and reset cursor
-            emptyBuffer(buffer, BUF_SIZE);
-            cursor = 0;
+                // Empty the buffer and reset cursor
+                emptyBuffer(buffer, BUF_SIZE);
+                cursor = 0;
+            }
             printf(" > ");
         }
 
@@ -104,21 +128,8 @@ void main() {
 
             // Insert the character in buffer
             buffer[cursor++] = c;
+            // Print the character
+            putc(c);
         }
-        // Print the character
-        putc(c);
     }
 }
-
-/*
- *
- * NE PAS IMPLEMENTER ls ICI !!!!!!
- *
- * Il doit etre implementer dans un fichier C
- * a part et le fichier binaire devra etre inclus dans notre PFS.
- *
- *
- * */
-//void ls() {
-//
-//}
