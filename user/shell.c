@@ -42,7 +42,7 @@ static void emptyBuffer(char* buffer, int size) {
     }
 }
 
-static void split(char* buffer, int size) {
+static void split(char* buffer, char* args, int size) {
 
     // Parse the buffer
     int i = 0;
@@ -53,6 +53,7 @@ static void split(char* buffer, int size) {
 
     // Place the args in the args buf
     for (int j = i; j < size; j++) {
+        args[j-i] = buffer[j];
         buffer[j] = '\0';
     }
 }
@@ -64,7 +65,7 @@ static void readBuffer(char* buffer, int size) {
     emptyBuffer(args, size);
 
     // Split the command and its args
-    split(buffer, size);
+    split(buffer, args, size);
 
     if (strcmp(buffer, "help") == 0) {
         help();
