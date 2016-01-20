@@ -48,4 +48,5 @@ clean:
 	rm -f $(FS)
 	$(MAKE) -C kernel clean
 	$(MAKE) -C tools clean
+	$(MAKE) -C user clean
 

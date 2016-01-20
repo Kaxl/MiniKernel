@@ -73,7 +73,6 @@ uint gdt_entry_to_selector(gdt_entry_t *entry) {
 	return GDT_INDEX_TO_SELECTOR(entry - gdt);
 }
 
-
 /**
  * @brief Change the context of a task
  *
@@ -105,7 +104,9 @@ void init_task(int id) {
 
 	// Define code and data segments in the LDT; both segments are overlapping
 	tasks[id].limit = LIMIT_SIZE;  // limit of 1M
-    tasks[id].addr = 0x800000 + id * tasks[id].limit;  // @8MB
+    tasks[id].addr = (uint32_t)(0x800000 + id * tasks[id].limit);  // @8MB
+    printf("[init task] %x\n", tasks[id].addr);
+    printf("[init task] %d", id * tasks[id].limit);
 	int ldt_code_idx = 0;
 	int ldt_data_idx = 1;
 	tasks[id].ldt[ldt_code_idx] = gdt_make_code_segment(tasks[id].addr, tasks[id].limit / 4096, DPL_USER);  // code
@@ -127,7 +128,6 @@ void init_task(int id) {
     setup_task(id);
 
     tasks[id].free = true;
-    //halt();
 }
 
 void mytask() {
@@ -151,20 +151,27 @@ int exec_task(char* filename) {
 
     // Copy of program memory into the task address
     //memcpy((void *)tasks[idTask].addr, &mytask, 256);
-    if (file_read(filename, (uint32_t*)&tasks[idTask].addr) < 0)
+    char b[10000];
+    printf("[gdt] b before : %x\n", b);
+    printf("[gdt] task addr : %x\n", tasks[idTask].addr);
+    //if (file_read(filename, b) < 0)
+    if (file_read(filename, (void*)tasks[idTask].addr) < 0)
         return -1;
+    //memcpy((void *)tasks[idTask].addr, b, 10000);
+    printf("[gdt] b after : %x\n", b);
     printf("[gdt] ead filename : %s\n", filename);
 
     setup_task(idTask);
     printf("[gdt] After setup : %d\n", idTask);
-    printf("[gdt] call task with : %d\n", tasks[idTask].tss.ldt_selector);
-    printf("[gdt] task addr : %d\n", tasks[idTask].addr);
-    printf("[gdt] task addr addr : %d\n", &tasks[idTask].addr);
+    printf("[gdt] call task with : %d\n", tasks[idTask].tss_sel);
+    printf("[gdt] task addr : %x\n", tasks[idTask].addr);
+    printf("[gdt] task addr addr : %x\n", &tasks[idTask].addr);
 
-    printf("[gdt] Before call_task");
+    printf("[gdt] Before call_task\n");
+    //halt();
     call_task((uint16_t)tasks[idTask].tss_sel);
 
-    printf("[gdt] After call_task");
+    printf("[gdt] After call_task\n");
     // After the task, set it as free
     tasks[idTask].free = true;
     return 1;

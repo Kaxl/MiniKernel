@@ -24,3 +24,4 @@ clean:
 	rm -f *.o
 	rm -f *.img
 	rm -f $(CMD)
+	rm -f shell
