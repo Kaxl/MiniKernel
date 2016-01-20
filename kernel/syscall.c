@@ -34,7 +34,7 @@ unsigned int syscall_get_ticks();
 int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4, uint32_t caller_tss_selector) {
 
     // First address of the task which called the syscall
-    char* addr = (char*)(LIMIT_SIZE * (SELECTOR_TO_GDT_INDEX(caller_tss_selector) - FIRST_TASK_ENTRY ) + FIRST_TASK_ADDR);
+    char* addr = (char*)(LIMIT_SIZE * (SELECTOR_TO_GDT_INDEX(caller_tss_selector) - FIRST_TASK_ENTRY) / 2 + FIRST_TASK_ADDR);
 
     switch (nb) {
 
@@ -50,13 +50,13 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             UNUSED(arg3);
             UNUSED(arg4);
             return syscall_puts((char*)(addr + arg1));
-            //syscall_puts((char*)arg1);
             break;
 
         case SYSCALL_EXEC:
+            printf("[syscall] addr %x\n", addr);
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_exec((char*)(addr + arg1), (char*)(addr + arg2));
+            return syscall_exec((char*)(addr + arg1), (char*)(addr + arg2));
             break;
 
         case SYSCALL_GETC:
@@ -107,7 +107,8 @@ int syscall_puts(char* s) {
 }
 
 int syscall_exec(char* filename) {
-    exec_task(filename);
+    if (exec_task(filename) < 0)
+        return -1;
     return 0;
 }
 

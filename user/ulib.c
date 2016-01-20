@@ -74,10 +74,7 @@ int get_next_file(char *filename, file_iterator_t *it) {
 ////////////////////////////////////////////////////////////////////////////////////////
 int exec(char *filename, char* args) {
     printf("[ulib] exec %s\n", filename);
-    int ret = syscall(SYSCALL_EXEC, (uint32_t)filename, (uint32_t)args, (uint32_t)0, (uint32_t)0);
-    if (ret < 0)
-        printf("Error while executing : %s", filename);
-    return ret;
+    return syscall(SYSCALL_EXEC, (uint32_t)filename, (uint32_t)args, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

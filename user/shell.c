@@ -45,7 +45,6 @@ static void split(char* buffer, int size) {
 }
 
 static void readBuffer(char* buffer, int size) {
-
     // Args buffer
     char args[size];
     emptyBuffer(args, size);
@@ -54,14 +53,13 @@ static void readBuffer(char* buffer, int size) {
     split(buffer, size);
 
     // Launch the command with it's args
-    //if (syscall(SYSCALL_EXEC, (uint32_t)buffer, (uint32_t)args, (uint32_t)0, (uint32_t)0) < 0)
     if (exec(buffer, args) < 0)
-        printf("Command not found\n");
+        printf("Error when executing : %s\n", buffer);
 }
 
 void main() {
-    //int a = 8 / 0;
     printf("In the shell ! Like a boss !\n");
+    printf(" > ");
 
     // Init the buffer of CLI and empty it
     char buffer[BUF_SIZE];
@@ -73,45 +71,41 @@ void main() {
 
     // Infinite loop to manage the CLI
     for (;;) {
-       //printf("in");
+        // Get the current character
+        if ((c = getc()) < 0)
+            continue;
 
-       // Get the current character
-       if ((c = getc()) < 0)
-           continue;
+        // Manage the character locally
+        // ... as a backspace
+        if (c == '\b')
+            if (cursor > 0)
+                buffer[cursor--] = '\0';        // Remove the last character
 
-    //    printf("%d\n",(int)c);
-       // Manage the character locally
-       // ... as a backspace
-       if (c == '\b')
-           buffer[cursor--] = '\0';        // Remove the last character
+        // ... as a return line
+        else if (c == '\n') {
+            // Read buffer and launch the command if it is found
+            readBuffer(buffer, BUF_SIZE);
 
-       // ... as a return line
-       else if (c == '\n') {
-           // Read buffer and launch the command if it is found
-           readBuffer(buffer, BUF_SIZE);
+            // Empty the buffer and reset cursor
+            emptyBuffer(buffer, BUF_SIZE);
+            cursor = 0;
+            printf(" > ");
+        }
 
-           // Empty the buffer and reset cursor
-           emptyBuffer(buffer, BUF_SIZE);
-           cursor = 0;
-       }
+        // ... as anything else
+        else {
 
-       // ... as anything else
-       else {
+            // Buffer full
+            if (cursor == BUF_SIZE) {
+                printf("Buffer char is full, please press [ENTER].\n");
+                continue;
+            }
 
-           // Buffer full
-           if (cursor == BUF_SIZE) {
-               printf("Buffer char is full, please press [ENTER].\n");
-               continue;
-           }
-
-           // Insert the character in buffer
-           buffer[cursor++] = c;
-       }
-
-       // Print the character
-       //if (putc(c) < 0)
-       //    printf("Error while printing character");
-       putc(c);
+            // Insert the character in buffer
+            buffer[cursor++] = c;
+        }
+        // Print the character
+        putc(c);
     }
 }
 
