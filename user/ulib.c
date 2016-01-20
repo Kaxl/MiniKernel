@@ -73,7 +73,7 @@ int get_next_file(char *filename, file_iterator_t *it) {
 // Processus
 ////////////////////////////////////////////////////////////////////////////////////////
 int exec(char *filename, char* args) {
-    printf("[ulib] exec %s\n", filename);
+    printf("[ulib] exec %s with args : %s \n", filename, args);
     return syscall(SYSCALL_EXEC, (uint32_t)filename, (uint32_t)args, (uint32_t)0, (uint32_t)0);
 }
 
@@ -188,5 +188,6 @@ void sleep(uint ms) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 uint get_ticks() {
-    return syscall(SYSCALL_GET_TICKS, (uint32_t)0, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    uint val;
+    return syscall(SYSCALL_GET_TICKS, (uint32_t)&val, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }

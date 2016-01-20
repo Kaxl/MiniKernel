@@ -26,8 +26,7 @@ int syscall_file_read(char* filename, void* buf);
 int syscall_file_remove(char* filename);
 int syscall_file_iterator(file_iterator_t* it);
 int syscall_file_next(char* filename, file_iterator_t *it);
-unsigned int syscall_get_ticks();
-
+int syscall_get_ticks(uint32_t* val);
 
 // System call handler: call the appropriate system call according to the nb argument.
 // Called by the assembly code _syscall_handler
@@ -70,22 +69,40 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
         case SYSCALL_FILE_STAT:
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_file_stat((char*)(addr + arg1), (stat_t*)arg2);
+            return syscall_file_stat((char*)(addr + arg1), (stat_t*)(addr + arg2));
             break;
 
         case SYSCALL_FILE_READ:
+            UNUSED(arg3);
+            UNUSED(arg4);
+            return syscall_file_read((char*)(addr + arg1), (void*)(addr + arg2));
             break;
 
         case SYSCALL_FILE_REMOVE:
+            UNUSED(arg2);
+            UNUSED(arg3);
+            UNUSED(arg4);
+            return syscall_file_remove((char*)(addr + arg1));
             break;
 
         case SYSCALL_FILE_ITERATOR:
+            UNUSED(arg2);
+            UNUSED(arg3);
+            UNUSED(arg4);
+            return syscall_file_iterator((file_iterator_t*)(addr + arg1));
             break;
 
         case SYSCALL_FILE_NEXT:
+            UNUSED(arg3);
+            UNUSED(arg4);
+            return syscall_file_next((char*)(addr + arg1), (file_iterator_t*)(addr + arg2));
             break;
 
         case SYSCALL_GET_TICKS:
+            UNUSED(arg2);
+            UNUSED(arg3);
+            UNUSED(arg4);
+            return syscall_get_ticks((uint32_t*)(addr + arg1));
             break;
 
         case __SYSCALL_END__:
@@ -137,6 +154,7 @@ int syscall_file_next(char* filename, file_iterator_t* it) {
     return file_next(filename, it);
 }
 
-unsigned int syscall_get_ticks() {
-    return get_ticks();
+int syscall_get_ticks(uint32_t* val) {
+    *val = get_ticks();
+    return 0;
 }

@@ -19,6 +19,7 @@
 #include "shell.h"
 #include "../common/syscall_nb.h"
 #include "ulib.h"
+#include "../common/string.h"
 #include "syscall.h"
 
 static void help() {
@@ -73,6 +74,7 @@ static void readBuffer(char* buffer, int size) {
         exit();
         return;
     } else {
+        printf("[shell] Buffer %s / args %s\n", buffer, args);
         if (exec(buffer, args) < 0) {
             printf("\nError when executing : %s\n", buffer);
         }

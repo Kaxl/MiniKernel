@@ -32,9 +32,13 @@ $(FS):
 	$(MAKE) -C tools
 	$(MAKE) -C user
 	cp user/shell tools/shell
+	cp user/ls tools/ls
+	cp user/cat tools/cat
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
 	cd tools && ./pfsadd $(FS) shell
+	cd tools && ./pfsadd $(FS) ls
+	cd tools && ./pfsadd $(FS) cat
 	cp tools/$(FS) ./
 
 run: $(KERNEL)
@@ -46,6 +50,9 @@ clean:
 	rm -f common/*.o
 	rm -f $(KERNEL)
 	rm -f $(FS)
+	rm -f shell
+	rm -f ls
+	rm -f cat
 	$(MAKE) -C kernel clean
 	$(MAKE) -C tools clean
 	$(MAKE) -C user clean
