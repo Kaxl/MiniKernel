@@ -145,19 +145,19 @@ int exec_task(char* filename) {
     // If there is no task free available, return an error
     if (idTask >= NB_TASKS_MAX)
         return -1;
-    printf("[gdt] task : %d\n", idTask);
+    // printf("[gdt] task : %d\n", idTask);
 
     // Copy of program memory into the task address
     //memcpy((void *)tasks[idTask].addr, &mytask, 256);
     char b[10000];
-    printf("[gdt] b before : %x\n", b);
-    printf("[gdt] task addr : %x\n", tasks[idTask].addr);
+    // printf("[gdt] b before : %x\n", b);
+    // printf("[gdt] task addr : %x\n", tasks[idTask].addr);
     //if (file_read(filename, b) < 0)
     if (file_read(filename, (void*)tasks[idTask].addr) < 0)
         return -1;
     //memcpy((void *)tasks[idTask].addr, b, 10000);
-    printf("[gdt] b after : %x\n", b);
-    printf("[gdt] ead filename : %s\n", filename);
+    // printf("[gdt] b after : %x\n", b);
+    // printf("[gdt] ead filename : %s\n", filename);
 
     setup_task(idTask);
     // printf("[gdt] After setup : %d\n", idTask);

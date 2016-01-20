@@ -146,10 +146,10 @@ void printf(char *fmt, ...) {
     char string[128];   // Buffer to store the string during conversion
     p++;
     while (*fmt) {
+        
         // If we have a '%', check the next char for the type and print the value
         // if (strcmp(fmt, "%") == 0) {
         if (*fmt == '%') {
-            putc(fmt);
 
             fmt++; // Skip the %
             switch(*fmt) {
