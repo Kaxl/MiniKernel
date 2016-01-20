@@ -57,6 +57,10 @@ void keyboard_handler() {
                 break;
             case RETURN:
                 printf("\r\n");
+                b.i_write &= (BUFFER_SIZE - 1);
+                b.data[b.i_write] = '\r\n';
+                b.i_write++;
+                b.counter++;
                 break;
             case BACKSPACE:
                 // In screen.c, \b is process to remove the character and set the cursor
