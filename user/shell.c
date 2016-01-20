@@ -59,7 +59,7 @@ static void readBuffer(char* buffer, int size) {
 }
 
 void main() {
-    int a = 8 / 0;
+    //int a = 8 / 0;
     printf("In the shell ! Like a boss !\n");
 
     // Init the buffer of CLI and empty it

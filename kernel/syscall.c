@@ -14,6 +14,7 @@
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
+#include "x86.h"
 
 
 void syscall_putc(char c);
@@ -38,7 +39,12 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             UNUSED(arg2);
             UNUSED(arg3);
             UNUSED(arg4);
-            syscall_putc(*(char*)(LIMIT_SIZE * caller_tss_selector + &arg1));
+            //printf("[syscall] tss_selecter: %x", caller_tss_selector);
+            // printf("Addr : %x\n", LIMIT_SIZE * (SELECTOR_TO_GDT_INDEX(caller_tss_selector) - FIRST_TASK_ENTRY ) + 0x800000);
+            // printf("arg1 : %x\n", arg1);
+            // printf("&arg1 : %x\n", &arg1);
+            syscall_putc((char*)(LIMIT_SIZE * (SELECTOR_TO_GDT_INDEX(caller_tss_selector) - FIRST_TASK_ENTRY ) + 0x800000 + arg1));
+            // halt();
             break;
 
         case SYSCALL_PUTS:
@@ -94,6 +100,8 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
 
 void syscall_putc(char c) {
     // TODO : Faire la translation d'adresse, adresse de base + addresse de la variable dans la tache ?
+    //printf("Syscall called\n");
+    // printCharacter((char)(*(&c + (char*)0x800000)));
     printCharacter(c);
 }
 
