@@ -54,3 +54,12 @@ pfsdel
 
 # User executables
 shell
+ls
+cat
+rm
+run
+ticks
+sleep
+exit
+help
+
