@@ -6,8 +6,6 @@
 #include "../common/pfs.h"
 #include "screen.h"
 
-#define GDT_INDEX_TO_SELECTOR(idx) ((idx) << 3)
-
 extern void call_task(uint16_t tss_selector);
 
 // Declaration of GDT
