@@ -35,15 +35,26 @@ static void setIteratorOnNextFile(file_iterator_t *it);
 ////////////////////////////////////////////////////////////////////////////////////////
 int file_stat(char* filename, stat_t *stat) {
     file_iterator_t it = file_iterator();
-    char sector[SECTOR_SIZE];
+    char fileEntry[SECTOR_SIZE];
     char file[FILENAME_SIZE];
 
     // Find the file
     while (file_next(file, &it)) {
         if (strcmp(file, filename) == 0) {
-            read_sector(it.sectorNumber, sector);
-            // Get the size
-            stat->size = (uint32_t)sector[it.posInSector + FILENAME_SIZE];
+            read_sector(it.sectorNumber, fileEntry);
+            // Index inside the file entry
+            int index = 36; // 36 is for 32B for the filename and 4B for the size
+            // Index of the block read inside the file entry
+            int currentIndexBlock = (ushort)fileEntry[index + it.posInSector];
+
+            // While there are blocks to read
+            while (currentIndexBlock != 0) {
+                // Add the size
+                stat->size += superblock.nbSectorsB * SECTOR_SIZE;
+                // Going at the next index
+                index += sizeof(ushort);
+                currentIndexBlock = (ushort)fileEntry[index + it.posInSector];
+            }
             return 0;
         }
     }
