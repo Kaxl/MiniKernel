@@ -29,6 +29,8 @@ extern void cat(char* filename);
 
 extern void rm(char* filename);
 
+extern void run(char* filename);
+
 extern void ticks();
 
 extern void help();

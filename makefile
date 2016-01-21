@@ -35,6 +35,9 @@ $(FS):
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
 	cd tools && ./pfsadd $(FS) shell
+	cd tools && ./pfsadd $(FS) fileA
+	cd tools && ./pfsadd $(FS) fileB
+	cd tools && ./pfsadd $(FS) fileC
 	cp tools/$(FS) ./
 
 run: $(KERNEL)

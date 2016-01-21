@@ -139,9 +139,6 @@ int exec_task(char* filename) {
     while (idTask <= NB_TASKS_MAX && !tasks[idTask].free)
         idTask++;
 
-    printf("[gdt] : task %d\n", idTask);
-    printf("[gdt] : task addr %x\n", tasks[idTask].addr);
-
     // If there is no task free available, return an error
     if (idTask >= NB_TASKS_MAX)
         return -1;
@@ -193,6 +190,5 @@ void gdt_init() {
 	// Init all tasks
     for (int i = 0; i < NB_TASKS_MAX; i++) {
 	    init_task(i);
-        // printf("[gdt_init] %d\n", i);
     }
 }
