@@ -12,7 +12,8 @@ typedef enum {
     SYSCALL_FILE_ITERATOR = 8,
     SYSCALL_FILE_NEXT = 9,
     SYSCALL_GET_TICKS = 10,
-    SYSCALL_SET_CURSOR = 11,
+    SYSCALL_SLEEP = 11,
+    SYSCALL_SET_CURSOR = 12,
     __SYSCALL_END__
 } syscall_t;
 

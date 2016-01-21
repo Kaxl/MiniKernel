@@ -74,7 +74,7 @@ static void readBuffer(char* buffer, int size) {
         ticks();
     }
     else if (strcmp(buffer, "sleep") == 0) {
-        sleep((uint)args);
+        sleep((uint)(atoi(args)));
     }
     else if (strcmp(buffer, "exit") == 0) {
         exit();

@@ -27,6 +27,7 @@ int syscall_file_remove(char* filename);
 int syscall_file_iterator(file_iterator_t* it);
 int syscall_file_next(char* filename, file_iterator_t *it);
 int syscall_get_ticks();
+int syscall_sleep(uint32_t* ms);
 int syscall_set_cursor(uint32_t* x, uint32_t* y);
 
 // System call handler: call the appropriate system call according to the nb argument.
@@ -106,6 +107,13 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             return syscall_get_ticks();
             break;
 
+        case SYSCALL_SLEEP:
+            UNUSED(arg2);
+            UNUSED(arg3);
+            UNUSED(arg4);
+            return syscall_sleep((uint32_t*)(addr + arg1));
+            break;
+
         case SYSCALL_SET_CURSOR:
             UNUSED(arg3);
             UNUSED(arg4);
@@ -163,6 +171,11 @@ int syscall_file_next(char* filename, file_iterator_t* it) {
 
 int syscall_get_ticks() {
     return get_ticks();
+}
+
+int syscall_sleep(uint32_t* ms) {
+    sleep(*ms);
+    return 0;
 }
 
 int syscall_set_cursor(uint32_t* x, uint32_t* y) {

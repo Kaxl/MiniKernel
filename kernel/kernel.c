@@ -112,24 +112,19 @@ void runKernel() {
     }
 
     // Print the splash screen from file
-    char buffer[BUFFER_SIZE_SPLASH];
+    stat_t stat;
+    file_stat(SPLASH_FILE, &stat);
+    char buffer[stat.size];
     file_read(SPLASH_FILE, (void *)&buffer);
     printf("\n%s\n", buffer);
 
 #ifdef TEST
     runKernelTest();
 #else
-    char buffer_kernel[9000]; // 9 KB
-    //stat_t stat;
-    //file_stat(SPLASH_FILE, &stat);
-    //printf("Size : %d\n", stat.size);
-    //file_read("shell", (void *)&buffer_kernel);
-
     if (exec_task("shell") < 0)
         printf("Execution of shell failed\n");
     else
         printf("Exiting shell\n");
-
 #endif
 
 }
