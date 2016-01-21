@@ -29,9 +29,10 @@
 #define LAST_CELL_X     (FIRST_CELL_X+SIZE_BOARD*GAP_ROW)
 #define LAST_CELL_Y     (FIRST_CELL_Y+SIZE_BOARD*GAP_LINE)
 #define CURS_POS_X(x)   ((x<SIZE_BOARD)&&(x>=0)?FIRST_CELL_X+(x*GAP_ROW):LAST_CELL_X)
-#define GO_LINE(y)      ((y<SIZE_BOARD)&&(y>=0)?FIRST_CELL_Y+(y*GAP_LINE):LAST_CELL_Y)
+#define CURS_POS_Y(y)   ((y<SIZE_BOARD)&&(y>=0)?FIRST_CELL_Y+(y*GAP_LINE):LAST_CELL_Y)
 
 static void printBoard(char* buf);
+static void initBoard();
 
 void main() {
 
@@ -48,10 +49,21 @@ void main() {
 
     for(;;) {
         setCursor(CMD_POS);
+        initBoard();
+        setCursor(CMD_POS);
         while(1);
     }
 }
 
 static void printBoard(char* buf) {
     printf("%s", buf);
+}
+
+static void initBoard() {
+    for (int i = 0; i < SIZE_BOARD; i++) {
+        for (int j = 0; j < SIZE_BOARD; j++) {
+            setCursor(CURS_POS_X(i), CURS_POS_Y(j));
+            putc(' ');
+        }
+    }
 }
