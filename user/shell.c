@@ -171,8 +171,7 @@ void cat(char* filename) {
     }
 
     // Create a buffer with the size of the file
-    //uchar buffer[stat.size];
-    uchar buffer[10000];
+    uchar buffer[stat.size];
 
     // Read de file
     if (read_file(filename, buffer) < 0) {

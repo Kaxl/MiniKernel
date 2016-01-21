@@ -50,7 +50,7 @@ void runKernel() {
     timer_init(DEFAULT_FREQ);
 
     // Init of keyboard with CH layout
-    keyboard_init(LAYOUT_CH);
+    keyboard_init(LAYOUT_US);
 
     // Activation of interruption (needs to be at the end)
     sti();
