@@ -181,7 +181,7 @@ void printf(char *fmt, ...) {
 // Time functions
 ////////////////////////////////////////////////////////////////////////////////////////
 void sleep(uint ms) {
-    return syscall(SYSCALL_SLEEP, (uint32_t)&ms, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+    syscall(SYSCALL_SLEEP, (uint32_t)&ms, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

@@ -34,11 +34,21 @@ $(FS):
 	cp user/shell tools/shell
 	cp user/connect4 tools/connect4
 	cp user/connect4_board.txt tools/connect4_board.txt
+	cp user/magic tools/magic
+	cp user/joke.txt tools/joke.txt
+	cp user/a.txt tools/a.txt
+	cp user/b.txt tools/b.txt
+	cp user/c.txt tools/c.txt
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
 	cd tools && ./pfsadd $(FS) shell
 	cd tools && ./pfsadd $(FS) connect4
 	cd tools && ./pfsadd $(FS) connect4_board.txt
+	cd tools && ./pfsadd $(FS) magic
+	cd tools && ./pfsadd $(FS) joke.txt
+	cd tools && ./pfsadd $(FS) a.txt
+	cd tools && ./pfsadd $(FS) b.txt
+	cd tools && ./pfsadd $(FS) c.txt
 	cd tools && ./pfsadd $(FS) fileA
 	cd tools && ./pfsadd $(FS) fileB
 	cd tools && ./pfsadd $(FS) fileC
