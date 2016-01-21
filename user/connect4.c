@@ -36,10 +36,12 @@
 #define CURS_POS_Y(y)   ((y<SIZE_BOARD)&&(y>=0)?FIRST_CELL_Y+(y*GAP_LINE):LAST_CELL_Y)
 #define PLAYER_TOKEN(x) ".OX"[x]
 #define CTOI(x)         (int)(x-'0')
+#define GOOD_NB(x)      (x>=0)&&(x<SIZE_BOARD)
 
 static void printBoard(char* buf);
 static void cleanBoard(char* board);
 static void cleanScore(char* score);
+static void printScore(char* score);
 static void setPlayer(int i);
 
 void main() {
@@ -75,6 +77,9 @@ void main() {
     // Command of players
     char c;
 
+    // Winning boolean
+    char w = 0;
+
     for(;;) {
         setCursor(CMD_POS);
 
@@ -88,10 +93,13 @@ void main() {
         }
 
         // Player restart the game
-        else if (c == 'r') cleanBoard(board);
+        else if (c == 'r') {
+            w = 0;
+            cleanBoard(board);
+        }
 
         // Player plays
-        else {
+        else if (GOOD_NB(CTOI(c)) && (w == 0)) {
             for (int i = SIZE_BOARD-1; i >= 0; i--) {
                 if (board[CTOI(c)+i*SIZE_BOARD] == 0) {
                     board[CTOI(c)+i*SIZE_BOARD] = player;
@@ -101,10 +109,44 @@ void main() {
                     break;
                 }
             }
+
+
+            // Win detection
+            //checks horizontal win
+            for(int i = 0; i < SIZE_BOARD; i++)
+                for(int j = 0; j < SIZE_BOARD-3; j++)
+                    if(board[i*SIZE_BOARD+j] != 0 && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+1] && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+2] && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+3]) {
+                        w++;
+                        score[player-1]++;
+                    }
+
+
+            //checks vertical win
+            for(int i = 0; i < SIZE_BOARD - 3; i++)
+                for(int j = 0; j < SIZE_BOARD; j++)
+                    if(board[i*SIZE_BOARD+j] != 0 && board[i*SIZE_BOARD+j]==board[(i+1)*SIZE_BOARD+j] && board[i*SIZE_BOARD+j]==board[(i+2)*SIZE_BOARD+j] && board[i*SIZE_BOARD+j]==board[(i+3)*SIZE_BOARD+j]) {
+                        w++;
+                        score[player-1]++;
+                    }
+
+            //checks rigth diagonal win
+            // for(int i = 0; i < SIZE_BOARD - 3; i++)
+            //     for(int j = 0; j < SIZE_BOARD; j++)
+            //         if(board[i][j] != 0 && board[i][j]==board[i+1][j+1] && board[i][j]==board[i+2][j+2] && board[i][j]==board[i+3][j+3]) {
+            //             w++;
+            //             score[player-1]++;
+            //         }
+            //
+            // //checks left diagonal win
+            // for(int i = 0; i < SIZE_BOARD - 3; i++)
+            //     for(int j = 0; j < SIZE_BOARD; j++)
+            //         if(board[i][j] != 0 && board[i][j]==board[i+1][j-1] && board[i][j]==board[i+2][j-2] && board[i][j]==board[i+3][j-3]) {
+            //             w++;
+            //             score[player-1]++;
+            //         }
         }
-
-        // Win detection
-
+        
+        if (w == 1) printScore(score);
     }
 }
 
@@ -128,7 +170,14 @@ static void cleanScore(char* score) {
     setCursor(SCORE_2_POS);
     putc('0');
     score[0] = 0;
-    score[1] = 1;
+    score[1] = 0;
+}
+
+static void printScore(char* score) {
+    setCursor(SCORE_1_POS);
+    printf("%d", score[0]);
+    setCursor(SCORE_2_POS);
+    printf("%d", score[1]);
 }
 
 static void setPlayer(int i) {
