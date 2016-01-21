@@ -39,6 +39,9 @@ $(FS):
 	cd tools && ./pfsadd $(FS) shell
 	cd tools && ./pfsadd $(FS) connect4
 	cd tools && ./pfsadd $(FS) connect4_board.txt
+	cd tools && ./pfsadd $(FS) fileA
+	cd tools && ./pfsadd $(FS) fileB
+	cd tools && ./pfsadd $(FS) fileC
 	cp tools/$(FS) ./
 
 run: $(KERNEL)

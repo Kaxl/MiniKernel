@@ -112,41 +112,24 @@ void runKernel() {
     }
 
     // Print the splash screen from file
-    //char buffer[BUFFER_SIZE_SPLASH];
-    //file_read(SPLASH_FILE, (void *)&buffer);
-    //printf("\n%s\n", buffer);
-    //printf("> ");
+    char buffer[BUFFER_SIZE_SPLASH];
+    file_read(SPLASH_FILE, (void *)&buffer);
+    printf("\n%s\n", buffer);
 
 #ifdef TEST
     runKernelTest();
 #else
-    printf("Before\n");
     char buffer_kernel[9000]; // 9 KB
-    file_read("shell", (void *)&buffer_kernel);
-
-    printf("\n%x\n", buffer_kernel);
-    //halt();
+    //stat_t stat;
+    //file_stat(SPLASH_FILE, &stat);
+    //printf("Size : %d\n", stat.size);
+    //file_read("shell", (void *)&buffer_kernel);
 
     if (exec_task("shell") < 0)
-        printf("[kernel] exec failed\n");
+        printf("Execution of shell failed\n");
     else
-        printf("[kernel] exec succeed\n");
+        printf("Exiting shell\n");
 
-    //printf("After\n");
-    //for (;;) {
-    //    char c = (char)(getc());
-    //    if ((int)(c) >= 0) {
-    //        if (c == 'Q') {
-    //            printf("\r\nShutdown of the system in 1 second.");
-    //            sleep(1000);
-    //            printf("\r\nNOW !");
-    //            halt();
-    //        }
-    //        else {
-    //            printf("%c", c);
-    //        }
-    //    }
-    //}
 #endif
 
 }

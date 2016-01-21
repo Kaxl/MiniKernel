@@ -78,11 +78,11 @@ static void readBuffer(char* buffer, int size) {
     }
     else if (strcmp(buffer, "exit") == 0) {
         exit();
+    }
+    else if (strcmp(buffer, "run") == 0) {
+        run(args);
     } else {
-        printf("[shell] Buffer %s / args %s\n", buffer, args);
-        if (exec(buffer, args) < 0) {
-            printf("\nError when executing : %s\n", buffer);
-        }
+        printf("\nCommand not found : %s\n", buffer);
     }
 }
 
@@ -171,7 +171,8 @@ void cat(char* filename) {
     }
 
     // Create a buffer with the size of the file
-    uchar buffer[stat.size];
+    //uchar buffer[stat.size];
+    uchar buffer[10000];
 
     // Read de file
     if (read_file(filename, buffer) < 0) {
@@ -186,6 +187,12 @@ void cat(char* filename) {
 void rm(char* filename) {
     if (remove_file(filename) < 0) {
         printf("Error while removing : %s\n", filename);
+    }
+}
+
+void run(char* filename) {
+    if (exec(filename, NULL) < 0) {
+        printf("Error when executing : %s\n", filename);
     }
 }
 
