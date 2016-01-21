@@ -73,7 +73,6 @@ int get_next_file(char *filename, file_iterator_t *it) {
 // Processus
 ////////////////////////////////////////////////////////////////////////////////////////
 int exec(char *filename, char* args) {
-    printf("[ulib] exec %s with args : %s \n", filename, args);
     return syscall(SYSCALL_EXEC, (uint32_t)filename, (uint32_t)args, (uint32_t)0, (uint32_t)0);
 }
 
