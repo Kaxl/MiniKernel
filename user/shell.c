@@ -22,18 +22,7 @@
 #include "../common/string.h"
 #include "syscall.h"
 
-static void help() {
-
-    // print the help for users
-    printf("ls :\t List all file on the disk.\n");
-    printf("cat FILE :\t Print the content of a file.\n");
-    printf("rm FILE :\t Delete a file from the disk.\n");
-    printf("run FILE :\t Run a program.\n");
-    printf("ticks :\t Display the current ticks count.\n");
-    printf("sleep N :\t Wait for N millisecond.\n");
-    printf("help :\t Display this help.\n");
-}
-
+////////////////////////////////////////////////////////////////////////////////////////
 static void emptyBuffer(char* buffer, int size) {
 
     // Fill the buffer with zero
@@ -42,6 +31,7 @@ static void emptyBuffer(char* buffer, int size) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 static void split(char* buffer, char* args, int size) {
 
     // Parse the buffer
@@ -58,6 +48,7 @@ static void split(char* buffer, char* args, int size) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 static void readBuffer(char* buffer, int size) {
 
     // Args buffer
@@ -69,11 +60,24 @@ static void readBuffer(char* buffer, int size) {
 
     if (strcmp(buffer, "help") == 0) {
         help();
-        return;
+    }
+    else if (strcmp(buffer, "ls") == 0) {
+        ls();
+    }
+    else if (strcmp(buffer, "cat") == 0) {
+        cat(args);
+    }
+    else if (strcmp(buffer, "rm") == 0) {
+        rm(args);
+    }
+    else if (strcmp(buffer, "ticks") == 0) {
+        ticks();
+    }
+    else if (strcmp(buffer, "sleep") == 0) {
+        sleep((uint)args);
     }
     else if (strcmp(buffer, "exit") == 0) {
         exit();
-        return;
     } else {
         printf("[shell] Buffer %s / args %s\n", buffer, args);
         if (exec(buffer, args) < 0) {
@@ -82,6 +86,7 @@ static void readBuffer(char* buffer, int size) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void main() {
     printf("In the shell ! Like a boss !\n");
     printf(" > ");
@@ -136,3 +141,69 @@ void main() {
         }
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////
+void ls() {
+    file_iterator_t it = get_file_iterator();
+    char filename[100];
+
+    while (get_next_file(filename, &it)) {
+        printf("%s\n", filename);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void cat(char* filename) {
+    stat_t stat;
+    stat.size = 0;
+
+    printf("Reading : %s\n", filename);
+
+    // Get the size of the file
+    if (get_stat(filename, &stat) < 0) {
+        printf("Error file : %s doesn't exist\n", filename);
+        return;
+    }
+    printf("Stat : %d\n", stat.size);
+    if (stat.size < 0) {
+        printf("Error with the size of the file\n");
+        return;
+    }
+
+    // Create a buffer with the size of the file
+    uchar buffer[stat.size];
+
+    // Read de file
+    if (read_file(filename, buffer) < 0) {
+        printf("Error while reading : %s\n", filename);
+        return;
+    }
+
+    printf("%s", buffer);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void rm(char* filename) {
+    if (remove_file(filename) < 0) {
+        printf("Error while removing : %s\n", filename);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void ticks() {
+    uint t = get_ticks();
+    printf("Ticks : %d\n", t);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void help() {
+    // print the help for users
+    printf("ls \t\t\t: List all file on the disk.\n");
+    printf("cat FILE \t: Print the content of a file.\n");
+    printf("rm FILE \t: Delete a file from the disk.\n");
+    printf("run FILE \t: Run a program.\n");
+    printf("ticks \t\t: Display the current ticks count.\n");
+    printf("sleep N \t: Wait for N millisecond.\n");
+    printf("help \t\t: Display this help.\n");
+}
+

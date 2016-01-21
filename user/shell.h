@@ -21,6 +21,16 @@
 
 #define BUF_SIZE 100
 
-void main();
+extern void main();
+
+extern void ls();
+
+extern void cat(char* filename);
+
+extern void rm(char* filename);
+
+extern void ticks();
+
+extern void help();
 
 #endif

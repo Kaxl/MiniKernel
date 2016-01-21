@@ -52,7 +52,6 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             break;
 
         case SYSCALL_EXEC:
-            printf("[syscall] addr %x\n", addr);
             UNUSED(arg3);
             UNUSED(arg4);
             return syscall_exec((char*)(addr + arg1), (char*)(addr + arg2));
