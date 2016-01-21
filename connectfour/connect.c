@@ -1,0 +1,1 @@
+b[48],c,k;W(n){return b[c]&b[c+n]&b[c+n*2]&b[c+n*3];}main(p){system("cls");for(;b[c-=8];);if(c>0)b[c]=p=3-p;for(k=c=0;++c<49;putchar(c%8?".XO"[b[c]]:10))k+=c<24&&W(8)||c%8<5&&W(c<25?9:-7)+W(1);k||gets(&c)&&main(p);}

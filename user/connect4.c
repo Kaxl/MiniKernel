@@ -20,7 +20,16 @@
 
 #define BOARD           "connect4_board.txt"
 #define BUFFER_BOARD    5000
-#define CMD_POS         23,38
+#define CMD_POS         38,23
+#define SIZE_BOARD      7
+#define GAP_ROW         6
+#define GAP_LINE        2
+#define FIRST_CELL_X    6
+#define FIRST_CELL_Y    7
+#define LAST_CELL_X     (FIRST_CELL_X+SIZE_BOARD*GAP_ROW)
+#define LAST_CELL_Y     (FIRST_CELL_Y+SIZE_BOARD*GAP_LINE)
+#define CURS_POS_X(x)   ((x<SIZE_BOARD)&&(x>=0)?FIRST_CELL_X+(x*GAP_ROW):LAST_CELL_X)
+#define GO_LINE(y)      ((y<SIZE_BOARD)&&(y>=0)?FIRST_CELL_Y+(y*GAP_LINE):LAST_CELL_Y)
 
 static void printBoard(char* buf);
 
