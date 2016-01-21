@@ -51,6 +51,7 @@ void main() {
         setCursor(CMD_POS);
         initBoard();
         setCursor(CMD_POS);
+        setCursor(CURS_POS_X(3), CURS_POS_Y(SIZE_BOARD-1));
         while(1);
     }
 }
