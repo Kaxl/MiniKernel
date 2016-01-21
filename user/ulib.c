@@ -143,7 +143,7 @@ void printf(char *fmt, ...) {
     char string[128];   // Buffer to store the string during conversion
     p++;
     while (*fmt) {
-        
+
         // If we have a '%', check the next char for the type and print the value
         // if (strcmp(fmt, "%") == 0) {
         if (*fmt == '%') {
@@ -187,7 +187,13 @@ void sleep(uint ms) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-uint get_ticks() {
-    uint val;
-    return syscall(SYSCALL_GET_TICKS, (uint32_t)&val, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+int get_ticks() {
+    return syscall(SYSCALL_GET_TICKS, (uint32_t)0, (uint32_t)0, (uint32_t)0, (uint32_t)0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Cursor functions
+////////////////////////////////////////////////////////////////////////////////////////
+int setCursor(int x, int y) {
+    return syscall(SYSCALL_SET_CURSOR, (uint32_t)&x, (uint32_t)&y, (uint32_t)0, (uint32_t)0);
 }

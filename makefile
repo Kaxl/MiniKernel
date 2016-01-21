@@ -32,9 +32,13 @@ $(FS):
 	$(MAKE) -C tools
 	$(MAKE) -C user
 	cp user/shell tools/shell
+	cp user/connect4 tools/connect4
+	cp user/connect4_board.txt tools/connect4_board.txt
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
 	cd tools && ./pfsadd $(FS) shell
+	cd tools && ./pfsadd $(FS) connect4
+	cd tools && ./pfsadd $(FS) connect4_board.txt
 	cd tools && ./pfsadd $(FS) fileA
 	cd tools && ./pfsadd $(FS) fileB
 	cd tools && ./pfsadd $(FS) fileC
@@ -53,4 +57,3 @@ clean:
 	$(MAKE) -C kernel clean
 	$(MAKE) -C tools clean
 	$(MAKE) -C user clean
-

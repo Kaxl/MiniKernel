@@ -13,13 +13,20 @@ ASM=nasm
 AFLAGS=-f elf32
 LINK=ld -melf_i386 -Tapp.ld
 
-CMD=shell
+CMD=shell connect4
 
 .PHONY: clean
 
+all: $(CMD)
 
 shell: shell.o ulib.o syscall.o app_stub.o ../common/string.o
 	$(LINK) $^ -o $@
+
+connect4: connect4.o ulib.o syscall.o app_stub.o ../common/string.o
+	$(LINK) $^ -o $@
+
+connect4.o: connect4.c ulib.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 ulib.o: ulib.c ulib.h ../common/string.c ../common/string.h syscall.h
 	$(CC) $(CFLAGS) -c $< -o $@

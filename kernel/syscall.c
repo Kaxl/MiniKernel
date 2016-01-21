@@ -26,7 +26,8 @@ int syscall_file_read(char* filename, void* buf);
 int syscall_file_remove(char* filename);
 int syscall_file_iterator(file_iterator_t* it);
 int syscall_file_next(char* filename, file_iterator_t *it);
-int syscall_get_ticks(uint32_t* val);
+int syscall_get_ticks();
+int syscall_set_cursor(uint32_t* x, uint32_t* y);
 
 // System call handler: call the appropriate system call according to the nb argument.
 // Called by the assembly code _syscall_handler
@@ -98,10 +99,17 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
             break;
 
         case SYSCALL_GET_TICKS:
+            UNUSED(arg1);
             UNUSED(arg2);
             UNUSED(arg3);
             UNUSED(arg4);
-            return syscall_get_ticks((uint32_t*)(addr + arg1));
+            return syscall_get_ticks();
+            break;
+
+        case SYSCALL_SET_CURSOR:
+            UNUSED(arg3);
+            UNUSED(arg4);
+            return syscall_set_cursor((uint32_t*)(addr + arg1), (uint32_t*)(addr + arg2));
             break;
 
         case __SYSCALL_END__:
@@ -153,7 +161,11 @@ int syscall_file_next(char* filename, file_iterator_t* it) {
     return file_next(filename, it);
 }
 
-int syscall_get_ticks(uint32_t* val) {
-    *val = get_ticks();
+int syscall_get_ticks() {
+    return get_ticks();
+}
+
+int syscall_set_cursor(uint32_t* x, uint32_t* y) {
+    setCursorPosition((uchar)*x, (uchar)*y);
     return 0;
 }
