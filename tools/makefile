@@ -25,3 +25,5 @@ clean:
 	rm -f *.img
 	rm -f $(CMD)
 	rm -f shell
+	rm -f connect4
+	rm -f magic
