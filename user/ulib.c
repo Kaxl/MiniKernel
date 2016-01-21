@@ -13,7 +13,7 @@
  *                      - exec
  *                      - exit
  *                      - strlen
- *                      - atoir
+ *                      - atoi
  *                      - getc
  *                      - putc
  *                      - puts
@@ -105,7 +105,7 @@ int atoi(char* s) {
     // Run over each digits
     while (isDigit(*s)) {
         value *= 10;
-        value += (int)(*s);
+        value += (int)(*s-'0');
         s++;
     }
     return (value * sign);
@@ -181,8 +181,7 @@ void printf(char *fmt, ...) {
 // Time functions
 ////////////////////////////////////////////////////////////////////////////////////////
 void sleep(uint ms) {
-    uint end = get_ticks() + ms;
-    while (get_ticks() < end);
+    return syscall(SYSCALL_SLEEP, (uint32_t)&ms, (uint32_t)0, (uint32_t)0, (uint32_t)0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
