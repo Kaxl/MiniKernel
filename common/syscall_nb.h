@@ -1,7 +1,7 @@
 #ifndef _SYSCALL_NB_H_
 #define _SYSCALL_NB_H_
 
-typedef enum { 
+typedef enum {
     SYSCALL_PUTC = 1,
     SYSCALL_PUTS = 2,
     SYSCALL_EXEC = 3,
@@ -12,6 +12,7 @@ typedef enum {
     SYSCALL_FILE_ITERATOR = 8,
     SYSCALL_FILE_NEXT = 9,
     SYSCALL_GET_TICKS = 10,
+    SYSCALL_SET_CURSOR = 11,
     __SYSCALL_END__
 } syscall_t;
 
