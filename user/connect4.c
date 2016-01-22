@@ -105,47 +105,49 @@ void main() {
                     board[CTOI(c)+i*SIZE_BOARD] = player;
                     setCursor(CURS_POS_X(CTOI(c)), CURS_POS_Y(i));
                     putc(PLAYER_TOKEN(player));
-                    player = (player==1?2:1);
+
+                    // Win detection
+                    // Checks horizontal win
+                    for(int i = 0; i < SIZE_BOARD; i++)
+                        for(int j = 0; j < SIZE_BOARD-3; j++)
+                            if(board[i*SIZE_BOARD+j] != 0 && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+1] && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+2] && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+3]) {
+                                w++;
+                                score[player-1]++;
+                            }
+
+
+                    // Checks vertical win
+                    for(int i = 0; i < SIZE_BOARD - 3; i++)
+                        for(int j = 0; j < SIZE_BOARD; j++)
+                            if(board[i*SIZE_BOARD+j] != 0 && board[i*SIZE_BOARD+j]==board[(i+1)*SIZE_BOARD+j] && board[i*SIZE_BOARD+j]==board[(i+2)*SIZE_BOARD+j] && board[i*SIZE_BOARD+j]==board[(i+3)*SIZE_BOARD+j]) {
+                                w++;
+                                score[player-1]++;
+                            }
+
+                    // Checks rigth diagonal win
+                    for(int i = 0; i < SIZE_BOARD - 3; i++)
+                        for(int j = 0; j < SIZE_BOARD; j++)
+                            if(board[i*SIZE_BOARD+j] != 0 && board[i*SIZE_BOARD+j]==board[(i+1)*SIZE_BOARD+j+1] && board[i*SIZE_BOARD+j]==board[(i+2)*SIZE_BOARD+j+2] && board[i*SIZE_BOARD+j]==board[(i+3)*SIZE_BOARD+j+3]) {
+                                w++;
+                                score[player-1]++;
+                            }
+
+                    // Checks left diagonal win
+                    for(int i = 0; i < SIZE_BOARD - 3; i++)
+                        for(int j = 0; j < SIZE_BOARD; j++)
+                            if(board[i*SIZE_BOARD+j] != 0 && board[i*SIZE_BOARD+j]==board[(i+1)*SIZE_BOARD+j-1] && board[i*SIZE_BOARD+j]==board[(i+2)*SIZE_BOARD+j-2] && board[i*SIZE_BOARD+j]==board[(i+3)*SIZE_BOARD+j-3]) {
+                                w++;
+                                score[player-1]++;
+                            }
+
+                    // Change Player
+                    setPlayer(player = (player==1?2:1));
                     break;
                 }
             }
-
-
-            // Win detection
-            //checks horizontal win
-            for(int i = 0; i < SIZE_BOARD; i++)
-                for(int j = 0; j < SIZE_BOARD-3; j++)
-                    if(board[i*SIZE_BOARD+j] != 0 && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+1] && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+2] && board[i*SIZE_BOARD+j]==board[i*SIZE_BOARD+j+3]) {
-                        w++;
-                        score[player-1]++;
-                    }
-
-
-            //checks vertical win
-            for(int i = 0; i < SIZE_BOARD - 3; i++)
-                for(int j = 0; j < SIZE_BOARD; j++)
-                    if(board[i*SIZE_BOARD+j] != 0 && board[i*SIZE_BOARD+j]==board[(i+1)*SIZE_BOARD+j] && board[i*SIZE_BOARD+j]==board[(i+2)*SIZE_BOARD+j] && board[i*SIZE_BOARD+j]==board[(i+3)*SIZE_BOARD+j]) {
-                        w++;
-                        score[player-1]++;
-                    }
-
-            //checks rigth diagonal win
-            // for(int i = 0; i < SIZE_BOARD - 3; i++)
-            //     for(int j = 0; j < SIZE_BOARD; j++)
-            //         if(board[i][j] != 0 && board[i][j]==board[i+1][j+1] && board[i][j]==board[i+2][j+2] && board[i][j]==board[i+3][j+3]) {
-            //             w++;
-            //             score[player-1]++;
-            //         }
-            //
-            // //checks left diagonal win
-            // for(int i = 0; i < SIZE_BOARD - 3; i++)
-            //     for(int j = 0; j < SIZE_BOARD; j++)
-            //         if(board[i][j] != 0 && board[i][j]==board[i+1][j-1] && board[i][j]==board[i+2][j-2] && board[i][j]==board[i+3][j-3]) {
-            //             w++;
-            //             score[player-1]++;
-            //         }
         }
-        
+
+        // If there is a win, update the score
         if (w == 1) printScore(score);
     }
 }
