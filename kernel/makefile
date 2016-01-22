@@ -68,7 +68,7 @@ syscall.o: syscall.c ../common/syscall_nb.h
 ../common/string.o: ../common/string.c ../common/string.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-../common/pfs.o: ../common/pfs.c ../common/pfs.h ../common/types.h base.h ide.h screen.h ../common/string.h
+../common/pfs.o: ../common/pfs.c ../common/pfs.h ../common/types.h base.h ide.h ../common/string.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

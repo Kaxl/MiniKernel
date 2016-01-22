@@ -54,6 +54,9 @@ typedef struct __attribute__((packed)) superblock_t {
 /**
  * @brief Calculate the size of a file
  *
+ * Check how many blocks the file is using and multiply this number
+ * by the size of a block.
+ *
  * @param filename  Filename to get the size from
  * @param stat      Stat structure to store the size
  *

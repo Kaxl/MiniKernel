@@ -16,11 +16,9 @@
  * =====================================================================================
  */
 
-#include "types.h"
 #include "pfs.h"
-#include "../kernel/ide.h"
-#include "../kernel/base.h"
-#include "../kernel/screen.h"
+#include "../kernel/ide.h"      // Read and write sector
+#include "../kernel/base.h"     // For memcpy
 #include "string.h"
 
 static superblock_t superblock;
@@ -195,7 +193,6 @@ int file_next(char* filename, file_iterator_t *it) {
 
     // Copy the filename
     memcpy(filename, &sector[it->posInSector], FILENAME_SIZE);
-    //printf("[file_next] : %s\n", filename);
 
     // If there is no filename (first byte), return 0
     if (!filename[0]) {
