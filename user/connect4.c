@@ -4,6 +4,12 @@
  *       Filename:  connect4.c
  *
  *    Description:  The connect 4 game
+ *                  The game is really simple, you have to align 4 tokens on the same
+ *                  line/row/diagonal to win.
+ *                  These are the commands available :
+ *                  [0-6]   : Choose the row there to put your token
+ *                  r       : Restart the game (only the board, not the scores)
+ *                  q       : Quit the game
  *
  *        Version:  1.0
  *        Created:  01/11/2016 07:47:28 PM
