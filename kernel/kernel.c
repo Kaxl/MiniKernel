@@ -21,6 +21,7 @@
 #include "gdt.h"
 #include "idt.h"
 #include "pic.h"
+#include "colors.h"
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"

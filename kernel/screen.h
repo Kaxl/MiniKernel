@@ -20,8 +20,6 @@
 #define _SCREEN_H_
 
 #include "../common/types.h"
-#include "colors.h"
-#include "controller.h"
 
 #define COMMAND_PORT    0x3d4
 #define DATA_PORT       0x3d5

@@ -17,7 +17,7 @@ AFLAGS=-f elf32
 kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o syscall_asm.o controller_asm.o ../common/string.o ../common/pfs.o
 	ld -melf_i386 -Tkernel.ld $^ -o $@
 
-kernel.o: kernel.c kernel.h x86.h gdt.h idt.h pic.h screen.h keyboard.h timer.h ../common/pfs.h 
+kernel.o: kernel.c kernel.h x86.h gdt.h idt.h pic.h screen.h keyboard.h timer.h ../common/pfs.h
 	$(CC) $(CFLAGS) -c $<
 
 bootloader.o: bootloader.s
@@ -29,10 +29,10 @@ gdt.o: gdt.c gdt.h ../common/types.h base.h task.h ../common/pfs.h x86.h
 pic.o: pic.c pic.h controller.h
 	$(CC) $(CFLAGS) -c $<
 
-keyboard.o: keyboard.c keyboard.h screen.h ../common/types.h controller.h
+keyboard.o: keyboard.c keyboard.h screen.h colors.h ../common/types.h controller.h
 	$(CC) $(CFLAGS) -c $<
 
-timer.o: timer.c timer.h controller.h screen.h
+timer.o: timer.c timer.h controller.h ../common/types.h
 	$(CC) $(CFLAGS) -c $<
 
 gdt_asm.o: gdt_asm.s
@@ -50,7 +50,7 @@ idt_asm.o: idt_asm.s
 base.o: base.c base.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-screen.o: screen.c screen.h
+screen.o: screen.c screen.h base.h colors.h controller.h ../common/string.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 controller_asm.o: controller_asm.s controller.h
@@ -62,7 +62,7 @@ syscall_asm.o: syscall_asm.s
 task_asm.o: task_asm.s task.h
 	$(ASM) $(AFLAGS) $<
 
-syscall.o: syscall.c ../common/syscall_nb.h
+syscall.o: syscall.c ../common/syscall_nb.h ../common/types.h ../common/pfs.h gdt.h screen.h keyboard.h timer.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 ../common/string.o: ../common/string.c ../common/string.h

@@ -1,6 +1,6 @@
 #include "keyboard.h"
+#include "colors.h"
 #include "screen.h"
-#include "../common/types.h"
 #include "controller.h"
 
 // Buffer
