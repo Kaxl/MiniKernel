@@ -1,6 +1,5 @@
 #include "timer.h"
 #include "controller.h"
-#include "screen.h"
 
 // Timer properties
 volatile timer t = {

@@ -18,6 +18,8 @@
 
 #include "screen.h"
 #include "base.h"
+#include "colors.h"
+#include "controller.h"
 #include "../common/string.h"
 
 // Screen properties

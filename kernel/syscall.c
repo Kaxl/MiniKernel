@@ -14,8 +14,6 @@
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
-#include "x86.h"
-
 
 int syscall_putc(char c);
 int syscall_puts(char* s);
