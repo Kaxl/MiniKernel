@@ -32,6 +32,7 @@ $(FS):
 	$(MAKE) -C tools
 	$(MAKE) -C user
 	cp user/shell tools/shell
+	cp user/shell.txt tools/shell.txt
 	cp user/connect4 tools/connect4
 	cp user/connect4_board.txt tools/connect4_board.txt
 	cp user/magic tools/magic
@@ -39,10 +40,10 @@ $(FS):
 	cp user/a.txt tools/a.txt
 	cp user/b.txt tools/b.txt
 	cp user/c.txt tools/c.txt
-	cp user/shell.txt tools/shell.txt
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
 	cd tools && ./pfsadd $(FS) shell
+	cd tools && ./pfsadd $(FS) shell.txt
 	cd tools && ./pfsadd $(FS) connect4
 	cd tools && ./pfsadd $(FS) connect4_board.txt
 	cd tools && ./pfsadd $(FS) magic
@@ -53,7 +54,6 @@ $(FS):
 	cd tools && ./pfsadd $(FS) fileA
 	cd tools && ./pfsadd $(FS) fileB
 	cd tools && ./pfsadd $(FS) fileC
-	cd tools && ./pfsadd $(FS) shell.txt
 	cp tools/$(FS) ./
 
 run: $(KERNEL)
@@ -65,7 +65,15 @@ clean:
 	rm -f common/*.o
 	rm -f $(KERNEL)
 	rm -f $(FS)
-	rm -f shell
+	rm -f tools/shell
+	rm -f tools/shell.txt
+	rm -f tools/connect4
+	rm -f tools/connect4_board.txt
+	rm -f tools/magic
+	rm -f tools/joke.txt
+	rm -f tools/a.txt
+	rm -f tools/b.txt
+	rm -f tools/c.txt
 	$(MAKE) -C kernel clean
 	$(MAKE) -C tools clean
 	$(MAKE) -C user clean
