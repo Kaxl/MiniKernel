@@ -174,16 +174,9 @@ void cat(char* filename) {
     stat_t stat;
     stat.size = 0;
 
-    printf("Reading : %s\n", filename);
-
     // Get the size of the file
     if (get_stat(filename, &stat) < 0) {
         printf("Error file : %s doesn't exist\n", filename);
-        return;
-    }
-    printf("Stat : %d\n", stat.size);
-    if (stat.size < 0) {
-        printf("Error with the size of the file\n");
         return;
     }
 

@@ -21,6 +21,12 @@
 
 #include "../common/types.h"
 #include "../common/pfs.h"
+#include "../common/string.h"
+
+// Functions from string.h
+extern int strcmp(const char* str1, const char* str2);
+extern void itoa(int n, char* s);
+extern void xtoa(int n, char* s);
 
 // Exit function in asm
 extern void exitpoint();

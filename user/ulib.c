@@ -33,7 +33,6 @@
  */
 
 #include "ulib.h"
-#include "../common/string.h"
 #include "../common/syscall_nb.h"
 #include "syscall.h"
 
