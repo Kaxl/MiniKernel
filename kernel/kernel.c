@@ -16,7 +16,6 @@
  * =====================================================================================
  */
 
-#include "../test/test_cases.h"
 #include "kernel.h"
 #include "x86.h"
 #include "gdt.h"
@@ -118,14 +117,9 @@ void runKernel() {
     file_read(SPLASH_FILE, (void *)&buffer);
     printf("\n%s\n", buffer);
 
-#ifdef TEST
-    runKernelTest();
-#else
     if (exec_task("shell") < 0)
         printf("Execution of shell failed\n");
     else
         printf("Exiting shell\n");
-#endif
-
 }
 

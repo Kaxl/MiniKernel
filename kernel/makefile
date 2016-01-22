@@ -14,7 +14,7 @@ AFLAGS=-f elf32
 
 .PHONY: clean
 
-kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o syscall_asm.o controller_asm.o ../common/string.o ../common/pfs.o ../test/test_cases.o
+kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o syscall_asm.o controller_asm.o ../common/string.o ../common/pfs.o
 	ld -melf_i386 -Tkernel.ld $^ -o $@
 
 kernel.o: kernel.c kernel.h x86.h gdt.h idt.h pic.h screen.h keyboard.h timer.h ../common/pfs.h task.h base.h
@@ -71,10 +71,6 @@ syscall.o: syscall.c ../common/syscall_nb.h
 ../common/pfs.o: ../common/pfs.c ../common/pfs.h ../common/types.h base.h ide.h screen.h ../common/string.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-../test/test_cases.o: ../test/test_cases.c ../test/test_cases.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
 clean:
 	rm -f *.o
 	rm -f *.elf
-	rm -f ../test/*.o
