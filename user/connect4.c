@@ -69,7 +69,7 @@
  *
  * @return
  */
-static void printBoard(char* buf);
+static void printBoard(uchar* buf);
 
 /**
  * @brief Clean the board on the screen and the local variable
@@ -78,7 +78,7 @@ static void printBoard(char* buf);
  *
  * @return
  */
-static void cleanBoard(char* board);
+static void cleanBoard(uchar* board);
 
 /**
  * @brief Clean the score on the screen and the local variable
@@ -117,13 +117,13 @@ static void setPlayer(int i);
 void main() {
 
     // Board play
-    char board[SIZE_BOARD*SIZE_BOARD];
+    uchar board[SIZE_BOARD*SIZE_BOARD];
 
     // Score of players
     char score[NB_PLAYER];
 
     // Init the buffer for the board
-    char buffer_board[BUFFER_BOARD];
+    uchar buffer_board[BUFFER_BOARD];
 
     // Load the board
     if (read_file(BOARD, buffer_board) < 0) {
@@ -237,12 +237,12 @@ void main() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-static void printBoard(char* buf) {
+static void printBoard(uchar* buf) {
     printf("%s", buf);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-static void cleanBoard(char* board) {
+static void cleanBoard(uchar* board) {
     for (int i = 0; i < SIZE_BOARD; i++) {
         for (int j = 0; j < SIZE_BOARD; j++) {
             setCursor(CURS_POS_X(i), CURS_POS_Y(j));
