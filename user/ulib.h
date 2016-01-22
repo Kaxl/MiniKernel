@@ -21,9 +21,6 @@
 
 #include "../common/types.h"
 #include "../common/pfs.h"
-#include "../common/string.h"
-#include "../common/syscall_nb.h"
-#include "syscall.h"
 
 // Exit function in asm
 extern void exitpoint();

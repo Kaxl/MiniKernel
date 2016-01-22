@@ -114,9 +114,12 @@ void runKernel() {
     file_read(SPLASH_FILE, (void *)&buffer);
     printf("\n%s\n", buffer);
 
+    // Wait to see the splash screen and then clear the screen
+    sleep(1000);
+    clearScreen();
+
     if (exec_task("shell") < 0)
         printf("Execution of shell failed\n");
     else
         printf("Exiting shell\n");
 }
-
