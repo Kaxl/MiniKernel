@@ -15,7 +15,7 @@
 #include "keyboard.h"
 #include "timer.h"
 
-int syscall_putc(char c);
+int syscall_putc(char* c);
 int syscall_puts(char* s);
 int syscall_exec();
 int syscall_getc();
@@ -126,8 +126,8 @@ int syscall_handler(syscall_t nb, uint32_t arg1, uint32_t arg2, uint32_t arg3, u
     return -1;
 }
 
-int syscall_putc(char c) {
-    printCharacter(c);
+int syscall_putc(char* c) {
+    printCharacter(*c);
     return 0;
 }
 
