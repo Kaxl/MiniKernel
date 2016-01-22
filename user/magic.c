@@ -32,6 +32,7 @@ static void printFile(char* filename) {
     sleep(2000);
 }
 
+// Lets play the magic ...
 void main() {
     printFile("a.txt");
     printFile("b.txt");

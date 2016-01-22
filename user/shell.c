@@ -23,6 +23,24 @@
 #include "syscall.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
+static void printShell() {
+
+    // Init the buffer
+    stat_t stat;
+    get_stat(SHELL_SCREEN, &stat);
+    uchar buffer[stat.size];
+
+    // Load the shell image
+    if (read_file(SHELL_SCREEN, buffer) < 0) {
+        printf("Error while loading shell image.\n");
+        return;
+    }
+
+    // Print the shell image
+    printf("%s\n",buffer);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
 static void emptyBuffer(char* buffer, int size) {
 
     // Fill the buffer with zero
@@ -88,7 +106,7 @@ static void readBuffer(char* buffer, int size) {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void main() {
-    printf("In the shell ! Like a boss !\n");
+    printShell();
     printf(" > ");
 
     // Init the buffer of CLI and empty it
@@ -212,4 +230,3 @@ void help() {
     printf("sleep N \t: Wait for N millisecond.\n");
     printf("help \t\t: Display this help.\n");
 }
-

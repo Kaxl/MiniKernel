@@ -20,6 +20,7 @@
 #define __SHELL_H
 
 #define BUF_SIZE 100
+#define SHELL_SCREEN    "shell.txt"
 
 extern void main();
 

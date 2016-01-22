@@ -39,6 +39,7 @@ $(FS):
 	cp user/a.txt tools/a.txt
 	cp user/b.txt tools/b.txt
 	cp user/c.txt tools/c.txt
+	cp user/shell.txt tools/shell.txt
 	cd tools && ./pfscreate $(FS) $(X) $(Y) $(Z)
 	cd tools && ./pfsadd $(FS) $(FT_SPLASH)
 	cd tools && ./pfsadd $(FS) shell
@@ -52,6 +53,7 @@ $(FS):
 	cd tools && ./pfsadd $(FS) fileA
 	cd tools && ./pfsadd $(FS) fileB
 	cd tools && ./pfsadd $(FS) fileC
+	cd tools && ./pfsadd $(FS) shell.txt
 	cp tools/$(FS) ./
 
 run: $(KERNEL)
