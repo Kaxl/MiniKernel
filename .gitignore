@@ -64,3 +64,4 @@ exit
 help
 connect4
 magic
+tools/*txt
