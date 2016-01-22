@@ -22,6 +22,9 @@ all: $(CMD)
 shell: shell.o ulib.o syscall.o app_stub.o ../common/string.o
 	$(LINK) $^ -o $@
 
+shell.o: shell.c shell.h ulib.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
 connect4: connect4.o ulib.o syscall.o app_stub.o ../common/string.o
 	$(LINK) $^ -o $@
 
@@ -34,10 +37,7 @@ magic: magic.o ulib.o syscall.o app_stub.o ../common/string.o
 magic.o: magic.c ulib.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-ulib.o: ulib.c ulib.h ../common/string.c ../common/string.h syscall.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-shell.o: shell.c shell.h ulib.h
+ulib.o: ulib.c ulib.h ../common/string.c ../common/string.h ../common/pfs.h ../common/types.h ../common/syscall_nb.h syscall.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 ../common/string.o: ../common/string.c ../common/string.h
@@ -48,7 +48,6 @@ syscall.o: syscall.s syscall.h
 
 app_stub.o: app_stub.s
 	$(ASM) $(AFLAGS) $^
-
 
 clean:
 	rm -f *.o

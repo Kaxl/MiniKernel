@@ -121,7 +121,7 @@ void main() {
 
     // Load the board
     if (read_file(BOARD, buffer_board) < 0) {
-        printf("Board not found");
+        printf("Board not found\n");
         exit();
     }
 

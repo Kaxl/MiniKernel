@@ -17,10 +17,7 @@
  */
 
 #include "shell.h"
-#include "../common/syscall_nb.h"
 #include "ulib.h"
-#include "../common/string.h"
-#include "syscall.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 static void printShell() {
@@ -132,6 +129,7 @@ void main() {
 
         // ... as a return line
         else if (c == '\n') {
+
             // Read buffer and launch the command if it is found
             if (cursor > 0) {
                 readBuffer(buffer, BUF_SIZE);
@@ -154,6 +152,7 @@ void main() {
 
             // Insert the character in buffer
             buffer[cursor++] = c;
+
             // Print the character
             putc(c);
         }
@@ -222,7 +221,7 @@ void ticks() {
 ////////////////////////////////////////////////////////////////////////////////////////
 void help() {
     // print the help for users
-    printf("ls \t\t\t: List all file on the disk.\n");
+    printf("ls \t\t\t: List all files on the disk.\n");
     printf("cat FILE \t: Print the content of a file.\n");
     printf("rm FILE \t: Delete a file from the disk.\n");
     printf("run FILE \t: Run a program.\n");

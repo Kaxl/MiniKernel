@@ -32,13 +32,7 @@
  * =====================================================================================
  */
 
-#include "../common/string.h"   // Include string function common to kernel and user
-#include "../common/syscall_nb.h"
-#include "../common/types.h"
-#include "syscall.h"
 #include "ulib.h"
-
-extern void exitpoint();
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Files access
