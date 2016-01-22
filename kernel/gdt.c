@@ -1,11 +1,9 @@
-#include "../common/types.h"
-#include "base.h"
 #include "gdt.h"
-#include "x86.h"
-#include "task.h"
-#include "../common/pfs.h"
-#include "screen.h"
+#include "base.h"           // For memset, ...
+#include "../common/pfs.h"  // For file_read in exec
+#include "x86.h"            // For defines
 
+// Function asm to call a task
 extern void call_task(uint16_t tss_selector);
 
 // Declaration of GDT

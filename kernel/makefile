@@ -17,13 +17,13 @@ AFLAGS=-f elf32
 kernel.elf: kernel.o gdt.o idt.o keyboard.o timer.o bootloader.o base.o ide.o pic.o gdt_asm.o idt_asm.o screen.o task_asm.o syscall.o syscall_asm.o controller_asm.o ../common/string.o ../common/pfs.o
 	ld -melf_i386 -Tkernel.ld $^ -o $@
 
-kernel.o: kernel.c kernel.h x86.h gdt.h idt.h pic.h screen.h keyboard.h timer.h ../common/pfs.h task.h base.h
+kernel.o: kernel.c kernel.h x86.h gdt.h idt.h pic.h screen.h keyboard.h timer.h ../common/pfs.h 
 	$(CC) $(CFLAGS) -c $<
 
 bootloader.o: bootloader.s
 	$(ASM) $(AFLAGS) $^
 
-gdt.o: gdt.c gdt.h ../common/types.h base.h x86.h task.h ../common/pfs.h screen.h
+gdt.o: gdt.c gdt.h ../common/types.h base.h task.h ../common/pfs.h x86.h
 	$(CC) $(CFLAGS) -c $<
 
 pic.o: pic.c pic.h controller.h
@@ -38,10 +38,10 @@ timer.o: timer.c timer.h controller.h screen.h
 gdt_asm.o: gdt_asm.s
 	$(ASM) $(AFLAGS) $^
 
-idt.o: idt.c idt.h x86.h screen.h colors.h pic.h timer.h base.h
+idt.o: idt.c idt.h x86.h screen.h colors.h pic.h keyboard.h timer.h base.h ../common/types.h
 	$(CC) $(CFLAGS) -c $<
 
-ide.o: ide.c ide.h controller.h
+ide.o: ide.c ide.h controller.h ../common/types.h
 	$(CC) $(CFLAGS) -c $<
 
 idt_asm.o: idt_asm.s

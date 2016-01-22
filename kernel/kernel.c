@@ -25,10 +25,6 @@
 #include "keyboard.h"
 #include "timer.h"
 #include "../common/pfs.h"
-#include "task.h"
-#include "base.h"
-
-extern void call_task(uint16_t tss_selector);
 
 void runKernel() {
 
