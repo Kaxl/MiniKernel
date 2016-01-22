@@ -44,6 +44,8 @@ boot/
 *.log
 *.aux
 *.gz
+*.fdb_latexmk
+*.fls
 
 # PFS Files
 pfscreate
