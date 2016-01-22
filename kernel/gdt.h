@@ -1,8 +1,8 @@
 #ifndef _GDT_H_
 #define _GDT_H_
 
-#include "../common/types.h"
-#include "task.h"
+#include "../common/types.h"    // For types
+#include "task.h"               // For tss_t structure
 
 #define LDT_SIZE            2
 #define KERNEL_STACK_SIZE   65536

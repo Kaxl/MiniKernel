@@ -7,6 +7,7 @@
 
 #include "ide.h"
 #include "controller.h"
+#include "../common/types.h"
 
 /**
  * Wait for the disk drive to be ready.

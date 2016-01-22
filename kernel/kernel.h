@@ -28,8 +28,7 @@
  * @brief Start the kernel
  *
  * Function call by the assembly file : 'bootloader.s'
- * For now, there is just the initialization of the kernel
- * and a welcom message.
+ * Initialize the kernel, print a splash screen and start a shell
  */
 extern void runKernel();
 
